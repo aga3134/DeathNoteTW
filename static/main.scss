@@ -1,0 +1,70 @@
+$transition-time: 0.5s;
+
+//==============Responsive================
+$pc-media: 1024px;
+@mixin pc-width() {
+    @media only screen and (min-width: $pc-media) {
+        @content;
+    }
+}
+//===================General======================
+html, body { 
+  height: 100%; margin: 0; padding: 0; 
+  overflow: auto;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: "微軟正黑體", "Microsoft JhengHei";
+}
+
+.center{
+    display: block;
+    margin: auto;
+    clear: both;
+    text-align: center;
+}
+
+.hide{
+	display: none;
+}
+
+//==================================================
+.death-note{
+	width: 1024px;
+	max-width: 100%;
+	.cover{
+		background-color: rgb(50,50,50);
+		color: white;
+		padding: 20px;
+		width: 100%;
+		
+		#svgAnim{
+			height: 400px;
+			width: 400px;
+			margin: auto;
+		}
+		.title{
+			margin: 10px auto 30px auto;
+			font-size: 2.5em;
+			font-weight: bold;
+			color: white;
+			text-align: center;
+		}
+		.chapter{
+			ul{
+				list-style-type: none;
+				margin: 0px;
+				padding: 0px;
+				li{
+					font-size: 1.5em;
+					line-height: 1.5em;
+					cursor: pointer;
+					&:hover{
+						color: rgb(255,255,0);
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,48 @@
+@charset "UTF-8";
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: auto; }
+
+* {
+  box-sizing: border-box;
+  font-family: "微軟正黑體", "Microsoft JhengHei"; }
+
+.center {
+  display: block;
+  margin: auto;
+  clear: both;
+  text-align: center; }
+
+.hide {
+  display: none; }
+
+.death-note {
+  width: 1024px;
+  max-width: 100%; }
+  .death-note .cover {
+    background-color: #323232;
+    color: white;
+    padding: 20px;
+    width: 100%; }
+    .death-note .cover #svgAnim {
+      height: 400px;
+      width: 400px;
+      margin: auto; }
+    .death-note .cover .title {
+      margin: 10px auto 30px auto;
+      font-size: 2.5em;
+      font-weight: bold;
+      color: white;
+      text-align: center; }
+    .death-note .cover .chapter ul {
+      list-style-type: none;
+      margin: 0px;
+      padding: 0px; }
+      .death-note .cover .chapter ul li {
+        font-size: 1.5em;
+        line-height: 1.5em;
+        cursor: pointer; }
+        .death-note .cover .chapter ul li:hover {
+          color: yellow; }
