@@ -24,14 +24,15 @@ html, body {
   .death-note .cover {
     background-color: #323232;
     color: white;
-    padding: 20px;
-    width: 100%; }
+    padding: 20px 0px;
+    width: 100%;
+    box-shadow: -5px 5px 5px #191919; }
     .death-note .cover #svgAnim {
-      height: 400px;
-      width: 400px;
+      height: 250px;
+      width: 300px;
       margin: auto; }
     .death-note .cover .title {
-      margin: 10px auto 30px auto;
+      margin: 0px auto 30px auto;
       font-size: 2.5em;
       font-weight: bold;
       color: white;
