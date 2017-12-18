@@ -2,54 +2,81 @@
 var g_APP = new Vue({
   el: "#app",
   data: {
-  	curPage: 0
+  	curPage: 0,
+    showRule: false,
+    showGraph: false,
+    showAbout: false
   },
   created: function () {
   	
   },
   methods: {
     UpdateGraph: function(){
-      
+      this.showRule = (this.curPage==1);
+      this.showGraph = (this.curPage>1&&this.curPage<6);
+      this.showAbout = (this.curPage==6);
+      if(this.showGraph){
+        setTimeout(function(){
+          var title = $("#pageGraph").children(".title");
+          switch(this.curPage){
+            case 2: title.text("生の章"); break;
+            case 3: title.text("老の章"); break;
+            case 4: title.text("病の章"); break;
+            case 5: title.text("死の章"); break;
+          }
+        }.bind(this),1);
+      }
     },
     FlipPage: function(page){
       if(this.curPage == page) return;
+      this.showRule = false;
+      this.showGraph = false;
+      this.showAbout = false;
+      $('.death-note').attr("scrollTop", 0);
 
-      function CoverOn(){
+      var CoverOn = function(){
         $(".cover-top").css("width","calc(100% - 20px)");
         $("#coverContent").css("display","block");
         var btList = $("#coverButtonList");
         btList.children("img").css("opacity",0);
-      }
-      function CoverOff(){
+      }.bind(this);
+      
+      var CoverOff = function(){
         $(".cover-top").css("width","50px");
         $("#coverContent").css("display","none");
         setTimeout(function(){
           var btList = $("#coverButtonList");
           btList.children("img").css("opacity",1);
-        },500);
-      }
-      function PageOn(){
+          this.UpdateGraph();
+        }.bind(this),500);
+      }.bind(this);
+
+      var PageOn = function(){
         var pageMove = $(".page-move");
         pageMove.css("width","0px");
         pageMove.css("display","block");
         setTimeout(function(){
           pageMove.css("width","100%");
-        },10);
+        },1);
         setTimeout(function(){
           pageMove.css("display","none");
-        },510);
-      }
-      function PageOff(){
+          this.UpdateGraph();
+        }.bind(this),500);
+      }.bind(this);
+
+      var PageOff = function(){
         var pageMove = $(".page-move");
         pageMove.css("width","100%");
         pageMove.css("display","block");
         setTimeout(function(){
           pageMove.css("width","0px");
-        },10);
+        },1);
         setTimeout(function(){
           pageMove.css("display","none");
-        },510);
-      }
+          this.UpdateGraph();
+        }.bind(this),500);
+      }.bind(this);
+
       if(page == 0) CoverOn();
       else if(this.curPage == 0 && page > 0) CoverOff();
       else if(this.curPage > page) PageOn();

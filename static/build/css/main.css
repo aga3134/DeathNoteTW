@@ -23,7 +23,6 @@ html, body {
   width: 1024px;
   max-width: 100%;
   height: 100%;
-  overflow: auto;
   box-shadow: -5px 5px 5px #646464; }
   .death-note .cover-top {
     position: absolute;
@@ -33,7 +32,8 @@ html, body {
     color: white;
     padding: 20px 0px;
     width: calc(100% - 20px);
-    height: 700px;
+    height: 100%;
+    overflow: auto;
     box-shadow: -3px 3px 3px #191919;
     z-index: 5;
     -webkit-transition: width 0.5s ease;
@@ -64,7 +64,7 @@ html, body {
     top: 0px;
     right: 0px;
     width: 100%;
-    height: 700px;
+    height: 100%;
     background-color: #e6e6e6;
     box-shadow: -5px 5px 5px #646464;
     color: #323232;
@@ -74,19 +74,49 @@ html, body {
   .death-note .page-bg {
     position: absolute;
     top: 0px;
-    right: 0px;
-    width: 100%;
-    height: 700px;
+    right: 50px;
+    width: calc(100% - 50px);
+    height: 100%;
+    overflow: auto;
     background-color: #e6e6e6;
     box-shadow: -5px 5px 5px #646464;
     color: #323232;
-    z-index: 2; }
+    z-index: 2;
+    text-align: left; }
+    .death-note .page-bg .title {
+      font-size: 2em;
+      padding: 20px;
+      font-weight: bold;
+      text-align: center; }
+    .death-note .page-bg .content {
+      margin: auto;
+      width: 500px;
+      max-width: 100%; }
+      .death-note .page-bg .content ol {
+        color: red; }
+      .death-note .page-bg .content ul {
+        color: black;
+        padding: 10px; }
+      .death-note .page-bg .content li {
+        padding: 5px; }
+      .death-note .page-bg .content a {
+        text-decoration: none;
+        color: #323264; }
+        .death-note .page-bg .content a:hover {
+          color: #326432; }
+      .death-note .page-bg .content .quote {
+        font-size: 1.5em;
+        text-align: left;
+        background-color: #646464;
+        color: white;
+        padding: 20px;
+        margin: 20px; }
   .death-note .cover-bottom {
     position: absolute;
     top: 0px;
     right: 0px;
     width: 100%;
-    height: 700px;
+    height: 100%;
     background-color: #323232;
     color: white;
     z-index: 1; }
@@ -97,6 +127,7 @@ html, body {
       display: block;
       width: 40px;
       height: 40px;
+      padding: 5px;
       margin: 5px;
       object-fit: contain;
       cursor: pointer;
