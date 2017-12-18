@@ -1,4 +1,5 @@
 $transition-time: 0.5s;
+$note-height: 700px;
 
 //==============Responsive================
 $pc-media: 1024px;
@@ -31,14 +32,25 @@ html, body {
 
 //==================================================
 .death-note{
+	position: relative;
 	width: 1024px;
 	max-width: 100%;
-	.cover{
+	height: 100%;
+	overflow: auto;
+	box-shadow: -5px 5px 5px rgb(100,100,100);
+	.cover-top{
+		position: absolute;
+		top: 0px;
+		right: 0px;
 		background-color: rgb(50,50,50);
 		color: white;
 		padding: 20px 0px;
-		width: 100%;
-		box-shadow: -5px 5px 5px rgb(25,25,25);
+		width: calc(100% - 20px);
+		height: $note-height;
+		box-shadow: -3px 3px 3px rgb(25,25,25);
+		z-index: 5;
+		-webkit-transition: width $transition-time ease;
+        transition: width $transition-time ease;
 		
 		#svgAnim{
 			height: 250px;
@@ -66,6 +78,62 @@ html, body {
 					}
 				}
 			}
+		}
+	}
+	.page-move{
+		display: none;
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		width: 100%;
+		height: $note-height;
+		background-color: rgb(230,230,230);
+		box-shadow: -5px 5px 5px rgb(100,100,100);
+		color: rgb(50,50,50);
+		z-index: 3;
+		-webkit-transition: width $transition-time ease;
+        transition: width $transition-time ease;
+	}
+	.page-bg{
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		width: 100%;
+		height: $note-height;
+		background-color: rgb(230,230,230);
+		box-shadow: -5px 5px 5px rgb(100,100,100);
+		color: rgb(50,50,50);
+		z-index: 2;
+	}
+	.cover-bottom{
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		width: 100%;
+		height: $note-height;
+		background-color: rgb(50,50,50);
+		color: white;
+		z-index: 1;
+	}
+	#coverButtonList{
+		position: fixed;
+		top: 20px;
+		img{
+			display: block;
+			width: 40px;
+			height: 40px;
+			margin: 5px;
+			object-fit: contain;
+			cursor: pointer;
+			opacity: 0;
+			-webkit-transition: opacity $transition-time ease;
+       		transition: opacity $transition-time ease;
+       		&:hover{
+       			border: 1px solid yellow;
+       		}
+       		&.select{
+       			border: 1px solid red;
+       		}
 		}
 	}
 }

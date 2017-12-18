@@ -2,7 +2,7 @@
 var g_APP = new Vue({
   el: "#app",
   data: {
-  	
+  	curPage: 0
   },
   created: function () {
   	
@@ -10,6 +10,54 @@ var g_APP = new Vue({
   methods: {
     UpdateGraph: function(){
       
+    },
+    FlipPage: function(page){
+      if(this.curPage == page) return;
+
+      function CoverOn(){
+        $(".cover-top").css("width","calc(100% - 20px)");
+        $("#coverContent").css("display","block");
+        var btList = $("#coverButtonList");
+        btList.children("img").css("opacity",0);
+      }
+      function CoverOff(){
+        $(".cover-top").css("width","50px");
+        $("#coverContent").css("display","none");
+        setTimeout(function(){
+          var btList = $("#coverButtonList");
+          btList.children("img").css("opacity",1);
+        },500);
+      }
+      function PageOn(){
+        var pageMove = $(".page-move");
+        pageMove.css("width","0px");
+        pageMove.css("display","block");
+        setTimeout(function(){
+          pageMove.css("width","100%");
+        },10);
+        setTimeout(function(){
+          pageMove.css("display","none");
+        },510);
+      }
+      function PageOff(){
+        var pageMove = $(".page-move");
+        pageMove.css("width","100%");
+        pageMove.css("display","block");
+        setTimeout(function(){
+          pageMove.css("width","0px");
+        },10);
+        setTimeout(function(){
+          pageMove.css("display","none");
+        },510);
+      }
+      if(page == 0) CoverOn();
+      else if(this.curPage == 0 && page > 0) CoverOff();
+      else if(this.curPage > page) PageOn();
+      else if(this.curPage < page) PageOff();
+
+      $("#coverButtonList :nth-child("+(this.curPage+1)+")").removeClass("select");
+      $("#coverButtonList :nth-child("+(page+1)+")").addClass("select");
+      this.curPage = page;
     }
   }
 });

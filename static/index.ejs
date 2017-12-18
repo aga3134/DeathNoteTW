@@ -26,22 +26,39 @@
 		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
 
 		<div id="app" class="death-note center">
-			<div class="cover">
-				<div id="svgMovie"></div>
-				<div class="title">
-					台灣の<br>死亡筆記本
+			<div class="cover-top">
+				<div id="coverContent">
+					<div id="svgMovie"></div>
+					<div class="title">
+						台灣の<br>死亡筆記本
+					</div>
+					
+					<div class="chapter">
+						<ul>
+							<li v-on:click="FlipPage(1);">使用規則</li>
+							<li v-on:click="FlipPage(2);">生の章</li>
+							<li v-on:click="FlipPage(3);">老の章</li>
+							<li v-on:click="FlipPage(4);">病の章</li>
+							<li v-on:click="FlipPage(5);">死の章</li>
+							<li v-on:click="FlipPage(6);">關於筆記本</li>
+						</ul>
+					</div>
 				</div>
-				
-				<div class="chapter">
-					<ul>
-						<li>使用規則</li>
-						<li>生の章</li>
-						<li>老の章</li>
-						<li>病の章</li>
-						<li>死の章</li>
-						<li>關於筆記本</li>
-					</ul>
+				<div id="coverButtonList">
+					<img src="/static/Image/icon.png" v-on:click="FlipPage(0);">
+					<img src="/static/Image/icon.png" v-on:click="FlipPage(1);">
+					<img src="/static/Image/icon.png" v-on:click="FlipPage(2);">
+					<img src="/static/Image/icon.png" v-on:click="FlipPage(3);">
+					<img src="/static/Image/icon.png" v-on:click="FlipPage(4);">
+					<img src="/static/Image/icon.png" v-on:click="FlipPage(5);">
+					<img src="/static/Image/icon.png" v-on:click="FlipPage(6);">
 				</div>
+			</div>
+			<div class="page-move">
+			</div>
+			<div class="page-bg">
+			</div>
+			<div class="cover-bottom">
 			</div>
 		</div>
 
