@@ -28,7 +28,7 @@
 		<div id="app" class="death-note center">
 			<div class="cover-top">
 				<div id="coverContent">
-					<div id="svgMovie"></div>
+					<svg id="svgAnim"></svg>
 					<div class="title">
 						台灣の<br>死亡筆記本
 					</div>
@@ -45,13 +45,13 @@
 					</div>
 				</div>
 				<div id="coverButtonList">
-					<img src="/static/Image/icon-first.png" v-on:click="FlipPage(0);">
-					<img src="/static/Image/icon-rule.png" v-on:click="FlipPage(1);">
-					<img src="/static/Image/icon-born.png" v-on:click="FlipPage(2);">
-					<img src="/static/Image/icon-old.png" v-on:click="FlipPage(3);">
-					<img src="/static/Image/icon-sick.png" v-on:click="FlipPage(4);">
-					<img src="/static/Image/icon-die.png" v-on:click="FlipPage(5);">
-					<img src="/static/Image/icon-last.png" v-on:click="FlipPage(6);">
+					<img src="/static/Image/icon-first.png" title="封面" v-on:click="FlipPage(0);">
+					<img src="/static/Image/icon-rule.png" title="規則" v-on:click="FlipPage(1);">
+					<img src="/static/Image/icon-born.png" title="生の章" v-on:click="FlipPage(2);">
+					<img src="/static/Image/icon-old.png" title="老の章" v-on:click="FlipPage(3);">
+					<img src="/static/Image/icon-sick.png" title="病の章" v-on:click="FlipPage(4);">
+					<img src="/static/Image/icon-die.png" title="死の章" v-on:click="FlipPage(5);">
+					<img src="/static/Image/icon-last.png" title="關於筆記本" v-on:click="FlipPage(6);">
 				</div>
 			</div>
 			<div class="page-move">
@@ -64,68 +64,68 @@
 							<li>因為養不起所以不敢生<br>
 								<ul>
 									<li>
-										<a href="https://www.youtube.com/watch?v=O_sFrxLvwUI" target="_blank">少子老齡 死亡交叉</a>
+										<a href="https://www.youtube.com/watch?v=O_sFrxLvwUI" target="_blank">【中天調查報告】 少子老齡 死亡交叉</a>
 									</li>
 								</ul>
 							</li>
 							<li>不受尊重又沒錢的地方招不到人<br>
 								<ul>
 									<li>
-										<a href="http://npost.tw/archives/24240" target="_blank">現行長照政策到底哪裡出問題？</a>
+										<a href="http://npost.tw/archives/24240" target="_blank">【公益交流站】 現行長照政策到底哪裡出問題？</a>
 									</li>
 									<li>
-										<a href="https://www.twreporter.org/a/opinion-long-term-care-version2" target="_blank">長照2.0版正式上路，變得更好嗎？</a>
+										<a href="https://www.twreporter.org/a/opinion-long-term-care-version2" target="_blank">【報導者】 長照2.0版正式上路，變得更好嗎？</a>
 									</li>
 									<li>
-										<a href="https://www.slideshare.net/ROC-MOHW/20-64725338" target="_blank">衛福部 長照2.0懶人包</a>
+										<a href="https://www.slideshare.net/ROC-MOHW/20-64725338" target="_blank">【衛福部】 長照2.0懶人包</a>
 									</li>
 								</ul>
 							</li>
 							<li>能自主生活才有真幸福<br>
 								<ul>
 									<li>
-										<a href="https://www.youtube.com/watch?v=B3ZZI6NwbZI" target="_blank">【民視異言堂】老了，你怕嗎？長照系列報導(一)</a>
+										<a href="https://www.youtube.com/watch?v=B3ZZI6NwbZI" target="_blank">【民視異言堂】 老了，你怕嗎？長照系列報導(一)</a>
 									</li>
 									<li>
-										<a href="https://www.youtube.com/watch?v=ssY671E8Jbw" target="_blank">【民視異言堂】老了，你怕嗎？長照系列報導(二)</a>
+										<a href="https://www.youtube.com/watch?v=ssY671E8Jbw" target="_blank">【民視異言堂】 老了，你怕嗎？長照系列報導(二)</a>
 									</li>
 									<li>
-										<a href="https://www.youtube.com/watch?v=OKo6PfKBC6w" target="_blank">【民視異言堂】老了，你怕嗎？長照系列報導(三)</a>
+										<a href="https://www.youtube.com/watch?v=OKo6PfKBC6w" target="_blank">【民視異言堂】 老了，你怕嗎？長照系列報導(三)</a>
 									</li>
 									<li>
-										<a href="https://www.youtube.com/watch?v=y6raMhMLl74" target="_blank">獨立特派員 荷蘭長照2.0 - 居家照顧</a>
+										<a href="https://www.youtube.com/watch?v=y6raMhMLl74" target="_blank">【獨立特派員】 荷蘭長照2.0 - 居家照顧</a>
 									</li>
 									<li>
-										<a href="https://www.youtube.com/watch?v=C9w9S6Wh-qo" target="_blank">獨立特派員 荷蘭長照2.0 - 資源連結</a>
+										<a href="https://www.youtube.com/watch?v=C9w9S6Wh-qo" target="_blank">【獨立特派員】 荷蘭長照2.0 - 資源連結</a>
 									</li>
 									<li>
-										<a href="https://www.youtube.com/watch?v=pgWu_24UzGM" target="_blank">獨立特派員 荷蘭長照2.0 - 居服員培力</a>
+										<a href="https://www.youtube.com/watch?v=pgWu_24UzGM" target="_blank">【獨立特派員】 荷蘭長照2.0 - 居服員培力</a>
 									</li>
 									<li>
-										<a href="https://www.youtube.com/watch?v=luGM2NLgZgc" target="_blank">獨立特派員 荷蘭長照2.0 - 服務創新</a>
+										<a href="https://www.youtube.com/watch?v=luGM2NLgZgc" target="_blank">【獨立特派員】 荷蘭長照2.0 - 服務創新</a>
 									</li>
 								</ul>
 							</li>
 							<li>想吃免費午餐就等著集體破產<br>
 								<ul>
 									<li>
-										<a href="https://www.youtube.com/watch?v=eQ-qiTG4mE0&t=310s" target="_blank">《政問 01 柯文哲》台灣醫療崩壞，健保亂象如何解決？</a>
+										<a href="https://www.youtube.com/watch?v=eQ-qiTG4mE0&t=310s" target="_blank">【政問】 台灣醫療崩壞，健保亂象如何解決？</a>
 									</li>
 									<li>
-										<a href="https://www.youtube.com/watch?v=kf3fJeMiNDM" target="_blank">全民健保簡介</a>
+										<a href="https://ymmedmagazine.blogspot.tw/2015/06/blog-post.html" target="_blank">【陽明醫聲】 系列專題：健保健保二十年</a>
 									</li>
 									<li>
-										<a href="https://ymmedmagazine.blogspot.tw/2015/06/blog-post.html" target="_blank">陽明醫聲 系列專題：健保健保二十年</a>
+										<a href="https://www.youtube.com/watch?v=kf3fJeMiNDM" target="_blank">【衛福部】 全民健保簡介</a>
 									</li>
 								</ul>
 							</li>
 							<li>人生的榮華富貴，不過就是一陀大便<br>
 								<ul>
 									<li>
-										<a href="https://www.youtube.com/watch?v=N0zhdMwD2Z8" target="_blank">生死的智慧：柯文哲</a>
+										<a href="https://www.youtube.com/watch?v=N0zhdMwD2Z8" target="_blank">【TEDx Taipei】 生死的智慧：柯文哲</a>
 									</li>
 									<li>
-										<a href="https://www.ted.com/talks/bj_miller_what_really_matters_at_the_end_of_life?language=zh-tw" target="_blank">在生命終點，真正重要的是什麼?</a>
+										<a href="https://www.ted.com/talks/bj_miller_what_really_matters_at_the_end_of_life?language=zh-tw" target="_blank">【TED】 在生命終點，真正重要的是什麼?</a>
 									</li>
 								</ul>
 							</li>
@@ -144,7 +144,6 @@
 			</div>
 		</div>
 
-		<script src="/static/bonsai-0.4.1.min.js"></script>
 		<script src="/static/main.js?v=<%=version%>"></script>
 	</body>
 </html>
