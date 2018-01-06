@@ -18,6 +18,17 @@ html, body {
 .hide {
   display: none; }
 
+::-webkit-scrollbar {
+  width: 12px; }
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 5px; }
+
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5); }
+
 .death-note {
   position: relative;
   width: 1024px;
@@ -31,7 +42,7 @@ html, body {
     background-color: #323232;
     color: white;
     padding: 20px 0px;
-    width: calc(100% - 20px);
+    width: calc(100% - 10px);
     height: 100%;
     overflow: auto;
     box-shadow: -3px 3px 3px #191919;
@@ -78,6 +89,7 @@ html, body {
     width: calc(100% - 50px);
     height: 100%;
     overflow: auto;
+    padding: 10px;
     background-color: #e6e6e6;
     box-shadow: -5px 5px 5px #646464;
     color: #323232;
@@ -93,10 +105,12 @@ html, body {
       width: 500px;
       max-width: 100%; }
       .death-note .page-bg .content ol {
-        color: red; }
+        color: red;
+        font-weight: bold; }
       .death-note .page-bg .content ul {
         color: black;
-        padding: 10px; }
+        padding: 10px;
+        font-weight: normal; }
       .death-note .page-bg .content li {
         padding: 5px; }
       .death-note .page-bg .content a {
@@ -110,7 +124,13 @@ html, body {
         background-color: #646464;
         color: white;
         padding: 20px;
-        margin: 20px; }
+        margin: 20px auto 40px auto; }
+    .death-note .page-bg svg {
+      width: 100%;
+      height: 350px; }
+      @media only screen and (min-width: 360px) {
+        .death-note .page-bg svg {
+          width: 50%; } }
   .death-note .cover-bottom {
     position: absolute;
     top: 0px;

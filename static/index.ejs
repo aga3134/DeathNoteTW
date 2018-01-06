@@ -7,8 +7,8 @@
 		<link rel="canonical" href="https://death-note.agawork.tw" />
 		<meta property="og:url" content="https://death-note.agawork.tw" />
 
-		<meta name="description" content="台灣 人口/健保/照護/死因 統計資料視覺化"/>
-		<meta property="og:description" content="台灣 人口/健保/照護/死因 統計資料視覺化" />
+		<meta name="description" content="凡名字被寫入這筆記本的人...都不會怎樣... 但這趨勢不搞清楚，怎麼死的你都不知道!"/>
+		<meta property="og:description" content="凡名字被寫入這筆記本的人...都不會怎樣... 但這趨勢不搞清楚，怎麼死的你都不知道!" />
 		<meta property="og:site_name" content="DeathNoteTW" />
 		<meta property="og:locale" content="zh_TW" />
 		<meta property="og:type" content="website" />
@@ -79,6 +79,18 @@
 									<li>
 										<a href="https://www.slideshare.net/ROC-MOHW/20-64725338" target="_blank">【衛福部】 長照2.0懶人包</a>
 									</li>
+									<li>
+										<a href="https://www.youtube.com/watch?v=y6raMhMLl74" target="_blank">【獨立特派員】 荷蘭長照2.0 - 居家照顧</a>
+									</li>
+									<li>
+										<a href="https://www.youtube.com/watch?v=C9w9S6Wh-qo" target="_blank">【獨立特派員】 荷蘭長照2.0 - 資源連結</a>
+									</li>
+									<li>
+										<a href="https://www.youtube.com/watch?v=pgWu_24UzGM" target="_blank">【獨立特派員】 荷蘭長照2.0 - 居服員培力</a>
+									</li>
+									<li>
+										<a href="https://www.youtube.com/watch?v=luGM2NLgZgc" target="_blank">【獨立特派員】 荷蘭長照2.0 - 服務創新</a>
+									</li>
 								</ul>
 							</li>
 							<li>能自主生活才有真幸福<br>
@@ -93,16 +105,10 @@
 										<a href="https://www.youtube.com/watch?v=OKo6PfKBC6w" target="_blank">【民視異言堂】 老了，你怕嗎？長照系列報導(三)</a>
 									</li>
 									<li>
-										<a href="https://www.youtube.com/watch?v=y6raMhMLl74" target="_blank">【獨立特派員】 荷蘭長照2.0 - 居家照顧</a>
+										<a href="https://www.youtube.com/watch?v=SA-KfT4McN8" target="_blank">【獨立特派員】 活躍老化</a>
 									</li>
 									<li>
-										<a href="https://www.youtube.com/watch?v=C9w9S6Wh-qo" target="_blank">【獨立特派員】 荷蘭長照2.0 - 資源連結</a>
-									</li>
-									<li>
-										<a href="https://www.youtube.com/watch?v=pgWu_24UzGM" target="_blank">【獨立特派員】 荷蘭長照2.0 - 居服員培力</a>
-									</li>
-									<li>
-										<a href="https://www.youtube.com/watch?v=luGM2NLgZgc" target="_blank">【獨立特派員】 荷蘭長照2.0 - 服務創新</a>
+										<a href="https://health.udn.com/health/story/8250/2179294" target="_blank">【元氣網】 別再說芬蘭人死前兩周才臥床了！</a>
 									</li>
 								</ul>
 							</li>
@@ -119,7 +125,7 @@
 									</li>
 								</ul>
 							</li>
-							<li>人生的榮華富貴，不過就是一陀大便<br>
+							<li>人生的榮華富貴，不過就是一坨大便<br>
 								<ul>
 									<li>
 										<a href="https://www.youtube.com/watch?v=N0zhdMwD2Z8" target="_blank">【TEDx Taipei】 生死的智慧：柯文哲</a>
@@ -135,6 +141,7 @@
 				</div>
 				<div id="pageGraph" v-if="showGraph">
 					<div class="title">生の章</div>
+					<svg id="mapGraph"></svg>
 				</div>
 				<div id="pageAbout" v-if="showAbout">
 					<div class="title">關於筆記本</div>
@@ -144,6 +151,12 @@
 			</div>
 		</div>
 
+		<script src="/static/svgAnim.js?v=<%=version%>"></script>
+		<script src="/static/mapTW.js?v=<%=version%>"></script>
+		<script src="/static/chapterBirth.js?v=<%=version%>"></script>
+		<script src="/static/chapterAging.js?v=<%=version%>"></script>
+		<script src="/static/chapterDisease.js?v=<%=version%>"></script>
+		<script src="/static/chapterDeath.js?v=<%=version%>"></script>
 		<script src="/static/main.js?v=<%=version%>"></script>
 	</body>
 </html>

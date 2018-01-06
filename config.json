@@ -1,0 +1,10 @@
+{
+	"mysqlAuth": {
+		"host": "127.0.0.1",
+		"port": "3306",
+		"dbName": "DeathNoteTW",
+    	"username": "root",
+    	"password": "justdoit"
+	},
+	"serverPort": 8001
+}
