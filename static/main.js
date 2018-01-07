@@ -3,6 +3,8 @@ var g_APP = new Vue({
   el: "#app",
   data: {
   	curPage: 0,
+    graphType: 1,
+    optionType: 1,
     showRule: false,
     showGraph: false,
     showAbout: false
@@ -16,13 +18,12 @@ var g_APP = new Vue({
       this.showGraph = (this.curPage>1&&this.curPage<6);
       this.showAbout = (this.curPage==6);
       if(this.showGraph){
-        setTimeout(function(){
-          var title = $("#pageGraph").children(".title");
+        setTimeout(function(){  //須先等dom元件更新後再處理畫面
           switch(this.curPage){
-            case 2: title.text("生の章"); g_ChapterBirth.loadGraph(); break;
-            case 3: title.text("老の章"); g_ChapterAging.loadGraph(); break;
-            case 4: title.text("病の章"); g_ChapterDisease.loadGraph(); break;
-            case 5: title.text("死の章"); g_ChapterDeath.loadGraph(); break;
+            case 2: g_ChapterBirth.loadGraph(this.graphType,this.optionType); break;
+            case 3: g_ChapterAging.loadGraph(this.graphType,this.optionType); break;
+            case 4: g_ChapterDisease.loadGraph(this.graphType,this.optionType); break;
+            case 5: g_ChapterDeath.loadGraph(this.graphType,this.optionType); break;
           }
         }.bind(this),1);
       }
@@ -85,6 +86,16 @@ var g_APP = new Vue({
       $("#coverButtonList :nth-child("+(this.curPage+1)+")").removeClass("select");
       $("#coverButtonList :nth-child("+(page+1)+")").addClass("select");
       this.curPage = page;
+    },
+    ChangeGraphType: function(type){
+      if(this.graphType == type) return;
+      this.graphType = type;
+      this.UpdateGraph();
+    },
+    ChangeOptionType: function(type){
+      if(this.optionType == type) return;
+      this.optionType = type;
+      this.UpdateGraph();
     }
   }
 });
@@ -95,4 +106,8 @@ window.addEventListener('load', function() {
 
 window.addEventListener('mousemove', function(e) {
   g_SvgAnim.EyeRollByMouse(e);
+});
+
+window.addEventListener('resize', function(e) {
+  g_APP.UpdateGraph();
 });

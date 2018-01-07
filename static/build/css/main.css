@@ -1,4 +1,13 @@
 @charset "UTF-8";
+.half-w {
+  display: inline-block;
+  vertical-align: top;
+  margin: 10px;
+  width: calc(100% - 20px); }
+  @media only screen and (min-width: 640px) {
+    .half-w {
+      width: calc(50% - 20px); } }
+
 html, body {
   height: 100%;
   margin: 0;
@@ -125,12 +134,46 @@ html, body {
         color: white;
         padding: 20px;
         margin: 20px auto 40px auto; }
+    .death-note .page-bg .graph-title {
+      margin: 5px;
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold; }
+    .death-note .page-bg .switch-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center; }
+      .death-note .page-bg .switch-container .switch-bt {
+        background-color: #323232;
+        padding: 5px 10px;
+        color: white;
+        margin: 5px;
+        cursor: pointer; }
+        .death-note .page-bg .switch-container .switch-bt:hover {
+          color: #FFAA0D; }
+        .death-note .page-bg .switch-container .switch-bt.selected {
+          color: #FFAA0D;
+          border: 1px solid #FFAA0D; }
+    .death-note .page-bg .option-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap; }
+      .death-note .page-bg .option-container .option-bt {
+        background-color: #c8c8c8;
+        padding: 5px 10px;
+        color: #323232;
+        margin: 5px 2px;
+        cursor: pointer;
+        border-radius: 3px; }
+        .death-note .page-bg .option-container .option-bt:hover {
+          color: red; }
+        .death-note .page-bg .option-container .option-bt.selected {
+          background-color: #646464;
+          color: white; }
     .death-note .page-bg svg {
       width: 100%;
       height: 350px; }
-      @media only screen and (min-width: 360px) {
-        .death-note .page-bg svg {
-          width: 50%; } }
   .death-note .cover-bottom {
     position: absolute;
     top: 0px;

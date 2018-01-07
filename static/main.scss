@@ -2,16 +2,26 @@ $transition-time: 0.5s;
 
 //==============Responsive================
 $pc-media: 1024px;
-$mobile-media: 360px;
+$pad-media: 640px;
 @mixin pc-width() {
     @media only screen and (min-width: $pc-media) {
         @content;
     }
 }
-@mixin mobile-width() {
-    @media only screen and (min-width: $mobile-media) {
+@mixin pad-width() {
+    @media only screen and (min-width: $pad-media) {
         @content;
     }
+}
+
+.half-w{
+	display: inline-block;
+	vertical-align:top;
+	margin: 10px;
+	width: calc(100% - 20px);
+	@include pad-width(){
+		width: calc(50% - 20px);
+	}
 }
 //===================General======================
 html, body { 
@@ -164,11 +174,54 @@ html, body {
 				margin: 20px auto 40px auto;
 			}
 		}
+		.graph-title{
+			margin: 5px;
+			text-align: center;
+			font-size: 1.5em;
+			font-weight: bold;
+		}
+		.switch-container{
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			.switch-bt{
+				background-color: rgb(50,50,50);
+				padding: 5px 10px;
+				color: white;
+				margin: 5px;
+				cursor: pointer;
+				&:hover{
+					color: #FFAA0D;
+				}
+				&.selected{
+					color: #FFAA0D;
+					border: 1px solid #FFAA0D;
+				}
+			}
+		}
+		.option-container{
+			display: flex;
+			justify-content: center;
+			flex-wrap: wrap;
+			.option-bt{
+				background-color: rgb(200,200,200);
+				padding: 5px 10px;
+				color: rgb(50,50,50);
+				margin: 5px 2px;
+				cursor: pointer;
+				border-radius: 3px;
+				&:hover{
+					color: red;
+				}
+				&.selected{
+					background-color: rgb(100,100,100);
+					color: white;
+				}
+			}
+		}
 		svg{
 			width: 100%;
-			@include mobile-width{
-		        width: 50%;
-		    }
 			height: 350px;
 		}
 	}

@@ -140,8 +140,65 @@
 					</div>
 				</div>
 				<div id="pageGraph" v-if="showGraph">
-					<div class="title">生の章</div>
-					<svg id="mapGraph"></svg>
+					<div id="chapterBirth" v-if="curPage === 2">
+						<div class="title">生の章</div>
+						<div class="switch-container">
+							<div class="switch-bt"
+								v-bind:class="{selected: graphType === 1}"
+								v-on:click="ChangeGraphType(1);">
+								人口分佈
+							</div>
+							<div class="switch-bt"
+								v-bind:class="{selected: graphType === 2}"
+								v-on:click="ChangeGraphType(2);">
+								婚姻狀況
+							</div>
+							<div class="switch-bt"
+								v-bind:class="{selected: graphType === 3}"
+								v-on:click="ChangeGraphType(3);">
+								出生統計
+							</div>
+							<div class="switch-bt"
+								v-bind:class="{selected: graphType === 4}"
+								v-on:click="ChangeGraphType(4);">
+								人口推估
+							</div>
+						</div>
+						<div v-if="graphType === 1">
+							<div class="half-w">
+								<div class="option-container">
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 1}"
+										v-on:click="ChangeOptionType(1);">
+										地圖
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 2}"
+										v-on:click="ChangeOptionType(2);">
+										排序
+									</div>
+								</div>
+								<svg id="countyPop"></svg>
+								<div class="center" id="countyInfo"></div>
+							</div><!--
+							--><div class="half-w">
+								<div class="graph-title">人口金字塔</div>
+								<svg id="popPyramid"></svg>
+							</div>
+						</div>
+					</div>
+					<div id="chapterAging" v-if="curPage === 3">
+						<div class="title">老の章</div>
+						<div class="content"></div>
+					</div>
+					<div id="chapterDisease" v-if="curPage === 4">
+						<div class="title">病の章</div>
+						<div class="content"></div>
+					</div>
+					<div id="chapterDeath" v-if="curPage === 5">
+						<div class="title">死の章</div>
+						<div class="content"></div>
+					</div>
 				</div>
 				<div id="pageAbout" v-if="showAbout">
 					<div class="title">關於筆記本</div>
@@ -151,6 +208,8 @@
 			</div>
 		</div>
 
+		<script src="/static/util.js?v=<%=version%>"></script>
+		<script src="/static/svgGraph.js?v=<%=version%>"></script>
 		<script src="/static/svgAnim.js?v=<%=version%>"></script>
 		<script src="/static/mapTW.js?v=<%=version%>"></script>
 		<script src="/static/chapterBirth.js?v=<%=version%>"></script>

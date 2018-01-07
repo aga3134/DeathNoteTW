@@ -12,7 +12,11 @@ module.exports = function(app){
 	//==========================生之章==========================
 	app.get("/populationByAge", function(req, res){
 		var county = req.query.county;
-		DB.PopulationByAge.findAll({where: {county:county}}).then(function(results){
+		var year = req.query.year;
+		var query = {};
+		if(county) query.county = county;
+		if(year) query.year = year;
+		DB.PopulationByAge.findAll({where: query}).then(function(results){
 			res.send(JSON.stringify(results));
 		});
 	});
