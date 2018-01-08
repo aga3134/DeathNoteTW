@@ -5,18 +5,16 @@ var g_APP = new Vue({
   	curPage: 0,
     graphType: 1,
     optionType: 1,
-    showRule: false,
+    year: 2010,
+    playTimer: null,
     showGraph: false,
-    showAbout: false
   },
   created: function () {
   	
   },
   methods: {
     UpdateGraph: function(){
-      this.showRule = (this.curPage==1);
       this.showGraph = (this.curPage>1&&this.curPage<6);
-      this.showAbout = (this.curPage==6);
       if(this.showGraph){
         setTimeout(function(){  //須先等dom元件更新後再處理畫面
           switch(this.curPage){
@@ -96,7 +94,48 @@ var g_APP = new Vue({
       if(this.optionType == type) return;
       this.optionType = type;
       this.UpdateGraph();
-    }
+    },
+    SubYear: function(selector){
+      var slider = $(selector).find("input[type='range']");
+      minYear = slider.attr("min");
+      var update = false;
+      if(this.year > minYear){
+        this.year--;
+        this.UpdateGraph();
+        update = true;
+      }
+      return update;
+    },
+    ToggleYearPlay: function(selector){
+      var playBt = $(selector).find(".play");
+      if(this.playTimer == null){
+        playBt.attr("src","/static/Image/icon-pause.png");
+        this.playTimer = setInterval(function(){
+          var update = this.AddYear(selector);
+          if(!update){
+            clearInterval(this.playTimer);
+            this.playTimer = null;
+            playBt.attr("src","/static/Image/icon-play.png");
+          }
+        }.bind(this),300);
+      }
+      else{
+        clearInterval(this.playTimer);
+        this.playTimer = null;
+        playBt.attr("src","/static/Image/icon-play.png");
+      }
+    },
+    AddYear: function(selector){
+      var slider = $(selector).find("input[type='range']");
+      maxYear = slider.attr("max");
+      var update = false;
+      if(this.year < maxYear){
+        this.year++;
+        this.UpdateGraph();
+        update = true;
+      }
+      return update;
+    },
   }
 });
 

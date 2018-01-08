@@ -57,7 +57,7 @@
 			<div class="page-move">
 			</div>
 			<div class="page-bg">
-				<div id="pageRule" v-if="showRule">
+				<div id="pageRule" v-if="curPage === 1">
 					<div class="title">規則</div>
 					<div class="content">
 						<ol>
@@ -179,11 +179,25 @@
 									</div>
 								</div>
 								<svg id="countyPop"></svg>
-								<div class="center" id="countyInfo"></div>
+								<div class="center" id="countyInfo">人口數</div>
 							</div><!--
 							--><div class="half-w">
 								<div class="graph-title">人口金字塔</div>
 								<svg id="popPyramid"></svg>
+							</div>
+							<div class="time-bar" id="popYear">
+								<div class="label">{{year}} 年</div>
+								<input v-model="year"
+									v-on:change="UpdateGraph();"
+									type="range" min="1974" max="2016" value="1974" class="slider">
+								<div>
+									<img class="control-icon prev" src="/static/Image/icon-prev.png"
+										v-on:click="SubYear('#popYear');">
+									<img class="control-icon play" src="/static/Image/icon-play.png"
+										v-on:click="ToggleYearPlay('#popYear');">
+									<img class="control-icon next" src="/static/Image/icon-next.png"
+										v-on:click="AddYear('#popYear');">
+								</div>
 							</div>
 						</div>
 					</div>
@@ -200,7 +214,7 @@
 						<div class="content"></div>
 					</div>
 				</div>
-				<div id="pageAbout" v-if="showAbout">
+				<div id="pageAbout" v-if="curPage === 6">
 					<div class="title">關於筆記本</div>
 				</div>
 			</div>

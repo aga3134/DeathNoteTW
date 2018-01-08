@@ -125,8 +125,10 @@ function MapTW(){
 		//console.log(keyData);
 		for(var key in adminRegion){
 			var county = adminRegion[key];
+			if(key == "桃園市" && year <= 2013){
+				key = "桃園縣";
+			}
 			var countyData = keyData[key][0].count+keyData[key][1].count;
-			//console.log(keyData[key]);
 			var g = tw.append("g")
 				.attr("data-select",key)
 				.attr("data-value",countyData)
@@ -164,7 +166,7 @@ function MapTW(){
 			});
 		tw.append("g")
 			.attr("class","selectOutline")
-			.attr("stroke","red")
+			.attr("stroke","#FF3333")
 			.attr("fill","none");
 	};
 	var OnHover = function(callback){

@@ -12,22 +12,73 @@ var g_SvgGraph = function(){
 		//console.log(data["男"]);
 		maleGroup.selectAll("rect").data(data["男"])
 			.enter().append("rect")
+			.attr("data-info",function(d){
+				var num = g_Util.NumberWithCommas(d.count);
+				return d.minAge+" ~ "+d.maxAge+"歲 男: "+num+" 人";
+			})
 			.attr("width", function(d){return scaleW(d.count);})
 			.attr("height", function(d){return scaleH(d.maxAge-d.minAge+1);})
 			.attr("stroke","#ffffff")
 			.attr("fill","#A1AFC9")
 			.attr("x", function(d){return w*0.5-scaleW(d.count);})
-			.attr("y", function(d){return h-scaleH(d.maxAge+1);});
+			.attr("y", function(d){return h-scaleH(d.maxAge+1);})
+			.on("mouseover",function(){
+				var cur = d3.select(this);
+				hoverRect
+					.attr("x",cur.attr("x"))
+					.attr("y",cur.attr("y"))
+					.attr("width",cur.attr("width"))
+					.attr("height",cur.attr("height"));
+				infoText.text(cur.attr("data-info"));
+			})
+			.on("mouseout",function(){
+				hoverRect
+					.attr("x",0)
+					.attr("y",0)
+					.attr("width",0)
+					.attr("height",0);
+				infoText.text("");
+			});
 
 		var femaleGroup = svg.append("g");
 		femaleGroup.selectAll("rect").data(data["女"])
 			.enter().append("rect")
+			.attr("data-info",function(d){
+				var num = g_Util.NumberWithCommas(d.count);
+				return d.minAge+" ~ "+d.maxAge+"歲 女: "+num+" 人";
+			})
 			.attr("width", function(d){return scaleW(d.count);})
 			.attr("height", function(d){return scaleH(d.maxAge-d.minAge+1);})
 			.attr("stroke","#ffffff")
 			.attr("fill","#F47983")
 			.attr("x", function(d){return w*0.5;})
-			.attr("y", function(d){return h-scaleH(d.maxAge+1);});
+			.attr("y", function(d){return h-scaleH(d.maxAge+1);})
+			.on("mouseover",function(){
+				var cur = d3.select(this);
+				hoverRect
+					.attr("x",cur.attr("x"))
+					.attr("y",cur.attr("y"))
+					.attr("width",cur.attr("width"))
+					.attr("height",cur.attr("height"));
+				infoText.text(cur.attr("data-info"));
+			})
+			.on("mouseout",function(){
+				hoverRect
+					.attr("x",0)
+					.attr("y",0)
+					.attr("width",0)
+					.attr("height",0);
+				infoText.text("");
+			});
+
+		var hoverRect = svg.append("rect").attr("class","hoverRect")
+			.attr("stroke","#FFAA0D")
+			.attr("stroke-width",2)
+			.attr("fill","none");
+		var infoText = svg.append("text").attr("class","infoText")
+			.attr("x",10)
+			.attr("y",10)
+			.attr("alignment-baseline","hanging");
 	}
 
 	return {

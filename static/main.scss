@@ -249,12 +249,55 @@ html, body {
 			opacity: 0;
 			-webkit-transition: opacity $transition-time ease;
        		transition: opacity $transition-time ease;
+       		border-radius: 50%;
        		&:hover{
        			border: 1px solid yellow;
        		}
        		&.select{
        			border: 1px solid red;
        		}
+		}
+	}
+	.time-bar{
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		align-items: center;
+		.label{
+			font-weight: bold;
+		}
+		.control-icon{
+			width: 30px;
+			height: 30px;
+			cursor: pointer;
+		}
+		.slider{
+			-webkit-appearance: none;
+		    appearance: none;
+		    margin: 10px;
+		    height: 10px;
+		    background: #999999;
+		    outline: none;
+		    opacity: 0.7;
+		    -webkit-transition: .2s;
+		    transition: opacity .2s;
+		    &:hover{
+		    	opacity: 1;
+		    }
+		    &::-webkit-slider-thumb {
+			    -webkit-appearance: none;
+			    appearance: none;
+			    width: 10px;
+			    height: 20px;
+			    background: #333333;
+			    cursor: pointer;
+			}
+			&::-moz-range-thumb {
+			    width: 10px;
+			    height: 20px;
+			    background: #333333;
+			    cursor: pointer;
+			}
 		}
 	}
 }

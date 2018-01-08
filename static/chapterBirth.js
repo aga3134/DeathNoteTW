@@ -1,5 +1,6 @@
 
 var g_ChapterBirth = function(){
+	var popMapData;
 	var pyramidData = {};
 	var selectCounty = "總計";
 	var pyramidScale = {};
@@ -29,16 +30,11 @@ var g_ChapterBirth = function(){
 	};
 
 	var DrawPopMap = function(){
-	  	var year = 1974;
-	  	$.get("/populationByAge?sum=1", function(data){
-	  		var countySum = d3.nest()
-		  		.key(function(d) {return d.year;})
-				.key(function(d) {return d.county;})
-				.map(JSON.parse(data));
-			//console.log(countySum);
-			var map = new MapTW();
+	  	var year = $("#popYear").find("input[type='range']").val();
+	  	function DrawMap(data){
+	  		var map = new MapTW();
 			var color = d3.scale.log().domain([1e6,1e8]).range(["#CCCCCC",'#333333']);
-			map.SetData(countySum[year],color);
+			map.SetData(popMapData[year],color);
 		  	map.OnHover(function(){
 		  		if(map.GetHoverKey() != ""){
 		  			var num = g_Util.NumberWithCommas(map.GetHoverValue());
@@ -49,7 +45,7 @@ var g_ChapterBirth = function(){
 		  			$("#countyInfo").text(map.GetSelectKey()+": "+num+"人");
 		  		}
 		  		else{
-		  			$("#countyInfo").text("");
+		  			$("#countyInfo").text("人口數");
 		  		}
 		  	});
 		  	map.OnHoverOut(function(){
@@ -58,7 +54,7 @@ var g_ChapterBirth = function(){
 		  			$("#countyInfo").text(map.GetSelectKey()+": "+num+"人");
 		  		}
 		  		else{
-		  			$("#countyInfo").text("");
+		  			$("#countyInfo").text("人口數");
 		  		}
 		  	});
 		  	map.OnClick(function(){
@@ -67,7 +63,22 @@ var g_ChapterBirth = function(){
 		  		DrawPopPyramid();
 		  	});
 		  	map.DrawMapTW("#countyPop",year);
-	  	});
+	  	}
+
+	  	if(popMapData){
+	  		DrawMap(popMapData);
+	  	}
+	  	else{
+	  		$.get("/populationByAge?sum=1", function(data){
+		  		popMapData = d3.nest()
+			  		.key(function(d) {return d.year;})
+					.key(function(d) {return d.county;})
+					.map(JSON.parse(data));
+				//console.log(popMapData);
+				DrawMap(popMapData);
+		  	});
+	  	}
+	  	
 	};
 
 	var DrawPopSort = function(){
@@ -76,7 +87,7 @@ var g_ChapterBirth = function(){
 	};
 
 	var DrawPopPyramid = function(){
-		var year = 1974;
+		var year = $("#popYear").find("input[type='range']").val();
 		if(pyramidData[selectCounty]){
 			g_SvgGraph.PopulationPyramid("#popPyramid",pyramidData[selectCounty][year],pyramidScale[selectCounty]);
 		}
