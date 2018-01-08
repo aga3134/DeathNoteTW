@@ -129,6 +129,7 @@ class DataBirth:
                     sexRow = row+sexIndex
                     #print(sex)
     
+                    #1~4歲分別計
                     countArr = []
                     countArr.append(sheet['D'+str(sexRow)].value)
                     countArr.append(sheet['F'+str(sexRow)].value)
@@ -136,15 +137,26 @@ class DataBirth:
                     countArr.append(sheet['H'+str(sexRow)].value)
                     countArr.append(sheet['I'+str(sexRow)].value)
                     
-                    d = {"year":year, "county":county, "sex": sex}
+                    d = {"year":year+1911, "county":county, "sex": sex}
                     for i in range(len(countArr)):
                         if(countArr[i] is None):
                             continue
                         d["minAge"] = d["maxAge"] = i
                         d["count"] = countArr[i]
                         #print(d)
+                        util.DataToDB(self.connection,"PopulationByAge",d) 
+                    #總計
+                    d["minAge"] = 0
+                    d["maxAge"] = 100
+                    d["count"] = sheet['C'+str(sexRow)].value
+                    util.DataToDB(self.connection,"PopulationByAge",d)
+                    #0~4歲總計
+                    if(countArr[0] is not None):
+                        d["minAge"] = 0
+                        d["maxAge"] = 4
+                        d["count"] = countArr[0]+sheet['E'+str(sexRow)].value
                         util.DataToDB(self.connection,"PopulationByAge",d)
-                    
+                    #5歲年齡組
                     for col in range(1,20,1):
                         age = re.findall(r"\d+",sheet.cell(row=3, column=9+col).value)
                         v = sheet.cell(row=sexRow, column=9+col).value
@@ -181,7 +193,7 @@ class DataBirth:
             
             for status in statusArr:
                 for sex in sexArr:
-                    d = {"year":year, "status":status, "sex": sex}
+                    d = {"year":year+1911, "status":status, "sex": sex}
                     d["minAge"] = 0
                     d["maxAge"] = 14
                     col = statusArr[status]+sexArr[sex]
@@ -268,7 +280,7 @@ class DataBirth:
                     continue
                 #print(county)
                 
-                d = {"year":year, "county":county}
+                d = {"year":year+1911, "county":county}
                 d["minMonAge"] = 0
                 d["maxMonAge"] = 20
                 v = sheet.cell(row=row, column=5).value

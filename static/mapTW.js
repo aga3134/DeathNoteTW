@@ -122,9 +122,11 @@ function MapTW(){
 		var tw = svg.append("g").attr("class","root")
 			.attr("transform","translate("+tx+","+ty+") "+"scale("+scale+")");
 		var adminRegion = year<2010?path["1982"]:path["2010"];
+		//console.log(keyData);
 		for(var key in adminRegion){
 			var county = adminRegion[key];
-			var countyData = keyData[key];
+			var countyData = keyData[key][0].count+keyData[key][1].count;
+			//console.log(keyData[key]);
 			var g = tw.append("g")
 				.attr("data-select",key)
 				.attr("data-value",countyData)

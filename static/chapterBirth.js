@@ -30,18 +30,15 @@ var g_ChapterBirth = function(){
 
 	var DrawPopMap = function(){
 	  	var year = 1974;
-	  	$.get("/populationByAge?year="+(year-1911), function(data){
+	  	$.get("/populationByAge?sum=1", function(data){
 	  		var countySum = d3.nest()
+		  		.key(function(d) {return d.year;})
 				.key(function(d) {return d.county;})
-				.rollup(function(county){
-				    return d3.sum(county, function(d){
-				        return d.count;
-				    });
-				})
-				.map(data);
+				.map(JSON.parse(data));
+			//console.log(countySum);
 			var map = new MapTW();
 			var color = d3.scale.log().domain([1e6,1e8]).range(["#CCCCCC",'#333333']);
-			map.SetData(countySum,color);
+			map.SetData(countySum[year],color);
 		  	map.OnHover(function(){
 		  		if(map.GetHoverKey() != ""){
 		  			var num = g_Util.NumberWithCommas(map.GetHoverValue());
@@ -81,23 +78,28 @@ var g_ChapterBirth = function(){
 	var DrawPopPyramid = function(){
 		var year = 1974;
 		if(pyramidData[selectCounty]){
-			g_SvgGraph.PopulationPyramid("#popPyramid",pyramidData[selectCounty][year-1911],pyramidScale[selectCounty]);
+			g_SvgGraph.PopulationPyramid("#popPyramid",pyramidData[selectCounty][year],pyramidScale[selectCounty]);
 		}
 		else{
 			$.get("/populationByAge?county="+selectCounty, function(data){
+				var json = JSON.parse(data).filter(function(d){
+					return d.maxAge-d.minAge==4;	//只取5歲區間
+				});
 				var nestGroup = d3.nest()
 					.key(function(d) {return d.year;})
 					.key(function(d) {return d.sex;})
-					.map(data);
+					.map(json);
+				//console.log(nestGroup);
 				var maxV = 0;
-				for(var i=0;i<data.length;i++){
-					var v = data[i].count;
+				for(var i=0;i<json.length;i++){
+					var v = json[i].count;
 					if(v > maxV) maxV = v;
 				}
+
 				pyramidScale[selectCounty] = Math.pow(2,Math.ceil(Math.log2(maxV)));
 
 				pyramidData[selectCounty] = nestGroup;
-		  		g_SvgGraph.PopulationPyramid("#popPyramid",nestGroup[year-1911],pyramidScale[selectCounty]);
+		  		g_SvgGraph.PopulationPyramid("#popPyramid",nestGroup[year],pyramidScale[selectCounty]);
 			});
 		}
 	};

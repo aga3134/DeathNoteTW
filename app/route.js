@@ -13,9 +13,14 @@ module.exports = function(app){
 	app.get("/populationByAge", function(req, res){
 		var county = req.query.county;
 		var year = req.query.year;
+		var sum = req.query.sum;
 		var query = {};
 		if(county) query.county = county;
 		if(year) query.year = year;
+		if(sum == 1){
+			query.minAge = 0;
+			query.maxAge = 100;
+		}
 		DB.PopulationByAge.findAll({where: query}).then(function(results){
 			res.send(JSON.stringify(results));
 		});

@@ -9,6 +9,7 @@ var g_SvgGraph = function(){
 		var scaleH = d3.scale.linear().domain([0,105]).range([0,h]);
 
 		var maleGroup = svg.append("g");
+		//console.log(data["男"]);
 		maleGroup.selectAll("rect").data(data["男"])
 			.enter().append("rect")
 			.attr("width", function(d){return scaleW(d.count);})
