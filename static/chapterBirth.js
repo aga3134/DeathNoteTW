@@ -4,20 +4,14 @@ var g_ChapterBirth = function(){
 	var pyramidData = {};
 	var selectCounty = "總計";
 	var pyramidScale = {};
+	var map = new MapTW();
+	var minBound = 0, maxBound = 0;
 	var loadGraph = function(graphType,optionType){
 	  	switch(graphType){
 			case 1:	//人口分佈
 	  		{
-				switch(optionType){
-					case 1:	//地圖
-						DrawPopMap();
-						DrawPopPyramid();
-						break;
-					case 2:	//排序
-						DrawPopSort();
-						DrawPopPyramid();
-						break;
-				}
+				DrawPopMap(optionType);
+				DrawPopPyramid();
 	  			break;
 	  		}
 	  		case 2:	//婚姻狀況
@@ -29,11 +23,10 @@ var g_ChapterBirth = function(){
 	  	}
 	};
 
-	var DrawPopMap = function(){
+	var DrawPopMap = function(type){
 	  	var year = $("#popYear").find("input[type='range']").val();
 	  	function DrawMap(data){
-	  		var map = new MapTW();
-			var color = d3.scale.log().domain([1e6,1e8]).range(["#CCCCCC",'#333333']);
+			var color = d3.scale.log().domain([minBound,maxBound]).range(["#FFFFFF",'#999999']);
 			map.SetData(popMapData[year],color);
 		  	map.OnHover(function(){
 		  		if(map.GetHoverKey() != ""){
@@ -62,7 +55,15 @@ var g_ChapterBirth = function(){
 		  		$("#chapterBirth").find(".graph-title").text(selectCounty);
 		  		DrawPopPyramid();
 		  	});
-		  	map.DrawMapTW("#countyPop",year);
+		  	switch(type){
+		  		case 1: map.DrawMapTW("#countyPop",year); break;
+		  		case 2: map.DrawSortBar("#countyPop",maxBound); break;
+		  	}
+		  	
+		  	if(map.GetSelectKey != ""){
+		  		var num = g_Util.NumberWithCommas(map.GetSelectValue());
+		  		$("#countyInfo").text(map.GetSelectKey()+": "+num+"人");
+		  	}
 	  	}
 
 	  	if(popMapData){
@@ -70,10 +71,22 @@ var g_ChapterBirth = function(){
 	  	}
 	  	else{
 	  		$.get("/populationByAge?sum=1", function(data){
+	  			var minV = 1e10,maxV = 0;
+		  		var json = JSON.parse(data);
+				for(var i=0;i<json.length;i++){
+					if(/[總計省地區]/.test(json[i].county)) continue;
+					var v = json[i].count;
+					if(v < 1e5) continue;
+					if(v > maxV) maxV = v;
+					if(v < minV) minV = v;
+				}
+				minBound = Math.pow(2,Math.ceil(Math.log2(minV)));
+				maxBound = Math.pow(2,Math.ceil(Math.log2(maxV)+1));	//男+女
+
 		  		popMapData = d3.nest()
 			  		.key(function(d) {return d.year;})
 					.key(function(d) {return d.county;})
-					.map(JSON.parse(data));
+					.map(json);
 				//console.log(popMapData);
 				DrawMap(popMapData);
 		  	});
@@ -81,15 +94,14 @@ var g_ChapterBirth = function(){
 	  	
 	};
 
-	var DrawPopSort = function(){
-	  	var svg = d3.select("#countyPop");
-		svg.selectAll("*").remove();
-	};
-
 	var DrawPopPyramid = function(){
 		var year = $("#popYear").find("input[type='range']").val();
 		if(pyramidData[selectCounty]){
-			g_SvgGraph.PopulationPyramid("#popPyramid",pyramidData[selectCounty][year],pyramidScale[selectCounty]);
+			var param = {};
+			param.selector = "#popPyramid";
+			param.data = pyramidData[selectCounty][year];
+			param.pyramidScale = pyramidScale[selectCounty];
+			g_SvgGraph.PopulationPyramid(param);
 		}
 		else{
 			$.get("/populationByAge?county="+selectCounty, function(data){
@@ -108,9 +120,13 @@ var g_ChapterBirth = function(){
 				}
 
 				pyramidScale[selectCounty] = Math.pow(2,Math.ceil(Math.log2(maxV)));
-
 				pyramidData[selectCounty] = nestGroup;
-		  		g_SvgGraph.PopulationPyramid("#popPyramid",nestGroup[year],pyramidScale[selectCounty]);
+
+				var param = {};
+				param.selector = "#popPyramid";
+				param.data = nestGroup[year];
+				param.pyramidScale = pyramidScale[selectCounty];
+		  		g_SvgGraph.PopulationPyramid(param);
 			});
 		}
 	};

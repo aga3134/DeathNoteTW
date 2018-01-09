@@ -2,11 +2,12 @@
 .half-w {
   display: inline-block;
   vertical-align: top;
-  margin: 10px;
-  width: calc(100% - 20px); }
+  margin: 0px;
+  width: 100%; }
   @media only screen and (min-width: 640px) {
     .half-w {
-      width: calc(50% - 20px); } }
+      width: calc(50% - 20px);
+      margin: 10px; } }
 
 html, body {
   height: 100%;

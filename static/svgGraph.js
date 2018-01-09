@@ -1,20 +1,22 @@
 
 var g_SvgGraph = function(){
-	var PopulationPyramid = function(selector,data,pyramidScale){
-		var graph = $(selector);
+	var PopulationPyramid = function(param){
+		if(param.data == null) return;
+
+		var graph = $(param.selector);
 		var w = graph.width(), h = graph.height();
-		var svg = d3.select(selector);
+		var svg = d3.select(param.selector);
 		svg.selectAll("*").remove();
-		var scaleW = d3.scale.linear().domain([0,pyramidScale]).range([0,w*0.5]);
+		var scaleW = d3.scale.linear().domain([0,param.pyramidScale]).range([0,w*0.5]);
 		var scaleH = d3.scale.linear().domain([0,105]).range([0,h]);
 
+		//console.log(param.data["男"]);
 		var maleGroup = svg.append("g");
-		//console.log(data["男"]);
-		maleGroup.selectAll("rect").data(data["男"])
+		maleGroup.selectAll("rect").data(param.data["男"])
 			.enter().append("rect")
 			.attr("data-info",function(d){
 				var num = g_Util.NumberWithCommas(d.count);
-				return d.minAge+" ~ "+d.maxAge+"歲 男: "+num+" 人";
+				return d.minAge+"~"+d.maxAge+"歲 男: "+num+" 人";
 			})
 			.attr("width", function(d){return scaleW(d.count);})
 			.attr("height", function(d){return scaleH(d.maxAge-d.minAge+1);})
@@ -30,22 +32,14 @@ var g_SvgGraph = function(){
 					.attr("width",cur.attr("width"))
 					.attr("height",cur.attr("height"));
 				infoText.text(cur.attr("data-info"));
-			})
-			.on("mouseout",function(){
-				hoverRect
-					.attr("x",0)
-					.attr("y",0)
-					.attr("width",0)
-					.attr("height",0);
-				infoText.text("");
 			});
 
 		var femaleGroup = svg.append("g");
-		femaleGroup.selectAll("rect").data(data["女"])
+		femaleGroup.selectAll("rect").data(param.data["女"])
 			.enter().append("rect")
 			.attr("data-info",function(d){
 				var num = g_Util.NumberWithCommas(d.count);
-				return d.minAge+" ~ "+d.maxAge+"歲 女: "+num+" 人";
+				return d.minAge+"~"+d.maxAge+"歲 女: "+num+" 人";
 			})
 			.attr("width", function(d){return scaleW(d.count);})
 			.attr("height", function(d){return scaleH(d.maxAge-d.minAge+1);})
@@ -61,14 +55,6 @@ var g_SvgGraph = function(){
 					.attr("width",cur.attr("width"))
 					.attr("height",cur.attr("height"));
 				infoText.text(cur.attr("data-info"));
-			})
-			.on("mouseout",function(){
-				hoverRect
-					.attr("x",0)
-					.attr("y",0)
-					.attr("width",0)
-					.attr("height",0);
-				infoText.text("");
 			});
 
 		var hoverRect = svg.append("rect").attr("class","hoverRect")
@@ -76,8 +62,8 @@ var g_SvgGraph = function(){
 			.attr("stroke-width",2)
 			.attr("fill","none");
 		var infoText = svg.append("text").attr("class","infoText")
-			.attr("x",10)
-			.attr("y",10)
+			.attr("x",0)
+			.attr("y",0)
 			.attr("alignment-baseline","hanging");
 	}
 

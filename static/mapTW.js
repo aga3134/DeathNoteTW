@@ -99,7 +99,7 @@ function MapTW(){
 	var clickCallback;
 	var hoverKey = "";
 	var hoverValue = "";
-	var selectKey = "";
+	var selectKey = "總計";
 	var selectValue = "";
 	var keyData;
 	var fillColor;
@@ -168,7 +168,135 @@ function MapTW(){
 			.attr("class","selectOutline")
 			.attr("stroke","#FF3333")
 			.attr("fill","none");
+
+		var selectItem = svg.select("g[data-select='"+selectKey+"']")[0];
+		if(selectItem[0] != null){
+			ClickFn(selectItem[0]);
+		}
 	};
+
+	var DrawSortBar = function(selector,maxBound){
+		function HoverIn(item){
+			var cur = $(item);
+			var county = cur.attr("data-select");
+			var rect = svg.select("rect[data-select='"+county+"']");
+			var text = svg.select("text[data-select='"+county+"']");
+			box.find(".hoverOutline")
+				.attr("data-select",county)
+				.attr("x",rect.attr("x"))
+				.attr("y",rect.attr("y"))
+				.attr("width",rect.attr("width"))
+				.attr("height",rect.attr("height"));
+			if(county != selectKey){
+				text.attr("fill","#FFAA0D");
+			}
+			hoverKey = cur.attr("data-select");
+			hoverValue = cur.attr("data-value");
+			if(hoverCallback) hoverCallback();
+		}
+		function HoverOut(item){
+			var county = $(item).attr("data-select");
+			if(county != selectKey){
+				svg.select("text[data-select='"+county+"']").attr("fill","black");
+			}
+			box.find(".hoverOutline")
+				.attr("x",0)
+				.attr("y",0)
+				.attr("width",0)
+				.attr("height",0);
+			hoverValue = "";
+			hoverKey = "";
+			if(hoverOutCallback) hoverOutCallback();
+		}
+		function ClickFn(item){
+			var cur = $(item);
+			var county = cur.attr("data-select");
+			var rect = svg.select("rect[data-select='"+county+"']");
+			box.find(".selectOutline")
+				.attr("x",rect.attr("x"))
+				.attr("y",rect.attr("y"))
+				.attr("width",rect.attr("width"))
+				.attr("height",rect.attr("height"));
+			svg.select("text[data-select='"+selectKey+"']").attr("fill","black");
+			svg.select("text[data-select='"+county+"']").attr("fill","#FF3333");
+			selectKey = county;
+			selectValue = cur.attr("data-value");
+			if(clickCallback) clickCallback();
+		}
+
+		var box = $(selector);
+		var w = box.width(), h = box.height();
+
+		var svg = d3.select(selector);
+		svg.selectAll("*").remove();
+
+		var dataArr = [];
+		for(key in keyData){
+			var d = keyData[key];
+			if(/[省地區]/.test(d[0].county)) continue;
+			var item = {};
+			item[d[0].sex] = d[0];
+			item[d[1].sex] = d[1];
+			item.total = d[0].count+d[1].count;
+			dataArr.push(item);
+		}
+		dataArr = dataArr.sort(function(a,b){
+			return b.total-a.total;
+		});
+		
+		var sortRect = svg.append("g").attr("class","sortRect");
+		var padL = 40,padR = 20, padT = 10, padB = 10;
+		var hStep = (h-padT-padB)/(dataArr.length);
+		sortRect.selectAll("rect").data(dataArr)
+			.enter().append("rect")
+			.attr("data-select",function(d){return d["女"].county;})
+			.attr("data-value",function(d){return d.total})
+			.attr("x",padL)
+			.attr("y",function(d,i){return i*hStep+padT;})
+			.attr("width",function(d){return (w-padL-padR)*d.total/maxBound})
+			.attr("height",hStep)
+			.attr("stroke","black")
+			.attr("stroke-width",0.5)
+			.attr("fill",function(d){return fillColor(d.total);})
+			.on("mouseover",function(){HoverIn(this);})
+			.on("mouseout",function(){HoverOut(this);})
+			.on("click",function(){ClickFn(this);});
+
+		var sortLabel = svg.append("g").attr("class","sortLabel");
+		sortLabel.selectAll("text").data(dataArr)
+			.enter().append("text")
+			.attr("style","cursor: pointer;")
+			.attr("data-select",function(d){return d["女"].county;})
+			.attr("data-value",function(d){return d.total})
+			.attr("x",0)
+			.attr("y",function(d,i){return i*hStep+3+padT;})
+			.attr("alignment-baseline","hanging")
+			.attr("font-size","12px")
+			.text(function(d){return d["女"].county;})
+			.on("mouseover",function(){HoverIn(this);})
+			.on("mouseout",function(){HoverOut(this);})
+			.on("click",function(){ClickFn(this);});
+
+		svg.append("rect")
+			.attr("class","hoverOutline")
+			.attr("stroke","#FFAA0D")
+			.attr("stroke-width",2)
+			.attr("fill","none")
+			.on("click",function(){
+				ClickFn(this);
+			});
+		svg.append("rect")
+			.attr("class","selectOutline")
+			.attr("stroke","#FF3333")
+			.attr("stroke-width",2)
+			.attr("fill","none");
+
+		var selectItem = svg.select("rect[data-select='"+selectKey+"']")[0];
+		if(selectItem[0] != null){
+			ClickFn(selectItem[0]);
+		}
+	};
+
 	var OnHover = function(callback){
 		hoverCallback = callback;
 	};
@@ -192,6 +320,7 @@ function MapTW(){
 
 	//build object methods
 	this.DrawMapTW = DrawMapTW;
+	this.DrawSortBar = DrawSortBar;
 	this.OnHover = OnHover;
 	this.OnHoverOut = OnHoverOut;
 	this.OnClick = OnClick;

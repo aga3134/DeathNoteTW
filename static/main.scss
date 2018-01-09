@@ -17,10 +17,11 @@ $pad-media: 640px;
 .half-w{
 	display: inline-block;
 	vertical-align:top;
-	margin: 10px;
-	width: calc(100% - 20px);
+	margin: 0px;
+	width: 100%;
 	@include pad-width(){
 		width: calc(50% - 20px);
+		margin: 10px;
 	}
 }
 //===================General======================
