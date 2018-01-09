@@ -17,7 +17,7 @@ $pad-media: 640px;
 .half-w{
 	display: inline-block;
 	vertical-align:top;
-	margin: 0px;
+	margin: 10px 0px;
 	width: 100%;
 	@include pad-width(){
 		width: calc(50% - 20px);
@@ -131,7 +131,7 @@ html, body {
 		width: calc(100% - 50px);
 		height: 100%;
 		overflow: auto;
-		padding: 10px;
+		padding: 10px 10px 40px 10px;
 		background-color: rgb(230,230,230);
 		box-shadow: -5px 5px 5px rgb(100,100,100);
 		color: rgb(50,50,50);
@@ -252,12 +252,19 @@ html, body {
        		transition: opacity $transition-time ease;
        		border-radius: 50%;
        		&:hover{
-       			border: 1px solid yellow;
+       			border: 1px solid #FFAA0D;
        		}
        		&.select{
-       			border: 1px solid red;
+       			border: 1px solid #FF3333;
        		}
 		}
+	}
+	.fix-bottom{
+		position: fixed;
+		bottom: 0px;
+		left: 0px;
+		width: 100%;
+		background-color: rgba(255,255,255,0.5);
 	}
 	.time-bar{
 		display: flex;

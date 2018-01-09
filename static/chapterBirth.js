@@ -24,7 +24,7 @@ var g_ChapterBirth = function(){
 	};
 
 	var DrawPopMap = function(type){
-	  	var year = $("#popYear").find("input[type='range']").val();
+	  	var year = $("#timeRange").val();
 	  	function DrawMap(data){
 			var color = d3.scale.log().domain([minBound,maxBound]).range(["#FFFFFF",'#999999']);
 			map.SetData(popMapData[year],color);
@@ -95,13 +95,19 @@ var g_ChapterBirth = function(){
 	};
 
 	var DrawPopPyramid = function(){
-		var year = $("#popYear").find("input[type='range']").val();
-		if(pyramidData[selectCounty]){
+		var year = $("#timeRange").val();
+
+		function DrawPyramid(){
 			var param = {};
 			param.selector = "#popPyramid";
+			param.textInfo = "#pyramidInfo";
 			param.data = pyramidData[selectCounty][year];
 			param.pyramidScale = pyramidScale[selectCounty];
 			g_SvgGraph.PopulationPyramid(param);
+		}
+
+		if(pyramidData[selectCounty]){
+			DrawPyramid();
 		}
 		else{
 			$.get("/populationByAge?county="+selectCounty, function(data){
@@ -122,11 +128,7 @@ var g_ChapterBirth = function(){
 				pyramidScale[selectCounty] = Math.pow(2,Math.ceil(Math.log2(maxV)));
 				pyramidData[selectCounty] = nestGroup;
 
-				var param = {};
-				param.selector = "#popPyramid";
-				param.data = nestGroup[year];
-				param.pyramidScale = pyramidScale[selectCounty];
-		  		g_SvgGraph.PopulationPyramid(param);
+				DrawPyramid();
 			});
 		}
 	};

@@ -104,6 +104,8 @@ function MapTW(){
 	var keyData;
 	var fillColor;
 	var DrawMapTW = function(selector,year){
+		if(!keyData) return;
+
 		function ClickFn(item){
 			var cur = $(item);
 			box.find(".selectOutline").html($(item).html());
@@ -176,6 +178,8 @@ function MapTW(){
 	};
 
 	var DrawSortBar = function(selector,maxBound){
+		if(!keyData) return;
+
 		function HoverIn(item){
 			var cur = $(item);
 			var county = cur.attr("data-select");
@@ -183,6 +187,7 @@ function MapTW(){
 			var text = svg.select("text[data-select='"+county+"']");
 			box.find(".hoverOutline")
 				.attr("data-select",county)
+				.attr("data-value",rect.attr("data-value"))
 				.attr("x",rect.attr("x"))
 				.attr("y",rect.attr("y"))
 				.attr("width",rect.attr("width"))
@@ -200,6 +205,8 @@ function MapTW(){
 				svg.select("text[data-select='"+county+"']").attr("fill","black");
 			}
 			box.find(".hoverOutline")
+				.attr("data-select","")
+				.attr("data-value","")
 				.attr("x",0)
 				.attr("y",0)
 				.attr("width",0)
@@ -209,10 +216,13 @@ function MapTW(){
 			if(hoverOutCallback) hoverOutCallback();
 		}
 		function ClickFn(item){
+			if(hoverKey == "") return;
 			var cur = $(item);
 			var county = cur.attr("data-select");
 			var rect = svg.select("rect[data-select='"+county+"']");
 			box.find(".selectOutline")
+				.attr("data-select",county)
+				.attr("data-value",rect.attr("data-value"))
 				.attr("x",rect.attr("x"))
 				.attr("y",rect.attr("y"))
 				.attr("width",rect.attr("width"))
@@ -312,10 +322,10 @@ function MapTW(){
 	var GetSelectKey = function(){return selectKey;};
 	var GetSelectValue = function(){return selectValue;}
 
-	var SetData = function(data,color){
+	var SetData = function(data,colorFn){
 		keyData = data;
-		if(!color) color = d3.scale.linear().domain([0,1]).range(["#FFFFFF",'#000000']);
-		fillColor = color;
+		if(!colorFn) colorFn = d3.scale.linear().domain([0,1]).range(["#FFFFFF",'#000000']);
+		fillColor = colorFn;
 	};
 
 	//build object methods

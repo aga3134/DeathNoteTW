@@ -5,7 +5,8 @@ var g_APP = new Vue({
   	curPage: 0,
     graphType: 1,
     optionType: 1,
-    year: 2010,
+    year: 0,
+    showTimeBar: false,
     playTimer: null,
     showGraph: false,
   },
@@ -28,9 +29,7 @@ var g_APP = new Vue({
     },
     FlipPage: function(page){
       if(this.curPage == page) return;
-      this.showRule = false;
       this.showGraph = false;
-      this.showAbout = false;
       $('.death-note').attr("scrollTop", 0);
 
       var CoverOn = function(){
@@ -84,19 +83,38 @@ var g_APP = new Vue({
       $("#coverButtonList :nth-child("+(this.curPage+1)+")").removeClass("select");
       $("#coverButtonList :nth-child("+(page+1)+")").addClass("select");
       this.curPage = page;
+      this.ChangeGraphType(1);
     },
     ChangeGraphType: function(type){
-      if(this.graphType == type) return;
       this.graphType = type;
-      this.UpdateGraph();
+      this.ChangeOptionType(1);
     },
     ChangeOptionType: function(type){
-      if(this.optionType == type) return;
       this.optionType = type;
+      this.UpdateTimeBar();
       this.UpdateGraph();
     },
-    SubYear: function(selector){
-      var slider = $(selector).find("input[type='range']");
+    UpdateTimeBar: function(){
+      var key = this.curPage+"-"+this.graphType+"-"+this.optionType;
+      var barAttr = {};
+      barAttr["2-1-1"] = {"min":1974,"max":2016};
+      barAttr["2-1-2"] = {"min":1974,"max":2016};
+      if(key in barAttr){
+        var attr = barAttr[key];
+        this.showTimeBar = true;
+        var slider = $("#timeRange");
+        slider.attr("min",attr.min);
+        slider.attr("max",attr.max);
+
+        if(this.year < attr.min) this.year = attr.min;
+        if(this.year > attr.max) this.year = attr.max;
+      }
+      else{
+        this.showTimeBar = false;
+      }
+    },
+    SubYear: function(){
+      var slider = $("#timeRange");
       minYear = slider.attr("min");
       var update = false;
       if(this.year > minYear){
@@ -106,12 +124,12 @@ var g_APP = new Vue({
       }
       return update;
     },
-    ToggleYearPlay: function(selector){
-      var playBt = $(selector).find(".play");
+    ToggleYearPlay: function(){
+      var playBt = $("#playBt");
       if(this.playTimer == null){
         playBt.attr("src","/static/Image/icon-pause.png");
         this.playTimer = setInterval(function(){
-          var update = this.AddYear(selector);
+          var update = this.AddYear();
           if(!update){
             clearInterval(this.playTimer);
             this.playTimer = null;
@@ -125,8 +143,8 @@ var g_APP = new Vue({
         playBt.attr("src","/static/Image/icon-play.png");
       }
     },
-    AddYear: function(selector){
-      var slider = $(selector).find("input[type='range']");
+    AddYear: function(){
+      var slider = $("#timeRange");
       maxYear = slider.attr("max");
       var update = false;
       if(this.year < maxYear){
@@ -135,7 +153,7 @@ var g_APP = new Vue({
         update = true;
       }
       return update;
-    },
+    }
   }
 });
 

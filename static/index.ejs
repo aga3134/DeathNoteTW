@@ -139,6 +139,21 @@
 						<div class="quote">"你問我什麼叫死亡，我如此地回答：怎樣才算是活著?" - 柯文哲</div>
 					</div>
 				</div>
+
+				<div class="fix-bottom" v-if="showTimeBar">
+					<div class="time-bar" id="timeBar">
+						<div class="label">{{year}} 年</div>
+						<input id="timeRange" v-model="year"
+							v-on:change="UpdateGraph();"
+							type="range" min="1974" max="2016" value="1974" class="slider">
+						<div>
+							<img id="prevBt" class="control-icon" src="/static/Image/icon-prev.png" v-on:click="SubYear();">
+							<img id="playBt" class="control-icon" src="/static/Image/icon-play.png" v-on:click="ToggleYearPlay();">
+							<img id="nextBt" class="control-icon" src="/static/Image/icon-next.png" v-on:click="AddYear();">
+						</div>
+					</div>
+				</div>
+
 				<div id="pageGraph" v-if="showGraph">
 					<div id="chapterBirth" v-if="curPage === 2">
 						<div class="title">生の章</div>
@@ -166,6 +181,11 @@
 						</div>
 						<div v-if="graphType === 1">
 							<div class="half-w">
+								<div class="graph-title">人口金字塔</div>
+								<svg id="popPyramid"></svg>
+								<div class="center" id="pyramidInfo">人口數</div>
+							</div><!--
+							--><div class="half-w">
 								<div class="option-container">
 									<div class="option-bt"
 										v-bind:class="{selected: optionType === 1}"
@@ -180,24 +200,6 @@
 								</div>
 								<svg id="countyPop"></svg>
 								<div class="center" id="countyInfo">人口數</div>
-							</div><!--
-							--><div class="half-w">
-								<div class="graph-title">人口金字塔</div>
-								<svg id="popPyramid"></svg>
-							</div>
-							<div class="time-bar" id="popYear">
-								<div class="label">{{year}} 年</div>
-								<input v-model="year"
-									v-on:change="UpdateGraph();"
-									type="range" min="1974" max="2016" value="1974" class="slider">
-								<div>
-									<img class="control-icon prev" src="/static/Image/icon-prev.png"
-										v-on:click="SubYear('#popYear');">
-									<img class="control-icon play" src="/static/Image/icon-play.png"
-										v-on:click="ToggleYearPlay('#popYear');">
-									<img class="control-icon next" src="/static/Image/icon-next.png"
-										v-on:click="AddYear('#popYear');">
-								</div>
 							</div>
 						</div>
 					</div>

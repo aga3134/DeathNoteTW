@@ -75,6 +75,7 @@ var g_SvgAnim = function(){
 
   var EyeRollByMouse = function(e){
     var svg = d3.select("#svgAnim");
+    if(!svg.node()) return;
     var svgBox = svg.node().getBoundingClientRect();
     var eyeBall = d3.select("#pEye2");
     if(!eyeBall.node()) return;

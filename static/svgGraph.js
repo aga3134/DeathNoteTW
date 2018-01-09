@@ -8,7 +8,7 @@ var g_SvgGraph = function(){
 		var svg = d3.select(param.selector);
 		svg.selectAll("*").remove();
 		var scaleW = d3.scale.linear().domain([0,param.pyramidScale]).range([0,w*0.5]);
-		var scaleH = d3.scale.linear().domain([0,105]).range([0,h]);
+		var scaleH = d3.scale.linear().domain([0,100]).range([0,h]);
 
 		//console.log(param.data["男"]);
 		var maleGroup = svg.append("g");
@@ -31,7 +31,7 @@ var g_SvgGraph = function(){
 					.attr("y",cur.attr("y"))
 					.attr("width",cur.attr("width"))
 					.attr("height",cur.attr("height"));
-				infoText.text(cur.attr("data-info"));
+				$(param.textInfo).text(cur.attr("data-info"));
 			});
 
 		var femaleGroup = svg.append("g");
@@ -54,17 +54,13 @@ var g_SvgGraph = function(){
 					.attr("y",cur.attr("y"))
 					.attr("width",cur.attr("width"))
 					.attr("height",cur.attr("height"));
-				infoText.text(cur.attr("data-info"));
+				$(param.textInfo).text(cur.attr("data-info"));
 			});
 
 		var hoverRect = svg.append("rect").attr("class","hoverRect")
 			.attr("stroke","#FFAA0D")
 			.attr("stroke-width",2)
 			.attr("fill","none");
-		var infoText = svg.append("text").attr("class","infoText")
-			.attr("x",0)
-			.attr("y",0)
-			.attr("alignment-baseline","hanging");
 	}
 
 	return {
