@@ -57,7 +57,7 @@
 			<div class="page-move">
 			</div>
 			<div class="page-bg">
-				<div id="pageRule" v-if="curPage === 1">
+				<div id="pageRule" v-show="curPage === 1">
 					<div class="title">規則</div>
 					<div class="content">
 						<ol>
@@ -140,7 +140,7 @@
 					</div>
 				</div>
 
-				<div class="fix-bottom" v-if="showTimeBar">
+				<div class="fix-bottom" v-show="showTimeBar">
 					<div class="time-bar" id="timeBar">
 						<div class="label">{{year}} 年</div>
 						<input id="timeRange" v-model="year"
@@ -154,8 +154,8 @@
 					</div>
 				</div>
 
-				<div id="pageGraph" v-if="showGraph">
-					<div id="chapterBirth" v-if="curPage === 2">
+				<div id="pageGraph" v-show="showGraph">
+					<div id="chapterBirth" v-show="curPage === 2">
 						<div class="title">生の章</div>
 						<div class="switch-container">
 							<div class="switch-bt"
@@ -179,11 +179,11 @@
 								人口推估
 							</div>
 						</div>
-						<div v-if="graphType === 1">
+						<div v-show="graphType === 1">
 							<div class="half-w">
-								<div class="graph-title">人口金字塔</div>
-								<svg id="popPyramid"></svg>
-								<div class="center" id="pyramidInfo">人口數</div>
+								<div class="graph-title" id="popPyramidTitle">人口金字塔</div>
+								<svg id="popPyramidSvg"></svg>
+								<div class="center" id="popPyramidInfo">人數</div>
 							</div><!--
 							--><div class="half-w">
 								<div class="option-container">
@@ -198,25 +198,157 @@
 										排序
 									</div>
 								</div>
-								<svg id="countyPop"></svg>
-								<div class="center" id="countyInfo">人口數</div>
+								<svg id="popMapSvg"></svg>
+								<div class="center" id="popMapInfo">人數</div>
+							</div>
+							<div class="full-w">
+								<div class="graph-title">平均壽命</div>
+								<svg id="expectLifeSvg"></svg>
+								<div class="center" id="expectLifeInfo">歲</div>
+							</div>
+						</div>
+						<div v-show="graphType === 2">
+							<div class="half-w">
+								<div class="graph-title">婚姻比例</div>
+								<div class="center">
+									<input id="marriageRatioMinAge" type="number" min="0" max="100" step="5" value="0" v-on:change="UpdateGraph();"> ~
+									<input id="marriageRatioMaxAge" type="number" min="0" max="100" step="5" value="100" v-on:change="UpdateGraph();"> 歲
+									<select id="marriageRatioSelect"  v-on:change="UpdateGraph();">
+										<option value="total">全部</option>
+										<option value="male">男</option>
+										<option value="female">女</option>
+									</select>
+								</div>
+								<svg id="marriageRatioSvg"></svg>
+								<div class="center" id="marriageRatioInfo">比例</div>
+							</div><!--
+							--><div class="half-w">
+								<div class="option-container">
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 1}"
+										v-on:click="ChangeOptionType(1);">
+										未婚
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 2}"
+										v-on:click="ChangeOptionType(2);">
+										有偶
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 3}"
+										v-on:click="ChangeOptionType(3);">
+										離婚
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 4}"
+										v-on:click="ChangeOptionType(4);">
+										喪偶
+									</div>
+								</div>
+								<svg id="marriageSvg"></svg>
+								<div class="center" id="marriageInfo">人數</div>
+							</div>
+						</div>
+						<div v-show="graphType === 3">
+							<div class="option-container">
+								<div class="option-bt"
+									v-bind:class="{selected: subGraphType === 1}"
+									v-on:click="ChangeSubGraphType(1);">
+									出生數
+								</div>
+								<div class="option-bt"
+									v-bind:class="{selected: subGraphType === 2}"
+									v-on:click="ChangeSubGraphType(2);">
+									生育率
+								</div>
+							</div>
+							<div class="half-w">
+								<div class="graph-title" id="birthHistTitle">出生人數</div>
+								<svg id="birthHistSvg"></svg>
+								<div class="center" id="birthHistInfo">人數</div>
+							</div><!--
+							--><div class="half-w">
+								<div class="option-container">
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 1}"
+										v-on:click="ChangeOptionType(1);">
+										地圖
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 2}"
+										v-on:click="ChangeOptionType(2);">
+										排序
+									</div>
+								</div>
+								<svg id="birthMapSvg"></svg>
+								<div class="center" id="birthMapInfo">人數</div>
+							</div>
+							<div class="full-w">
+								<div class="graph-title">人口變化</div>
+								<svg id="birthTimeLineSvg"></svg>
+								<div class="center" id="birthTimeLineInfo">人數</div>
 							</div>
 						</div>
 					</div>
-					<div id="chapterAging" v-if="curPage === 3">
+					<div v-show="graphType === 4">
+							<div class="option-container">
+								<div class="option-bt"
+									v-bind:class="{selected: optionType === 1}"
+									v-on:click="ChangeOptionType(1);">
+									中推估
+								</div>
+								<div class="option-bt"
+									v-bind:class="{selected: optionType === 2}"
+									v-on:click="ChangeOptionType(2);">
+									低推估
+								</div>
+								<div class="option-bt"
+									v-bind:class="{selected: optionType === 3}"
+									v-on:click="ChangeOptionType(3);">
+									高推估
+								</div>
+							</div>
+							<div class="half-w"><!--
+							--><div class="graph-title" id="projectionPyramidTitle">人口金字塔</div>
+								<svg id="projectionPyramidSvg"></svg>
+								<div class="center" id="projectionPyramidInfo">人數</div>
+							</div><!--
+							--><div class="half-w">
+								<div class="graph-title" id="projectionPopTitle">人口數</div>
+								<svg id="projectionPopSvg"></svg>
+								<div class="center" id="projectionPopInfo">人數</div>
+							</div><!--
+							--><div class="half-w">
+								<div class="graph-title" id="projectionLifeTitle">平均壽命</div>
+								<svg id="projectionLifeSvg"></svg>
+								<div class="center" id="projectionLifeInfo">歲</div>
+							</div><!--
+							--><div class="half-w">
+								<div class="graph-title" id="projectionVarietyTitle">人口變化</div>
+								<svg id="projectionVarietySvg"></svg>
+								<div class="center" id="projectionVarietyInfo">人數</div>
+							</div><!--
+							--><div class="half-w">
+								<div class="graph-title" id="projectionFertilityTitle">總生育率</div>
+								<svg id="projectionFertilitySvg"></svg>
+								<div class="center" id="projectionFertilityInfo">生育率</div>
+							</div>
+						</div>
+					</div>
+					<div id="chapterAging" v-show="curPage === 3">
 						<div class="title">老の章</div>
 						<div class="content"></div>
 					</div>
-					<div id="chapterDisease" v-if="curPage === 4">
+					<div id="chapterDisease" v-show="curPage === 4">
 						<div class="title">病の章</div>
 						<div class="content"></div>
 					</div>
-					<div id="chapterDeath" v-if="curPage === 5">
+					<div id="chapterDeath" v-show="curPage === 5">
 						<div class="title">死の章</div>
 						<div class="content"></div>
 					</div>
 				</div>
-				<div id="pageAbout" v-if="curPage === 6">
+				<div id="pageAbout" v-show="curPage === 6">
 					<div class="title">關於筆記本</div>
 				</div>
 			</div>
@@ -225,9 +357,9 @@
 		</div>
 
 		<script src="/static/util.js?v=<%=version%>"></script>
+		<script src="/static/mapTW.js?v=<%=version%>"></script>
 		<script src="/static/svgGraph.js?v=<%=version%>"></script>
 		<script src="/static/svgAnim.js?v=<%=version%>"></script>
-		<script src="/static/mapTW.js?v=<%=version%>"></script>
 		<script src="/static/chapterBirth.js?v=<%=version%>"></script>
 		<script src="/static/chapterAging.js?v=<%=version%>"></script>
 		<script src="/static/chapterDisease.js?v=<%=version%>"></script>

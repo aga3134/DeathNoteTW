@@ -225,6 +225,22 @@ class DataBirth:
             print(year)
             sheet = wb[str(year)]
             
+            #總計
+            maleBirth = sheet['D7'].value
+            femaleBirth = sheet['E7'].value
+            maleDeath = sheet['H7'].value
+            femaleDeath = sheet['I7'].value
+            socialIncrease = sheet['L7'].value
+            marriage = sheet['P7'].value
+            divorce = sheet['R7'].value
+            d = {"year":year, "county":"總計", 
+                 "maleBirth": maleBirth,"femaleBirth":femaleBirth,
+                 "maleDeath":maleDeath,"femaleDeath":femaleDeath,
+                 "socialIncrease":socialIncrease,"marriage":marriage,
+                 "divorce":divorce}
+            #print(d)
+            util.DataToDB(self.connection,"BirthByCounty",d)
+            
             for row in range(8,36,1):
                 countyCell = sheet['A'+str(row)]
                 if(countyCell.value is None):
@@ -245,7 +261,7 @@ class DataBirth:
                 femaleBirth = sheet['E'+str(row)].value
                 maleDeath = sheet['H'+str(row)].value
                 femaleDeath = sheet['I'+str(row)].value
-                socialIncrease = sheet['J'+str(row)].value
+                socialIncrease = sheet['L'+str(row)].value
                 marriage = sheet['P'+str(row)].value
                 divorce = sheet['R'+str(row)].value
                 
@@ -264,7 +280,7 @@ class DataBirth:
             print(year)
             sheet = wb[str(year)]
             
-            for row in range(6,36,1):
+            for row in range(6,37,1):
                 countyCell = sheet['A'+str(row)]
                 if(countyCell.value is None):
                     continue
@@ -282,7 +298,7 @@ class DataBirth:
                 
                 d = {"year":year+1911, "county":county}
                 d["minMonAge"] = 0
-                d["maxMonAge"] = 20
+                d["maxMonAge"] = 19
                 v = sheet.cell(row=row, column=5).value
                 d["count"] = v
                 #print(d)
@@ -312,6 +328,16 @@ class DataBirth:
         for year in range(1999,2017,1):
             print(year)
             sheet = wb[str(year)]
+            
+            d = {"year":year, "county":"總計"}
+            for col in range(4,11,1):
+                age = re.findall(r"\d+",sheet.cell(row=5, column=col).value)
+                d["minAge"] = int(age[0])
+                d["maxAge"] = int(age[1])
+                v = sheet.cell(row=7, column=col).value
+                d["rate"] = v
+                #print(d)
+                util.DataToDB(self.connection,"FertilityRateByAge",d)
             
             for row in range(8,36,1):
                 countyCell = sheet['A'+str(row)]

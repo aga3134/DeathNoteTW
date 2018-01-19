@@ -130,7 +130,8 @@ function MapTW(){
 			if(key == "桃園市" && year <= 2013){
 				key = "桃園縣";
 			}
-			var countyData = keyData[key][0].count+keyData[key][1].count;
+			var countyData = keyData[key];
+			if(!countyData) continue;
 			var g = tw.append("g")
 				.attr("data-select",key)
 				.attr("data-value",countyData)
@@ -145,6 +146,8 @@ function MapTW(){
 					if(hoverCallback) hoverCallback();
 				})
 				.on("mouseout",function(){
+					//avoid flash
+					if(d3.event.movementX == 0 && d3.event.movementY == 0) return;
 					box.find(".hoverOutline").html("");
 					hoverValue = "";
 					hoverKey = "";
@@ -200,6 +203,8 @@ function MapTW(){
 			if(hoverCallback) hoverCallback();
 		}
 		function HoverOut(item){
+			//avoid flash
+			if(d3.event.movementX == 0 && d3.event.movementY == 0) return;
 			var county = $(item).attr("data-select");
 			if(county != selectKey){
 				svg.select("text[data-select='"+county+"']").attr("fill","black");
@@ -243,11 +248,10 @@ function MapTW(){
 		var dataArr = [];
 		for(key in keyData){
 			var d = keyData[key];
-			if(/[省地區]/.test(d[0].county)) continue;
+			if(/[省地區]/.test(key)) continue;
 			var item = {};
-			item[d[0].sex] = d[0];
-			item[d[1].sex] = d[1];
-			item.total = d[0].count+d[1].count;
+			item.county = key;
+			item.total = d;
 			dataArr.push(item);
 		}
 		dataArr = dataArr.sort(function(a,b){
@@ -259,7 +263,7 @@ function MapTW(){
 		var hStep = (h-padT-padB)/(dataArr.length);
 		sortRect.selectAll("rect").data(dataArr)
 			.enter().append("rect")
-			.attr("data-select",function(d){return d["女"].county;})
+			.attr("data-select",function(d){return d.county;})
 			.attr("data-value",function(d){return d.total})
 			.attr("x",padL)
 			.attr("y",function(d,i){return i*hStep+padT;})
@@ -276,13 +280,13 @@ function MapTW(){
 		sortLabel.selectAll("text").data(dataArr)
 			.enter().append("text")
 			.attr("style","cursor: pointer;")
-			.attr("data-select",function(d){return d["女"].county;})
+			.attr("data-select",function(d){return d.county;})
 			.attr("data-value",function(d){return d.total})
 			.attr("x",0)
 			.attr("y",function(d,i){return i*hStep+3+padT;})
 			.attr("alignment-baseline","hanging")
 			.attr("font-size","12px")
-			.text(function(d){return d["女"].county;})
+			.text(function(d){return d.county;})
 			.on("mouseover",function(){HoverIn(this);})
 			.on("mouseout",function(){HoverOut(this);})
 			.on("click",function(){ClickFn(this);});

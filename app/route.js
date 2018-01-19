@@ -51,19 +51,31 @@ module.exports = function(app){
 	});
 
 	app.get("/expectLife", function(req, res){
-		DB.ExpectLife.findAll({where: {}}).then(function(results){
+		var age = req.query.age;
+		var year = req.query.year;
+		var query = {};
+		if(age) query.age = age;
+		if(year) query.year = year;
+		DB.ExpectLife.findAll({where: query}).then(function(results){
 			res.send(JSON.stringify(results));
 		});
 	});
 
 	app.get("/populationProjection", function(req, res){
-		DB.PopulationProjection.findAll({where: {}}).then(function(results){
+		var estimateParam = req.query.estimateParam;
+		var query = {};
+		if(estimateParam) query.estimateParam = estimateParam;
+
+		DB.PopulationProjection.findAll({where: query}).then(function(results){
 			res.send(JSON.stringify(results));
 		});
 	});
 
 	app.get("/projectionIndex", function(req, res){
-		DB.ProjectionIndex.findAll({where: {}}).then(function(results){
+		var estimateParam = req.query.estimateParam;
+		var query = {};
+		if(estimateParam) query.estimateParam = estimateParam;
+		DB.ProjectionIndex.findAll({where: query}).then(function(results){
 			res.send(JSON.stringify(results));
 		});
 	});

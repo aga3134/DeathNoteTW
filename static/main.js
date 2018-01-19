@@ -4,6 +4,7 @@ var g_APP = new Vue({
   data: {
   	curPage: 0,
     graphType: 1,
+    subGraphType: 1,
     optionType: 1,
     year: 0,
     showTimeBar: false,
@@ -17,14 +18,14 @@ var g_APP = new Vue({
     UpdateGraph: function(){
       this.showGraph = (this.curPage>1&&this.curPage<6);
       if(this.showGraph){
-        setTimeout(function(){  //須先等dom元件更新後再處理畫面
+        Vue.nextTick(function () {  //須先等dom元件更新後再處理畫面
           switch(this.curPage){
-            case 2: g_ChapterBirth.loadGraph(this.graphType,this.optionType); break;
-            case 3: g_ChapterAging.loadGraph(this.graphType,this.optionType); break;
-            case 4: g_ChapterDisease.loadGraph(this.graphType,this.optionType); break;
-            case 5: g_ChapterDeath.loadGraph(this.graphType,this.optionType); break;
+            case 2: g_ChapterBirth.loadGraph(this); break;
+            case 3: g_ChapterAging.loadGraph(this); break;
+            case 4: g_ChapterDisease.loadGraph(this); break;
+            case 5: g_ChapterDeath.loadGraph(this); break;
           }
-        }.bind(this),1);
+        }.bind(this));
       }
     },
     FlipPage: function(page){
@@ -87,18 +88,32 @@ var g_APP = new Vue({
     },
     ChangeGraphType: function(type){
       this.graphType = type;
+      this.ChangeSubGraphType(1);
+    },
+    ChangeSubGraphType: function(type){
+      this.subGraphType = type;
       this.ChangeOptionType(1);
     },
     ChangeOptionType: function(type){
       this.optionType = type;
-      this.UpdateTimeBar();
-      this.UpdateGraph();
+      Vue.nextTick(function () {
+        this.UpdateTimeBar();
+        this.UpdateGraph();
+      }.bind(this));
     },
     UpdateTimeBar: function(){
-      var key = this.curPage+"-"+this.graphType+"-"+this.optionType;
+      var key = this.curPage+"-"+this.graphType+"-"+this.subGraphType+"-"+this.optionType;
       var barAttr = {};
-      barAttr["2-1-1"] = {"min":1974,"max":2016};
-      barAttr["2-1-2"] = {"min":1974,"max":2016};
+      //生之章-人口分佈
+      for(var i=1;i<=2;i++) barAttr["2-1-1-"+i] = {"min":1974,"max":2016};
+      //生之章-婚姻狀況
+      for(var i=1;i<=4;i++) barAttr["2-2-1-"+i] = {"min":2007,"max":2016};
+      //生之章-出生統計
+      for(var i=1;i<=2;i++) barAttr["2-3-1-"+i] = {"min":2007,"max":2016};
+      for(var i=1;i<=2;i++) barAttr["2-3-2-"+i] = {"min":1999,"max":2016};
+      //生之章-人口推估
+      for(var i=1;i<=3;i++) barAttr["2-4-1-"+i] = {"min":2016,"max":2061};
+
       if(key in barAttr){
         var attr = barAttr[key];
         this.showTimeBar = true;
