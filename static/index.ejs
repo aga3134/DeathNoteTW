@@ -182,8 +182,21 @@
 						<div v-show="graphType === 1">
 							<div class="half-w">
 								<div class="graph-title" id="popPyramidTitle">人口金字塔</div>
+								<div class="option-container">
+									<div class="option-bt"
+										v-bind:class="{selected: subGraphType === 1}"
+										v-on:click="ChangeSubGraphType(1);">
+										年齡分佈
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: subGraphType === 2}"
+										v-on:click="ChangeSubGraphType(2);">
+										扶養比例
+									</div>
+								</div>
+								<div class="center enhance" id="popRatio">單位:人(%)</div>
 								<svg id="popPyramidSvg"></svg>
-								<div class="center" id="popPyramidInfo">人數</div>
+								<div class="center" id="popPyramidInfo">單位:人</div>
 							</div><!--
 							--><div class="half-w">
 								<div class="option-container">
@@ -199,12 +212,28 @@
 									</div>
 								</div>
 								<svg id="popMapSvg"></svg>
-								<div class="center" id="popMapInfo">人數</div>
-							</div>
-							<div class="full-w">
+								<div class="center" id="popMapInfo">單位:人</div>
+							</div><!--
+							--><div class="full-w">
 								<div class="graph-title">平均壽命</div>
 								<svg id="expectLifeSvg"></svg>
-								<div class="center" id="expectLifeInfo">歲</div>
+								<div class="center" id="expectLifeInfo">單位:歲</div>
+							</div>
+							<div class="note">
+								<div class="title">案情並不單純</div>
+								<ul>
+									<li>1974年40~50歲的男性比女性多很多，發生了什麼事?</li>
+									<li>1974年20~24歲人口明顯比25~29歲的人口多，是什麼原因?</li>
+									<li>台灣的出生率是什麼時候開始下降的? 原因為何?</li>
+									<li>目前台灣最老的縣市是?最年輕的縣市是?為何出現這種分佈?</li>
+									<li>1956年台灣平均壽命突然比前一年少了一歲多，發生了什麼事?</li>
+								</ul>
+								<div class="title">專有名詞</div>
+								<ul>
+									<li>扶老比: 「65歲以上人數」 對 「15~65歲人數」 的比例，數字越大表示社會對老人扶養的負擔越重</li>
+									<li>扶幼比: 「15歲以下人數」 對 「15~65歲人數」 的比例，數字越大表示社會對小孩扶養的負擔越重</li>
+									<li>平均壽命: 即<a href="http://sowf.moi.gov.tw/stat/Life/T05-lt-quary.html" target="_blank">簡易生命表</a>的<a href="http://terms.naer.edu.tw/detail/1316650/" target="_blank">0歲平均餘命</a>，也就是剛出生的嬰兒平均還可以活多久的意思...</li>
+								</ul>
 							</div>
 						</div>
 						<div v-show="graphType === 2">
@@ -220,7 +249,7 @@
 									</select>
 								</div>
 								<svg id="marriageRatioSvg"></svg>
-								<div class="center" id="marriageRatioInfo">比例</div>
+								<div class="center" id="marriageRatioInfo">單位:人(%)</div>
 							</div><!--
 							--><div class="half-w">
 								<div class="option-container">
@@ -246,26 +275,34 @@
 									</div>
 								</div>
 								<svg id="marriageSvg"></svg>
-								<div class="center" id="marriageInfo">人數</div>
+								<div class="center" id="marriageInfo">單位:人</div>
+							</div>
+							<div class="note">
+								<div class="title">案情並不單純</div>
+								<ul>
+									<li>20~40歲未婚比例逐年增高，原因為何?</li>
+									<li>20~30歲有偶人數跟離婚人數女性皆遠高於男性，說明了什麼?</li>
+									<li>男性跟女性的喪偶人數比例懸殊，為何會這樣?</li>
+								</ul>
 							</div>
 						</div>
 						<div v-show="graphType === 3">
-							<div class="option-container">
-								<div class="option-bt"
-									v-bind:class="{selected: subGraphType === 1}"
-									v-on:click="ChangeSubGraphType(1);">
-									出生數
-								</div>
-								<div class="option-bt"
-									v-bind:class="{selected: subGraphType === 2}"
-									v-on:click="ChangeSubGraphType(2);">
-									生育率
-								</div>
-							</div>
 							<div class="half-w">
 								<div class="graph-title" id="birthHistTitle">出生人數</div>
+								<div class="option-container">
+									<div class="option-bt"
+										v-bind:class="{selected: subGraphType === 1}"
+										v-on:click="ChangeSubGraphType(1);">
+										出生數
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: subGraphType === 2}"
+										v-on:click="ChangeSubGraphType(2);">
+										生育率
+									</div>
+								</div>
 								<svg id="birthHistSvg"></svg>
-								<div class="center" id="birthHistInfo">人數</div>
+								<div class="center" id="birthHistInfo">單位:人</div>
 							</div><!--
 							--><div class="half-w">
 								<div class="option-container">
@@ -281,57 +318,83 @@
 									</div>
 								</div>
 								<svg id="birthMapSvg"></svg>
-								<div class="center" id="birthMapInfo">人數</div>
+								<div class="center" id="birthMapInfo">單位:人</div>
 							</div>
 							<div class="full-w">
-								<div class="graph-title">人口變化</div>
+								<div class="graph-title" id="birthTimeLineTitle">人口變化</div>
 								<svg id="birthTimeLineSvg"></svg>
-								<div class="center" id="birthTimeLineInfo">人數</div>
+								<div class="center" id="birthTimeLineInfo">單位:人</div>
+							</div>
+							<div class="note">
+								<div class="title">案情並不單純</div>
+								<ul>
+									<li>生母年齡最高點逐年從25~30歲轉移到30~35歲，原因為何?</li>
+									<li>歷年男出生數皆大於女出生數，說明了什麼?</li>
+									<li>歷年男死亡數皆大於女死亡數，說明了什麼?</li>
+									<li>出生數在2000年和2012年出現高峰，原因為何?</li>
+									<li>出生數在1998年和2010年出現低谷，原因為何?</li>
+									<li>出生數趨勢逐年下降，2010年後觸底反彈，原因為何?</li>
+									<li>是哪些原因造成社會增加數的波動?</li>
+								</ul>
+								<div class="title">專有名詞</div>
+								<ul>
+									<li>生育率: 當年度在設定的年齡區間中，每1000位女性生了幾個小孩。</li>
+									<li>總生育率: 將所有年齡區間的生育率加總得到的數字。假設20~25歲區間的生育率為60‰，就會對此數字有5 x 60‰ = 300‰的貢獻。</li>
+									<li>社會增加數: 因為人口移入、移出所增加或減少的人口數</li>
+								</ul>
 							</div>
 						</div>
 					</div>
 					<div v-show="graphType === 4">
-							<div class="option-container">
-								<div class="option-bt"
-									v-bind:class="{selected: optionType === 1}"
-									v-on:click="ChangeOptionType(1);">
-									中推估
+							<div class="half-w">
+								<div class="graph-title" id="projectionPyramidTitle">人口金字塔</div>
+								<div class="option-container">
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 1}"
+										v-on:click="ChangeOptionType(1);">
+										中推估
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 2}"
+										v-on:click="ChangeOptionType(2);">
+										低推估
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 3}"
+										v-on:click="ChangeOptionType(3);">
+										高推估
+									</div>
 								</div>
-								<div class="option-bt"
-									v-bind:class="{selected: optionType === 2}"
-									v-on:click="ChangeOptionType(2);">
-									低推估
-								</div>
-								<div class="option-bt"
-									v-bind:class="{selected: optionType === 3}"
-									v-on:click="ChangeOptionType(3);">
-									高推估
-								</div>
-							</div>
-							<div class="half-w"><!--
-							--><div class="graph-title" id="projectionPyramidTitle">人口金字塔</div>
 								<svg id="projectionPyramidSvg"></svg>
-								<div class="center" id="projectionPyramidInfo">人數</div>
+								<div class="center" id="projectionPyramidInfo">單位:人</div>
 							</div><!--
 							--><div class="half-w">
-								<div class="graph-title" id="projectionPopTitle">人口數</div>
-								<svg id="projectionPopSvg"></svg>
-								<div class="center" id="projectionPopInfo">人數</div>
-							</div><!--
-							--><div class="half-w">
-								<div class="graph-title" id="projectionLifeTitle">平均壽命</div>
-								<svg id="projectionLifeSvg"></svg>
-								<div class="center" id="projectionLifeInfo">歲</div>
-							</div><!--
-							--><div class="half-w">
-								<div class="graph-title" id="projectionVarietyTitle">人口變化</div>
-								<svg id="projectionVarietySvg"></svg>
-								<div class="center" id="projectionVarietyInfo">人數</div>
-							</div><!--
-							--><div class="half-w">
-								<div class="graph-title" id="projectionFertilityTitle">總生育率</div>
-								<svg id="projectionFertilitySvg"></svg>
-								<div class="center" id="projectionFertilityInfo">生育率</div>
+								<div class="graph-title" id="projectionTimeLineTitle">時間變化</div>
+								<div class="center">
+									<select id="projectionTimeLineSelect" v-on:change="UpdateGraph();">
+										<option value="popNum">人口數</option>
+										<option value="life">平均壽命</option>
+										<option value="popVariety">人口變化</option>
+										<option value="fertility">總生育率</option>
+									</select>
+								</div>
+								<svg id="projectionTimeLineSvg"></svg>
+								<div class="center" id="projectionTimeLineInfo">單位:人</div>
+							</div>
+							<div class="note">
+								<div class="title">案情並不單純</div>
+								<ul>
+									<li>人口數會一直持續減少嗎? 生育率至少要達到多少才能維持人口穩定?</li>
+									<li>平均壽命逐年增加合理嗎? 何時會到達極限?</li>
+									<li>為何在平均壽命逐年增加的情況下，死亡數也是逐年增加?</li>
+									<li>低、中、高推估的總生育率各不相同，哪個比較合理?</li>
+									<li>為何在高推估總生育率逐年升高的情況下，出生數還是逐年下降?</li>
+								</ul>
+								<div class="title">專有名詞</div>
+								<ul>
+									<li>低、中、高推估: 任何預測都會基於某些假設來推算。低、中、高推估的差異就在於這些假設的數字不同。這邊的差異主要為總生育率，低推估假設總生育率逐年下降低0.9，中推估假設總生育率持平在1.2，高推推則假設總生育率逐年上升至1.5。</li>
+									<li>總生育率: 這邊總生育率的定義與「出生統計」中的定義相同。只是「出生統計」中以千分率(‰)表示，這邊則以一般數字表示。</li>
+								</ul>
 							</div>
 						</div>
 					</div>

@@ -16,7 +16,7 @@ $pad-media: 640px;
 
 .half-w{
 	display: inline-block;
-	vertical-align:top;
+	vertical-align:middle;
 	margin: 10px 0px;
 	width: 100%;
 	@include pad-width(){
@@ -187,6 +187,37 @@ html, body {
 		select{
 			margin: 5px;
 			padding: 5px;
+		}
+		.enhance{
+			font-weight: bold;
+			color: rgb(100,100,255);
+		}
+		.note{
+			width: 800px;
+			max-width: calc(100% - 20px);
+			margin: 20px auto;
+			background-color: rgb(200,200,200);
+			padding: 5px 10px 5px 5px;
+			line-height: 1.5em;
+			.title{
+				padding-bottom: 0px;
+				font-size: 1.5em;
+				font-weight: bold;
+			}
+			ul{
+				color: black;
+				font-weight: normal;
+			}
+			li{
+				padding: 10px;
+			}
+			a{
+				text-decoration: none;
+				color: rgb(255,50,50);
+				&:hover{
+					color: rgb(255,100,50);
+				}
+			}
 		}
 		.graph-title{
 			margin: 5px;

@@ -7,6 +7,7 @@ var g_ChapterBirth = function(){
 	var pyramidData = {};
 	var popMinBound = 0, popMaxBound = 0;
 	var pyramidScale = {};
+	var popRatioData = {};
 	var lifeData;
 
 	var marriageData;
@@ -37,8 +38,8 @@ var g_ChapterBirth = function(){
 	  	switch(app.graphType){
 			case 1:	//人口分佈
 	  		{
-				DrawPopMap(app.optionType);
-				DrawPopPyramid();
+				DrawPopMap(app.subGraphType,app.optionType);
+				DrawPopPyramid(app.subGraphType);
 				DrawExpectLife();
 	  			break;
 	  		}
@@ -60,20 +61,42 @@ var g_ChapterBirth = function(){
 	  	}
 	};
 
-	var DrawPopPyramid = function(){
+	var DrawPopPyramid = function(type){
 		var year = $("#timeRange").val();
 
 		function DrawData(){
-			var param = {};
-			param.selector = "#popPyramidSvg";
-			param.textInfo = "#popPyramidInfo";
-			param.data = pyramidData[selectCounty][year];
-			param.pyramidScale = pyramidScale[selectCounty];
-			param.hover = pyramidHover;
-			param.hoverFn = function(item){
-				pyramidHover = item.attr("data-hover");
-			};
-			g_SvgGraph.PopulationPyramid(param);
+			switch(type){
+				case 1:
+					var param = {};
+					param.selector = "#popPyramidSvg";
+					param.textInfo = "#popPyramidInfo";
+					param.data = pyramidData[selectCounty][year];
+					param.pyramidScale = pyramidScale[selectCounty];
+					param.hover = pyramidHover;
+					param.hoverFn = function(item){
+						pyramidHover = item.attr("data-hover");
+					};
+					g_SvgGraph.PopulationPyramid(param);
+					$("#popRatio").text("");
+					break;
+				case 2:
+					param = {};
+					param.selector = "#popPyramidSvg";
+					param.textInfo = "#popPyramidInfo";
+					param.value = "num";
+					param.data = popRatioData[selectCounty][year];
+					param.inRadius = 50;
+					param.infoFn = function(d){
+						var num = g_Util.NumberWithCommas(d.data.num);
+						return d.data.key+" "+num+"人 ("+d.data.ratio+"%)";
+					};
+					g_SvgGraph.PieChart(param);
+					break;
+			}
+			var ratioData = popRatioData[selectCounty][year];
+			var str = "扶老比:"+(100*ratioData[2].num/ratioData[1].num).toFixed(1)+"%";
+			str += " 扶幼比:"+(100*ratioData[0].num/ratioData[1].num).toFixed(1)+"%";
+			$("#popRatio").text(str);
 		}
 
 		if(pyramidData[selectCounty]){
@@ -87,6 +110,25 @@ var g_ChapterBirth = function(){
 				var nestGroup = d3.nest()
 					.key(function(d) {return d.year;})
 					.key(function(d) {return d.sex;})
+					.map(json);
+
+				popRatioData[selectCounty] = d3.nest()
+					.key(function(d) {return d.year;})
+					.rollup(function(arr){
+						var childNum = 0, adultNum = 0, elderNum = 0;
+						for(var i=0;i<arr.length;i++){
+							var d = arr[i];
+							if(d.maxAge < 15) childNum += d.count;
+							else if(d.maxAge < 65) adultNum += d.count;
+							else elderNum += d.count;
+						}
+						var sum = childNum+adultNum+elderNum;
+						return [
+							{num: childNum, key:"小於15歲",ratio: (100*childNum/sum).toFixed(1)},
+							{num: adultNum, key:"15~65歲", ratio: (100*adultNum/sum).toFixed(1)},
+							{num: elderNum, key:"大於65歲", ratio: (100*elderNum/sum).toFixed(1)}
+						];
+					})
 					.map(json);
 				//console.log(nestGroup);
 				var maxV = 0;
@@ -103,24 +145,25 @@ var g_ChapterBirth = function(){
 		}
 	};
 
-	var DrawPopMap = function(type){
+	var DrawPopMap = function(subGraphType,optionType){
 	  	var year = $("#timeRange").val();
 	  	function DrawMap(){
 	  		var param = {};
 	  		param.map = map;
 	  		param.year = year;
-	  		param.type = type;
+	  		param.type = optionType;
 	  		param.selector = "#popMapSvg";
 	  		param.minBound = popMinBound;
 	  		param.maxBound = popMaxBound;
 	  		param.minColor = "#FFFFFF";
 	  		param.maxColor = "#999999";
 	  		param.textInfo = $("#popMapInfo");
-	  		param.titleInfo = $("#popPyramidTitle");
 	  		param.data = popMapData[year];
 	  		param.unit = "人";
 	  		param.clickFn = function(map){
 	  			selectCounty = map.GetSelectKey();
+	  			if(subGraphType == 1) $("#popPyramidTitle").text(selectCounty+" 年齡分佈");
+	  			else if(subGraphType == 2) $("#popPyramidTitle").text(selectCounty+" 扶養比例");
 	  			DrawPopPyramid();	
 	  		};
 	  		g_SvgGraph.MapTW(param);
@@ -175,6 +218,8 @@ var g_ChapterBirth = function(){
 			param.maxValue = 100;
 			param.axisX = "year";
 			param.axisY = "life";
+			param.unitY = "歲";
+			param.unitX = "年";
 			param.color = {"男":"#A1AFC9","女":"#F47983"};
 			param.infoFn = function(d){return d.year+"年 "+d.sex+" "+d.life+"歲";};
 			g_SvgGraph.TimeLine(param);
@@ -221,6 +266,10 @@ var g_ChapterBirth = function(){
 			param.textInfo = "#marriageInfo";
 			param.data = marriageData[year][marriageStatus];
 			param.pyramidScale = marriageScale[marriageStatus];
+			param.hover = pyramidHover;
+			param.hoverFn = function(item){
+				pyramidHover = item.attr("data-hover");
+			};
 			g_SvgGraph.PopulationPyramid(param);
 
 			param = {};
@@ -253,7 +302,7 @@ var g_ChapterBirth = function(){
 				totalNum += sum;
 			}
 			for(var i=0;i<ratioData.length;i++){
-				ratioData[i].ratio = parseInt(100*(ratioData[i].num/totalNum));
+				ratioData[i].ratio = (100*(ratioData[i].num/totalNum)).toFixed(1);
 			}
 			param.value = "num";
 			param.data = ratioData;
@@ -315,6 +364,8 @@ var g_ChapterBirth = function(){
 	  		param.maxValue = birthHistMax[selectCounty];
 	  		param.minColor = "#FF9999";
 	  		param.maxColor = "#996666";
+	  		param.unitY = "人";
+	  		param.unitX = "歲";
 	  		param.textInfo = $("#birthHistInfo");
 	  		param.titleInfo = $("#birthHistTitle");
 	  		param.data = birthHistData[year][selectCounty];
@@ -336,11 +387,12 @@ var g_ChapterBirth = function(){
 	  		param.minColor = "#FFFFFF";
 	  		param.maxColor = "#999999";
 	  		param.textInfo = $("#birthMapInfo");
-	  		param.titleInfo = $("#birthHistTitle");
 	  		param.data = birthMapData[year];
 	  		param.unit = "人";
 	  		param.clickFn = function(map){
 	  			selectCounty = map.GetSelectKey();
+	  			$("#birthHistTitle").text(selectCounty+" 出生人數");
+	  			$("#birthTimeLineTitle").text(selectCounty+" 人口變化");
 	  			DrawBirthHistogram();
 	  			DrawBirthTimeLine();
 	  		};
@@ -457,11 +509,13 @@ var g_ChapterBirth = function(){
 	  		param.maxValue = fertilityHistMax[selectCounty];
 	  		param.minColor = "#99FF99";
 	  		param.maxColor = "#669966";
+	  		param.unitY = "‰";
+	  		param.unitX = "歲";
 	  		param.textInfo = $("#birthHistInfo");
 	  		param.titleInfo = $("#birthHistTitle");
 	  		param.data = fertilityHistData[year][selectCounty];
 	  		param.infoFn = function(d){
-				return "生母"+d.minAge+"~"+d.maxAge+"歲 "+d.rate+"‰";
+				return "生母"+d.minAge+"~"+d.maxAge+"歲 生育率"+d.rate+"‰";
 			};
 	  		g_SvgGraph.Histogram(param);
 		};
@@ -479,9 +533,11 @@ var g_ChapterBirth = function(){
 	  		param.textInfo = $("#birthMapInfo");
 	  		param.titleInfo = $("#birthHistpTitle");
 	  		param.data = fertilityMapData[year];
-	  		param.unit = "‰";
+	  		param.unit = "‰(總生育率)";
 	  		param.clickFn = function(map){
 	  			selectCounty = map.GetSelectKey();
+	  			$("#birthHistTitle").text(selectCounty+" 生育率");
+	  			$("#birthTimeLineTitle").text(selectCounty+" 人口變化");
 	  			DrawFertilityHistogram();
 	  			DrawBirthTimeLine();
 	  		};
@@ -523,7 +579,7 @@ var g_ChapterBirth = function(){
 					.key(function(d) {return d.county;})
 					.rollup(function(countyArr) {
 						return d3.sum(countyArr,function(d){
-							return parseInt(d.rate*(d.maxAge-d.minAge+1));
+							return (d.rate*(d.maxAge-d.minAge+1)).toFixed(1);
 						}); 
 					})
 					.map(json);
@@ -573,6 +629,8 @@ var g_ChapterBirth = function(){
 			param.maxValue = maxC;
 			param.axisX = "year";
 			param.axisY = "count";
+			param.unitY = "人";
+			param.unitX = "年";
 			param.padL = 70;
 			param.alignZero = true;
 			var color = g_Util.ColorCategory(7);
@@ -669,109 +727,122 @@ var g_ChapterBirth = function(){
 			var slider = $("#timeRange");
 	        var minY = slider.attr("min");
 	        var maxY = slider.attr("max");
-
-	        //draw population
-			var minP = 1e10, maxP = 0;
-			for(var key in projectionPop[estimateParam]){
-				var keyData = projectionPop[estimateParam][key];
-				for(var i=0;i<keyData.length;i++){
-					var v = keyData[i];
-					if(v.count < minP) minP = v.count;
-					if(v.count > maxP) maxP = v.count;
-				}
-			}
-			var param = {};
-			param.selector = "#projectionPopSvg";
-			param.textInfo = "#projectionPopInfo";
-			param.data = projectionPop[estimateParam];
-			param.minTime = minY;
-			param.maxTime = maxY;
-			param.time = year;
-			param.minValue = 0;
-			param.maxValue = 25000;
-			param.axisX = "year";
-			param.axisY = "count";
-			param.color = {"男":"#A1AFC9","女":"#F47983","總計":"#79F483"};
-			param.infoFn = function(d){
-				var num = g_Util.NumberWithCommas(d.count);
-				return d.year+"年 "+d.key+" "+num+"千人";
-			};
-			g_SvgGraph.TimeLine(param);
-
-	        //draw life
-			var param = {};
-			param.selector = "#projectionLifeSvg";
-			param.textInfo = "#projectionLifeInfo";
-			param.data = projectionLife[estimateParam];
-			param.minTime = minY;
-			param.maxTime = maxY;
-			param.time = year;
-			param.minValue = 50;
-			param.maxValue = 100;
-			param.axisX = "year";
-			param.axisY = "life";
-			param.color = {"男":"#A1AFC9","女":"#F47983"};
-			param.infoFn = function(d){
-				return d.year+"年 "+d.key+" "+d.life+"歲";
-			};
-			g_SvgGraph.TimeLine(param);
-
-			//draw variety
-			var minV = 1e10, maxV = 0;
-			for(var key in projectionVariety[estimateParam]){
-				var keyData = projectionVariety[estimateParam][key];
-				for(var i=0;i<keyData.length;i++){
-					var v = keyData[i];
-					if(v.count < minV) minV = v.count;
-					if(v.count > maxV) maxV = v.count;
-				}
-			}
-			var param = {};
-			param.selector = "#projectionVarietySvg";
-			param.textInfo = "#projectionVarietyInfo";
-			param.data = projectionVariety[estimateParam];
-			param.minTime = minY;
-			param.maxTime = maxY;
-			param.time = year;
-			param.minValue = 0;
-			param.maxValue = maxV;
-			param.axisX = "year";
-			param.axisY = "count";
-			var color = g_Util.ColorCategory(3);
-			param.color = {"出生數":color(0),"死亡數":color(1),"社會增加數":color(2)};
-			param.infoFn = function(d){
-				var num = g_Util.NumberWithCommas(d.count);
-				return d.year+"年 "+d.key+" "+num+"千人";
-			};
-			g_SvgGraph.TimeLine(param);
-
-			//draw fertility
-			var minR = 1e10, maxR = 0;
-			for(var key in projectionFertility[estimateParam]){
-				var keyData = projectionFertility[estimateParam][key];
-				for(var i=0;i<keyData.length;i++){
-					var v = keyData[i];
-					if(v.rate < minR) minR = v.rate;
-					if(v.rate > maxR) maxR = v.rate;
-				}
-			}
-			var param = {};
-			param.selector = "#projectionFertilitySvg";
-			param.textInfo = "#projectionFertilityInfo";
-			param.data = projectionFertility[estimateParam];
-			param.minTime = minY;
-			param.maxTime = maxY;
-			param.time = year;
-			param.minValue = minR;
-			param.maxValue = maxR;
-			param.axisX = "year";
-			param.axisY = "rate";
-			var color = g_Util.ColorCategory(1);
-			param.color = {"總生育率":color(0)};
-			param.infoFn = function(d){
-				return d.year+"年 "+d.key+" "+d.rate+"人";
-			};
-			g_SvgGraph.TimeLine(param);
+	        var select = $("#projectionTimeLineSelect").val();
+	        switch(select){
+	        	case "popNum":
+					var minP = 1e10, maxP = 0;
+					for(var key in projectionPop[estimateParam]){
+						var keyData = projectionPop[estimateParam][key];
+						for(var i=0;i<keyData.length;i++){
+							var v = keyData[i];
+							if(v.count < minP) minP = v.count;
+							if(v.count > maxP) maxP = v.count;
+						}
+					}
+					var param = {};
+					param.selector = "#projectionTimeLineSvg";
+					param.textInfo = "#projectionTimeLineInfo";
+					param.data = projectionPop[estimateParam];
+					param.minTime = minY;
+					param.maxTime = maxY;
+					param.time = year;
+					param.minValue = 0;
+					param.maxValue = 25000;
+					param.padL = 50;
+					param.axisX = "year";
+					param.axisY = "count";
+					param.unitY = "千人";
+					param.unitX = "年";
+					param.color = {"男":"#A1AFC9","女":"#F47983","總計":"#79F483"};
+					param.infoFn = function(d){
+						var num = g_Util.NumberWithCommas(d.count);
+						return d.year+"年 "+d.key+" "+num+"千人";
+					};
+					g_SvgGraph.TimeLine(param);
+	        		break;
+	        	case "life":
+					var param = {};
+					param.selector = "#projectionTimeLineSvg";
+					param.textInfo = "#projectionTimeLineInfo";
+					param.data = projectionLife[estimateParam];
+					param.minTime = minY;
+					param.maxTime = maxY;
+					param.time = year;
+					param.minValue = 50;
+					param.maxValue = 100;
+					param.axisX = "year";
+					param.axisY = "life";
+					param.unitY = "歲";
+					param.unitX = "年";
+					param.color = {"男":"#A1AFC9","女":"#F47983"};
+					param.infoFn = function(d){
+						return d.year+"年 "+d.key+" "+d.life+"歲";
+					};
+					g_SvgGraph.TimeLine(param);
+	        		break;
+	        	case "popVariety":
+	        		var minV = 1e10, maxV = 0;
+						for(var key in projectionVariety[estimateParam]){
+							var keyData = projectionVariety[estimateParam][key];
+							for(var i=0;i<keyData.length;i++){
+								var v = keyData[i];
+								if(v.count < minV) minV = v.count;
+								if(v.count > maxV) maxV = v.count;
+							}
+						}
+						var param = {};
+						param.selector = "#projectionTimeLineSvg";
+						param.textInfo = "#projectionTimeLineInfo";
+						param.data = projectionVariety[estimateParam];
+						param.minTime = minY;
+						param.maxTime = maxY;
+						param.time = year;
+						param.minValue = 0;
+						param.maxValue = maxV;
+						param.axisX = "year";
+						param.axisY = "count";
+						param.unitY = "千人";
+						param.unitX = "年";
+						var color = g_Util.ColorCategory(3);
+						param.color = {"出生數":color(0),"死亡數":color(1),"社會增加數":color(2)};
+						param.infoFn = function(d){
+							var num = g_Util.NumberWithCommas(d.count);
+							return d.year+"年 "+d.key+" "+num+"千人";
+						};
+						g_SvgGraph.TimeLine(param);
+	        		break;
+	        	case "fertility":
+	        		var minR = 1e10, maxR = 0;
+					for(var key in projectionFertility[estimateParam]){
+						var keyData = projectionFertility[estimateParam][key];
+						for(var i=0;i<keyData.length;i++){
+							var v = keyData[i];
+							if(v.rate < minR) minR = v.rate;
+							if(v.rate > maxR) maxR = v.rate;
+						}
+					}
+					var param = {};
+					param.selector = "#projectionTimeLineSvg";
+					param.textInfo = "#projectionTimeLineInfo";
+					param.data = projectionFertility[estimateParam];
+					param.minTime = minY;
+					param.maxTime = maxY;
+					param.time = year;
+					param.minValue = minR;
+					param.maxValue = maxR;
+					param.padL = 50;
+					param.axisX = "year";
+					param.axisY = "rate";
+					param.unitY = "人";
+					param.unitX = "年";
+					var color = g_Util.ColorCategory(1);
+					param.color = {"總生育率":color(0)};
+					param.infoFn = function(d){
+						return d.year+"年 "+d.key+" "+d.rate+"人";
+					};
+					g_SvgGraph.TimeLine(param);
+	        		break;
+	        }
 		}
 
 		if(projectionLife[estimateParam] && 

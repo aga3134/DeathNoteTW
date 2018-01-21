@@ -221,7 +221,7 @@ function MapTW(){
 			if(hoverOutCallback) hoverOutCallback();
 		}
 		function ClickFn(item){
-			if(hoverKey == "") return;
+			//if(hoverKey == "") return;
 			var cur = $(item);
 			var county = cur.attr("data-select");
 			var rect = svg.select("rect[data-select='"+county+"']");

@@ -4,7 +4,6 @@ var g_SvgGraph = function(){
 		var map = param.map;
 		var color = d3.scale.log().domain([param.minBound,param.maxBound]).range([param.minColor,param.maxColor]);
 		var textInfo = param.textInfo;
-		var titleInfo = param.titleInfo;
 		map.SetData(param.data,color);
 	  	map.OnHover(function(){
 	  		if(map.GetHoverKey() != ""){
@@ -29,7 +28,6 @@ var g_SvgGraph = function(){
 	  		}
 	  	});
 	  	map.OnClick(function(){
-	  		titleInfo.text(map.GetSelectKey());
 	  		if(param.clickFn) param.clickFn(map);
 	  	});
 	  	switch(param.type){
@@ -230,7 +228,7 @@ var g_SvgGraph = function(){
 
 			index++;
   		}
-
+  		$(param.textInfo).text("單位 X軸:"+param.unitX+" Y軸:"+param.unitY);
 	};
 
 	var PieChart = function(param){
@@ -336,6 +334,7 @@ var g_SvgGraph = function(){
 			.on("mouseout",function(){
 				d3.select(this).attr("stroke-width",0);
 			});
+		$(param.textInfo).text("單位 X軸:"+param.unitX+" Y軸:"+param.unitY);
 	}
 
 	return {
