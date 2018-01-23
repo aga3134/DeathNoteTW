@@ -255,19 +255,23 @@ var g_SvgGraph = function(){
 		    .value(function(d) { return d[param.value]; });
 		var color = g_Util.ColorCategory(20);
 
-		g.selectAll(".arc")
+		g.selectAll("path")
 			.data(pie(param.data)).enter()
 			.append("path")
 			.attr("data-info",param.infoFn)
-			.attr("class", "arc")
 			.attr("d", arc)
 			.attr("stroke","#FFFFFF")
 			.attr("stroke-width",0)
 			.attr("fill", function(d,i) { return color(i); })
-			.on("mouseover",function(){
+			.on("mouseover",function(d){
 				var cur = d3.select(this);
 				cur.attr("stroke-width",3);
 				$(param.textInfo).text(cur.attr("data-info"));
+				//move hovered object up
+				g.selectAll("path").sort(function (a, b) {
+					if (a.data.key != d.data.key) return -1;
+					else return 1;
+				});
 			})
 			.on("mouseout",function(){
 				d3.select(this).attr("stroke-width",0);
@@ -326,10 +330,15 @@ var g_SvgGraph = function(){
 			.attr("stroke","#FFAA0D")
 			.attr("stroke-width",0)
 			.attr("fill", function(d) {return color(d[param.keyY]);})
-			.on("mouseover",function(){
+			.on("mouseover",function(d){
 				var cur = d3.select(this);
 				cur.attr("stroke-width",3);
 				$(param.textInfo).text(cur.attr("data-info"));
+				//move hovered object up
+				g.selectAll("rect").sort(function (a, b) {
+					if (a[param.keyXMin] != d[param.keyXMin]) return -1;
+					else return 1;
+				});
 			})
 			.on("mouseout",function(){
 				d3.select(this).attr("stroke-width",0);

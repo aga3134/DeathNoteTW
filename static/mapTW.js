@@ -188,34 +188,29 @@ function MapTW(){
 			var county = cur.attr("data-select");
 			var rect = svg.select("rect[data-select='"+county+"']");
 			var text = svg.select("text[data-select='"+county+"']");
-			box.find(".hoverOutline")
-				.attr("data-select",county)
-				.attr("data-value",rect.attr("data-value"))
-				.attr("x",rect.attr("x"))
-				.attr("y",rect.attr("y"))
-				.attr("width",rect.attr("width"))
-				.attr("height",rect.attr("height"));
+
 			if(county != selectKey){
 				text.attr("fill","#FFAA0D");
+				rect.attr("stroke","#FFAA0D").attr("stroke-width",2);
+				//move hovered object up
+				svg.selectAll("rect").sort(function (a, b) {
+					if (a.county != county) return -1;
+					else return 1;
+				});
 			}
 			hoverKey = cur.attr("data-select");
 			hoverValue = cur.attr("data-value");
 			if(hoverCallback) hoverCallback();
 		}
 		function HoverOut(item){
-			//avoid flash
-			if(d3.event.movementX == 0 && d3.event.movementY == 0) return;
 			var county = $(item).attr("data-select");
+			var rect = svg.select("rect[data-select='"+county+"']");
+			var text = svg.select("text[data-select='"+county+"']");
+
 			if(county != selectKey){
-				svg.select("text[data-select='"+county+"']").attr("fill","black");
+				text.attr("fill","black");
+				rect.attr("stroke","black").attr("stroke-width",0.5);
 			}
-			box.find(".hoverOutline")
-				.attr("data-select","")
-				.attr("data-value","")
-				.attr("x",0)
-				.attr("y",0)
-				.attr("width",0)
-				.attr("height",0);
 			hoverValue = "";
 			hoverKey = "";
 			if(hoverOutCallback) hoverOutCallback();
@@ -225,15 +220,21 @@ function MapTW(){
 			var cur = $(item);
 			var county = cur.attr("data-select");
 			var rect = svg.select("rect[data-select='"+county+"']");
-			box.find(".selectOutline")
-				.attr("data-select",county)
-				.attr("data-value",rect.attr("data-value"))
-				.attr("x",rect.attr("x"))
-				.attr("y",rect.attr("y"))
-				.attr("width",rect.attr("width"))
-				.attr("height",rect.attr("height"));
-			svg.select("text[data-select='"+selectKey+"']").attr("fill","black");
-			svg.select("text[data-select='"+county+"']").attr("fill","#FF3333");
+			var text = svg.select("text[data-select='"+county+"']");
+			var preRect = svg.select("rect[data-select='"+selectKey+"']");
+			var preText = svg.select("text[data-select='"+selectKey+"']");
+
+			preText.attr("fill","black");
+			preRect.attr("stroke","black").attr("stroke-width",0.5);
+
+			text.attr("fill","#FF3333");
+			rect.attr("stroke","#FF3333").attr("stroke-width",2);
+			//move hovered object up
+			svg.selectAll("rect").sort(function (a, b) {
+				if (a.county != county) return -1;
+				else return 1;
+			});
+
 			selectKey = county;
 			selectValue = cur.attr("data-value");
 			if(clickCallback) clickCallback();
@@ -290,20 +291,6 @@ function MapTW(){
 			.on("mouseover",function(){HoverIn(this);})
 			.on("mouseout",function(){HoverOut(this);})
 			.on("click",function(){ClickFn(this);});
-
-		svg.append("rect")
-			.attr("class","hoverOutline")
-			.attr("stroke","#FFAA0D")
-			.attr("stroke-width",2)
-			.attr("fill","none")
-			.on("click",function(){
-				ClickFn(this);
-			});
-		svg.append("rect")
-			.attr("class","selectOutline")
-			.attr("stroke","#FF3333")
-			.attr("stroke-width",2)
-			.attr("fill","none");
 
 		var selectItem = svg.select("rect[data-select='"+selectKey+"']")[0];
 		if(selectItem[0] != null){

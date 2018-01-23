@@ -16,7 +16,7 @@ var g_APP = new Vue({
   },
   methods: {
     UpdateGraph: function(){
-      this.showGraph = (this.curPage>1&&this.curPage<6);
+      this.showGraph = (this.curPage>0&&this.curPage<6);
       if(this.showGraph){
         Vue.nextTick(function () {  //須先等dom元件更新後再處理畫面
           switch(this.curPage){
@@ -59,7 +59,7 @@ var g_APP = new Vue({
         },1);
         setTimeout(function(){
           pageMove.css("display","none");
-          this.UpdateGraph();
+          this.ChangeGraphType(1);
         }.bind(this),500);
       }.bind(this);
 
@@ -72,7 +72,7 @@ var g_APP = new Vue({
         },1);
         setTimeout(function(){
           pageMove.css("display","none");
-          this.UpdateGraph();
+          this.ChangeGraphType(1);
         }.bind(this),500);
       }.bind(this);
 
@@ -84,7 +84,7 @@ var g_APP = new Vue({
       $("#coverButtonList :nth-child("+(this.curPage+1)+")").removeClass("select");
       $("#coverButtonList :nth-child("+(page+1)+")").addClass("select");
       this.curPage = page;
-      this.ChangeGraphType(1);
+      
     },
     ChangeGraphType: function(type){
       this.graphType = type;

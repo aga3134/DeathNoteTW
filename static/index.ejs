@@ -57,7 +57,7 @@
 			<div class="page-move">
 			</div>
 			<div class="page-bg">
-				<div id="pageRule" v-show="curPage === 1">
+				<div id="pageRule" v-show="curPage === 1 && showGraph">
 					<div class="title">規則</div>
 					<div class="content">
 						<ol>
@@ -194,7 +194,6 @@
 										扶養比例
 									</div>
 								</div>
-								<div class="center enhance" id="popRatio">單位:人(%)</div>
 								<svg id="popPyramidSvg"></svg>
 								<div class="center" id="popPyramidInfo">單位:人</div>
 							</div><!--
@@ -213,6 +212,7 @@
 								</div>
 								<svg id="popMapSvg"></svg>
 								<div class="center" id="popMapInfo">單位:人</div>
+								<div class="center enhance" id="popRatio">單位:人(%)</div>
 							</div><!--
 							--><div class="full-w">
 								<div class="graph-title">平均壽命</div>
@@ -228,7 +228,9 @@
 									<li>目前台灣最老的縣市是?最年輕的縣市是?為何出現這種分佈?</li>
 									<li>1956年台灣平均壽命突然比前一年少了一歲多，發生了什麼事?</li>
 								</ul>
-								<div class="title">專有名詞</div>
+							</div>
+							<div class="note">
+								<div class="title">名詞解釋</div>
 								<ul>
 									<li>扶老比: 「65歲以上人數」 對 「15~65歲人數」 的比例，數字越大表示社會對老人扶養的負擔越重</li>
 									<li>扶幼比: 「15歲以下人數」 對 「15~65歲人數」 的比例，數字越大表示社會對小孩扶養的負擔越重</li>
@@ -336,7 +338,9 @@
 									<li>出生數趨勢逐年下降，2010年後觸底反彈，原因為何?</li>
 									<li>是哪些原因造成社會增加數的波動?</li>
 								</ul>
-								<div class="title">專有名詞</div>
+							</div>
+							<div class="note">
+								<div class="title">名詞解釋</div>
 								<ul>
 									<li>生育率: 當年度在設定的年齡區間中，每1000位女性生了幾個小孩。</li>
 									<li>總生育率: 將所有年齡區間的生育率加總得到的數字。假設20~25歲區間的生育率為60‰，就會對此數字有5 x 60‰ = 300‰的貢獻。</li>
@@ -390,7 +394,9 @@
 									<li>低、中、高推估的總生育率各不相同，哪個比較合理?</li>
 									<li>為何在高推估總生育率逐年升高的情況下，出生數還是逐年下降?</li>
 								</ul>
-								<div class="title">專有名詞</div>
+							</div>
+							<div class="note">
+								<div class="title">名詞解釋</div>
 								<ul>
 									<li>低、中、高推估: 任何預測都會基於某些假設來推算。低、中、高推估的差異就在於這些假設的數字不同。這邊的差異主要為總生育率，低推估假設總生育率逐年下降低0.9，中推估假設總生育率持平在1.2，高推推則假設總生育率逐年上升至1.5。</li>
 									<li>總生育率: 這邊總生育率的定義與「出生統計」中的定義相同。只是「出生統計」中以千分率(‰)表示，這邊則以一般數字表示。</li>
@@ -400,7 +406,157 @@
 					</div>
 					<div id="chapterAging" v-show="curPage === 3">
 						<div class="title">老の章</div>
-						<div class="content"></div>
+						<div class="switch-container">
+							<div class="switch-bt"
+								v-bind:class="{selected: graphType === 1}"
+								v-on:click="ChangeGraphType(1);">
+								抽樣分佈
+							</div>
+							<div class="switch-bt"
+								v-bind:class="{selected: graphType === 2}"
+								v-on:click="ChangeGraphType(2);">
+								生活狀況
+							</div>
+							<div class="switch-bt"
+								v-bind:class="{selected: graphType === 3}"
+								v-on:click="ChangeGraphType(3);">
+								自理能力
+							</div>
+						</div>
+						<div v-show="graphType === 1">
+							<div class="half-w">
+								<div class="graph-title" id="agingStatusAttrTitle">年齡分佈</div>
+								<div class="option-container">
+									<div class="option-bt"
+										v-bind:class="{selected: subGraphType === 1}"
+										v-on:click="ChangeSubGraphType(1);">
+										年齡
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: subGraphType === 2}"
+										v-on:click="ChangeSubGraphType(2);">
+										居住
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: subGraphType === 3}"
+										v-on:click="ChangeSubGraphType(3);">
+										家庭
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: subGraphType === 4}"
+										v-on:click="ChangeSubGraphType(4);">
+										慢性病
+									</div>
+								</div>
+								<div class="center">
+									分類:
+									<select id="agingStatusAttrSelect" v-model="optionType"
+										v-on:change="UpdateGraph();">
+										<option value="1">姓別</option>
+										<option value="2" v-show="subGraphType !== 1">年齡別</option>
+										<option value="3">身份別</option>
+										<option value="4">教育程度</option>
+										<option value="5">婚姻狀況</option>
+										<option value="6">現有子女數</option>
+										<option value="7" v-show="subGraphType !== 2 && subGraphType !== 3">居住方式</option>
+										<option value="8">縣市</option>
+									</select>
+								</div>
+								<svg id="agingStatusAttrSvg"></svg>
+								<div class="center" id="agingStatusAttrInfo">單位:人</div>
+							</div><!--
+							--><div class="half-w">
+								<div class="graph-title" id="agingStatusRatioTitle">年齡比例</div>
+								<svg id="agingStatusRatioSvg"></svg>
+								<div class="center" id="agingStatusRatioInfo">單位:人</div>
+							</div>
+						</div>
+						<div v-show="graphType === 2">
+							<div class="half-w">
+								<div class="graph-title" id="agingLivingAttrTitle">日常活動</div>
+								<div class="option-container">
+									<div class="option-bt"
+										v-bind:class="{selected: subGraphType === 1}"
+										v-on:click="ChangeSubGraphType(1);">
+										日常活動
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: subGraphType === 2}"
+										v-on:click="ChangeSubGraphType(2);">
+										心情
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: subGraphType === 3}"
+										v-on:click="ChangeSubGraphType(3);">
+										理想居住
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: subGraphType === 4}"
+										v-on:click="ChangeSubGraphType(4);">
+										生活期望
+									</div>
+								</div>
+								<div class="center">
+									分類:
+									<select id="agingLivingAttrSelect" v-model="optionType"
+										v-on:change="UpdateGraph();">
+										<option value="1">姓別</option>
+										<option value="2">年齡別</option>
+										<option value="3">身份別</option>
+										<option value="4">教育程度</option>
+										<option value="5">婚姻狀況</option>
+										<option value="6">現有子女數</option>
+										<option value="7">居住方式</option>
+										<option value="8">縣市</option>
+									</select>
+								</div>
+								<svg id="agingLivingAttrSvg"></svg>
+								<div class="center" id="agingLivingAttrInfo">單位:人</div>
+							</div><!--
+							--><div class="half-w">
+								<div class="graph-title" id="agingLivingRatioTitle">年齡比例</div>
+								<svg id="agingLivingRatioSvg"></svg>
+								<div class="center" id="agingLivingRatioInfo">單位:人</div>
+							</div>
+						</div>
+						<div v-show="graphType === 3">
+							<div class="half-w">
+								<div class="graph-title" id="agingAbilityAttrTitle">起居困難</div>
+								<div class="option-container">
+									<div class="option-bt"
+										v-bind:class="{selected: subGraphType === 1}"
+										v-on:click="ChangeSubGraphType(1);">
+										起居困難
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: subGraphType === 2}"
+										v-on:click="ChangeSubGraphType(2);">
+										功能性活動
+									</div>
+								</div>
+								<div class="center">
+									分類:
+									<select id="agingAbilityAttrSelect" v-model="optionType"
+										v-on:change="UpdateGraph();">
+										<option value="1">姓別</option>
+										<option value="2">年齡別</option>
+										<option value="3">身份別</option>
+										<option value="4">教育程度</option>
+										<option value="5">婚姻狀況</option>
+										<option value="6">現有子女數</option>
+										<option value="7">居住方式</option>
+										<option value="8">縣市</option>
+									</select>
+								</div>
+								<svg id="agingAbilityAttrSvg"></svg>
+								<div class="center" id="agingAbilityAttrInfo">單位:人</div>
+							</div><!--
+							--><div class="half-w">
+								<div class="graph-title" id="agingAbilityRatioTitle">年齡比例</div>
+								<svg id="agingAbilityRatioSvg"></svg>
+								<div class="center" id="agingAbilityRatioInfo">單位:人</div>
+							</div>
+						</div>
 					</div>
 					<div id="chapterDisease" v-show="curPage === 4">
 						<div class="title">病の章</div>

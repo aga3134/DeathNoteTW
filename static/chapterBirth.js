@@ -164,7 +164,7 @@ var g_ChapterBirth = function(){
 	  			selectCounty = map.GetSelectKey();
 	  			if(subGraphType == 1) $("#popPyramidTitle").text(selectCounty+" 年齡分佈");
 	  			else if(subGraphType == 2) $("#popPyramidTitle").text(selectCounty+" 扶養比例");
-	  			DrawPopPyramid();	
+	  			DrawPopPyramid(subGraphType);	
 	  		};
 	  		g_SvgGraph.MapTW(param);
 	  	}

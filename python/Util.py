@@ -22,6 +22,15 @@ def GenValue(record, keyStr):
             val+=","
     return val
 
+def IsNumber(s):
+    if s is None:
+        return False
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
 def DataToDB(connection, table, d):
     field = ",".join(d.keys())
     val = GenValue(d,field)
