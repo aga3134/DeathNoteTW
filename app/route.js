@@ -81,6 +81,95 @@ module.exports = function(app){
 	});
 
 	//==========================老之章==========================
+	app.get("/agingSurveyHouseType", function(req, res){
+		var attrGroup = req.query.attrGroup;
+		var sum = req.query.sum;
+		var query = {};
+		if(attrGroup) query.attrGroup = attrGroup;
+		DB.AgingSurveyHouseType.findAll({where: query}).then(function(results){
+			res.send(JSON.stringify(results));
+		});
+	});
+
+	app.get("/agingSurveyFamilyType", function(req, res){
+		var attrGroup = req.query.attrGroup;
+		var sum = req.query.sum;
+		var query = {};
+		if(attrGroup) query.attrGroup = attrGroup;
+		DB.AgingSurveyFamilyType.findAll({where: query}).then(function(results){
+			res.send(JSON.stringify(results));
+		});
+	});
+
+	app.get("/agingSurveyChronic", function(req, res){
+		var attrGroup = req.query.attrGroup;
+		var sum = req.query.sum;
+		var query = {};
+		if(attrGroup) query.attrGroup = attrGroup;
+		DB.AgingSurveyChronic.findAll({where: query}).then(function(results){
+			res.send(JSON.stringify(results));
+		});
+	});
+
+	app.get("/agingSurveyActivity", function(req, res){
+		var attrGroup = req.query.attrGroup;
+		var sum = req.query.sum;
+		var query = {};
+		if(attrGroup) query.attrGroup = attrGroup;
+		DB.AgingSurveyActivity.findAll({where: query}).then(function(results){
+			res.send(JSON.stringify(results));
+		});
+	});
+
+	app.get("/agingSurveyFeeling", function(req, res){
+		var attrGroup = req.query.attrGroup;
+		var sum = req.query.sum;
+		var query = {};
+		if(attrGroup) query.attrGroup = attrGroup;
+		DB.AgingSurveyFeeling.findAll({where: query}).then(function(results){
+			res.send(JSON.stringify(results));
+		});
+	});
+
+	app.get("/agingSurveyIdealLive", function(req, res){
+		var attrGroup = req.query.attrGroup;
+		var sum = req.query.sum;
+		var query = {};
+		if(attrGroup) query.attrGroup = attrGroup;
+		DB.AgingSurveyIdealLive.findAll({where: query}).then(function(results){
+			res.send(JSON.stringify(results));
+		});
+	});
+
+	app.get("/agingSurveyExpect", function(req, res){
+		var attrGroup = req.query.attrGroup;
+		var sum = req.query.sum;
+		var query = {};
+		if(attrGroup) query.attrGroup = attrGroup;
+		DB.AgingSurveyExpect.findAll({where: query}).then(function(results){
+			res.send(JSON.stringify(results));
+		});
+	});
+
+	app.get("/agingSurveyLivingDifficulty", function(req, res){
+		var attrGroup = req.query.attrGroup;
+		var sum = req.query.sum;
+		var query = {};
+		if(attrGroup) query.attrGroup = attrGroup;
+		DB.AgingSurveyLivingDifficulty.findAll({where: query}).then(function(results){
+			res.send(JSON.stringify(results));
+		});
+	});
+
+	app.get("/agingSurveyFunctionDifficulty", function(req, res){
+		var attrGroup = req.query.attrGroup;
+		var sum = req.query.sum;
+		var query = {};
+		if(attrGroup) query.attrGroup = attrGroup;
+		DB.AgingSurveyFunctionDifficulty.findAll({where: query}).then(function(results){
+			res.send(JSON.stringify(results));
+		});
+	});
 
 	//==========================病之章==========================
 

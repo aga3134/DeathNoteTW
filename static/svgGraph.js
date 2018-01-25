@@ -1,5 +1,7 @@
 
 var g_SvgGraph = function(){
+	var selectKey = "";
+
 	function MapTW(param){
 		var map = param.map;
 		var color = d3.scale.log().domain([param.minBound,param.maxBound]).range([param.minColor,param.maxColor]);
@@ -243,6 +245,23 @@ var g_SvgGraph = function(){
 		var g = svg.append("g")
 			.attr("class","group")
     		.attr("transform", "translate(" + w*0.5 + "," + h*0.5 + ")");
+
+    	function ClickFn(item){
+    		if(param.clickFn){
+	    		var pre = g.select("path[data-select='"+selectKey+"']");
+	    		pre.attr("stroke","#FFFFFF").attr("stroke-width",0);
+
+	    		var select = item.attr("data-select");
+				item.attr("stroke","#FF3333").attr("stroke-width",2);
+
+				selectKey = select;
+				g.selectAll("path").sort(function (a, b) {
+					if (a.data[param.key] != select) return -1;
+					else return 1;
+				});
+				param.clickFn(item);
+			}
+		}
 	
 		var inRadius = param.inRadius?param.inRadius:0;
 		var radius = Math.min(w,h)*0.5;
@@ -253,30 +272,50 @@ var g_SvgGraph = function(){
 		var pie = d3.layout.pie()
 		    .sort(null)
 		    .value(function(d) { return d[param.value]; });
-		var color = g_Util.ColorCategory(20);
+		var color = g_Util.ColorCategory(param.data.length);
 
 		g.selectAll("path")
 			.data(pie(param.data)).enter()
 			.append("path")
 			.attr("data-info",param.infoFn)
+			.attr("data-select",function(d){return d.data[param.key];})
 			.attr("d", arc)
 			.attr("stroke","#FFFFFF")
 			.attr("stroke-width",0)
 			.attr("fill", function(d,i) { return color(i); })
 			.on("mouseover",function(d){
 				var cur = d3.select(this);
-				cur.attr("stroke-width",3);
+				var curSelect = cur.attr("data-select");
 				$(param.textInfo).text(cur.attr("data-info"));
+				if(curSelect == selectKey) return;
+
+				cur.attr("stroke-width",2);
 				//move hovered object up
 				g.selectAll("path").sort(function (a, b) {
-					if (a.data.key != d.data.key) return -1;
+					//selected在最上面，其次hover
+					if(a.data[param.key] == selectKey) return 1;
+					else if(b.data[param.key] == selectKey) return -1;
+					else if (a.data[param.key] != d.data[param.key]) return -1;
 					else return 1;
 				});
 			})
 			.on("mouseout",function(){
-				d3.select(this).attr("stroke-width",0);
-			});
+				var cur = d3.select(this);
+				var curSelect = cur.attr("data-select");
+				if(curSelect == selectKey) return;
+				cur.attr("stroke-width",0);
 
+				var selectItem = g.select("path[data-select='"+selectKey+"']");
+				if(!selectItem.empty()){
+					$(param.textInfo).text(selectItem.attr("data-info"));
+				}
+			})
+			.on("click",function(){ClickFn(d3.select(this));});
+
+		if(param.select){
+			var item = g.select("path[data-select='"+param.select+"']");
+			if(!item.empty()) ClickFn(item);
+		}
 	};
 
 	var Histogram = function(param){
@@ -286,8 +325,7 @@ var g_SvgGraph = function(){
 		var w = graph.width(), h = graph.height();
 		var svg = d3.select(param.selector);
 		svg.selectAll("*").remove();
-		var padL = 50,padR = 10,padT = 20,padB = 30;
-		var minV = 1e10,maxV = 0;
+		var padL = param.padL||50,padR = param.padR||10,padT = param.padT||20,padB = param.padB||30;
 		var scaleW = d3.scale.linear().domain([param.minX,param.maxX]).range([0,w-padL-padR]);
 		var scaleH = d3.scale.linear().domain([param.maxValue,0]).range([0,h-padT-padB]);
 		var color = d3.scale.linear().domain([param.maxValue*0.1,param.maxValue]).range([param.minColor,param.maxColor]);
@@ -325,14 +363,14 @@ var g_SvgGraph = function(){
 			.attr("data-info",param.infoFn)
 			.attr("x",function(d){return scaleW(d[param.keyXMin])+padL;})
 			.attr("y",function(d){return h-padB-scaleH(param.maxValue-d[param.keyY]);})
-			.attr("width",function(d){return scaleW(d[param.keyXMax]-d[param.keyXMin]+1);})
+			.attr("width",function(d){return scaleW(d[param.keyXMax]-d[param.keyXMin]+param.minX+1);})
 			.attr("height",function(d){return scaleH(param.maxValue-d[param.keyY]);})
 			.attr("stroke","#FFAA0D")
 			.attr("stroke-width",0)
 			.attr("fill", function(d) {return color(d[param.keyY]);})
 			.on("mouseover",function(d){
 				var cur = d3.select(this);
-				cur.attr("stroke-width",3);
+				cur.attr("stroke-width",2);
 				$(param.textInfo).text(cur.attr("data-info"));
 				//move hovered object up
 				g.selectAll("rect").sort(function (a, b) {
@@ -346,11 +384,169 @@ var g_SvgGraph = function(){
 		$(param.textInfo).text("單位 X軸:"+param.unitX+" Y軸:"+param.unitY);
 	}
 
+	var CategoryHistogram = function(param){
+		if(param.data == null) return;
+		//compute scale
+		var graph = $(param.selector);
+		var w = graph.width(), h = graph.height();
+		var svg = d3.select(param.selector);
+		svg.selectAll("*").remove();
+		var padL = param.padL||50,padR = param.padR||10,padT = param.padT||20,padB = param.padB||30;
+		var stepX = (w-padL-padR)/param.data.length;
+		var scaleH = d3.scale.linear().domain([param.maxValue,0]).range([0,h-padT-padB]);
+		var color = d3.scale.linear().domain([param.maxValue*0.1,param.maxValue]).range([param.minColor,param.maxColor]);
+
+		//draw axis
+		svg.append("line").attr({
+			"x1":padL,
+			"y1":h-padB,
+			"x2":w-padR,
+			"y2":h-padB,
+			"fill":"black",
+  			"stroke":"black",
+  			"stroke-width": 2
+		});
+		var yAxis = d3.svg.axis().orient("left").scale(scaleH).ticks(10)
+			.tickFormat(function(d){return d;});
+		var yAxisGroup = svg.append("g").call(yAxis)
+			.attr({
+				"font-size": "12px",
+				"transform":"translate("+padL+","+padT+")",
+  				"fill":"black",
+  				"stroke":"black",
+  				"stroke-width": 0.5
+  			});
+		yAxisGroup.select('path')
+  			.style({ 'stroke': 'black', 'fill': 'none', 'stroke-width': '2px'});
+
+  		var g = svg.append("g").attr("class","histGroup");
+  		g.selectAll("rect")
+			.data(param.data).enter()
+			.append("rect")
+			.attr("data-info",param.infoFn)
+			.attr("x",function(d,i){return i*stepX+padL;})
+			.attr("y",function(d){return h-padB-scaleH(param.maxValue-d[param.keyY]);})
+			.attr("width",stepX)
+			.attr("height",function(d){return scaleH(param.maxValue-d[param.keyY]);})
+			.attr("stroke","#FFAA0D")
+			.attr("stroke-width",0)
+			.attr("fill", function(d) {return color(d[param.keyY]);})
+			.on("mouseover",function(d){
+				var cur = d3.select(this);
+				cur.attr("stroke-width",2);
+				$(param.textInfo).text(cur.attr("data-info"));
+				//move hovered object up
+				g.selectAll("rect").sort(function (a, b) {
+					if (a[param.keyX] != d[param.keyX]) return -1;
+					else return 1;
+				});
+			})
+			.on("mouseout",function(){
+				d3.select(this).attr("stroke-width",0);
+			});
+
+		g.selectAll("text")
+			.data(param.data).enter()
+			.append("text")
+			.attr("x",function(d,i){return (i+0.5)*stepX+padL;})
+			.attr("y",h-padB-10)
+			.attr("text-anchor","end")
+			.attr("alignment-baseline","middle")
+			.attr("writing-mode","tb")
+			.attr("font-size","12px")
+			.text(function(d){return d[param.keyX];})
+
+		$(param.textInfo).text("單位: "+param.unit);
+	}
+
+	var SortedBar = function(param){
+		if(param.data == null) return;
+		//compute scale
+		var graph = $(param.selector);
+		var w = graph.width(), h = graph.height();
+		var svg = d3.select(param.selector);
+		svg.selectAll("*").remove();
+		var padL = param.padL||20,padR = param.padR||10,padT = param.padT||20,padB = param.padB||30;
+		var stepY = (h-padT-padB)/param.data.length;
+		var scaleW = d3.scale.linear().domain([0,param.maxValue]).range([0,w-padL-padR]);
+		var color = d3.scale.linear().domain([param.maxValue*0.1,param.maxValue]).range([param.minColor,param.maxColor]);
+
+		var sortData = param.data.sort(function(a,b){
+			return b[param.value]-a[param.value];
+		});
+
+		var xAxis = d3.svg.axis().orient("top").scale(scaleW).ticks(w/75);
+		var xAxisGroup = svg.append("g").call(xAxis)
+			.attr({
+				"font-size": "12px",
+				"transform":"translate("+padL+","+padT+")",
+  				"fill":"black",
+  				"stroke":"black",
+  				"stroke-width": 0.5
+  			});
+		xAxisGroup.select('path')
+  			.style({ 'stroke': 'black', 'fill': 'none', 'stroke-width': '2px'});
+
+  		svg.append("line").attr({
+  			"x1":padL,
+  			"y1":padT,
+  			"x2":padL,
+  			"y2":h-padB,
+  			"fill":"black",
+  			"stroke":"black",
+  			"stroke-width": 2
+  		});
+
+
+  		var g = svg.append("g").attr("class","barGroup");
+  		g.selectAll("rect")
+			.data(sortData).enter()
+			.append("rect")
+			.attr("data-info",param.infoFn)
+			.attr("x",padL)
+			.attr("y",function(d,i){return padT+stepY*i;})
+			.attr("width",function(d){return scaleW(d[param.value]);})
+			.attr("height",stepY)
+			.attr("stroke","black")
+			.attr("stroke-width",0.5)
+			.attr("fill", function(d) {return color(d[param.value]);})
+			.on("mouseover",function(d){
+				var cur = d3.select(this);
+				cur.attr("stroke","#FFAA0D")
+					.attr("stroke-width",2);
+				$(param.textInfo).text(cur.attr("data-info"));
+				//move hovered object up
+				g.selectAll("rect").sort(function (a, b) {
+					if (a[param.key] != d[param.key]) return -1;
+					else return 1;
+				});
+			})
+			.on("mouseout",function(){
+				d3.select(this).attr("stroke","black")
+					.attr("stroke-width",0.5);
+			});
+
+		g.selectAll("text")
+			.data(sortData).enter()
+			.append("text")
+			.attr("x",padL+10)
+			.attr("y",function(d,i){return padT+stepY*(i+0.5);})
+			.attr("text-anchor","start")
+			.attr("alignment-baseline","middle")
+			.attr("writing-mode","rl")
+			.attr("font-size","12px")
+			.text(function(d){return d[param.key];})
+
+		$(param.textInfo).text("單位: "+param.unit);
+	};
+
 	return {
 		MapTW: MapTW,
 		PopulationPyramid: PopulationPyramid,
 		TimeLine: TimeLine,
 		PieChart: PieChart,
-		Histogram: Histogram
+		Histogram: Histogram,
+		CategoryHistogram: CategoryHistogram,
+		SortedBar: SortedBar
 	}
 }();

@@ -94,7 +94,7 @@ var g_ChapterBirth = function(){
 					break;
 			}
 			var ratioData = popRatioData[selectCounty][year];
-			var str = "扶老比:"+(100*ratioData[2].num/ratioData[1].num).toFixed(1)+"%";
+			var str = selectCounty+" 扶老比:"+(100*ratioData[2].num/ratioData[1].num).toFixed(1)+"%";
 			str += " 扶幼比:"+(100*ratioData[0].num/ratioData[1].num).toFixed(1)+"%";
 			$("#popRatio").text(str);
 		}
@@ -914,5 +914,5 @@ var g_ChapterBirth = function(){
 
 	return {
 		loadGraph: loadGraph
-	}
+	};
 }();

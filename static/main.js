@@ -46,7 +46,7 @@ var g_APP = new Vue({
         setTimeout(function(){
           var btList = $("#coverButtonList");
           btList.children("img").css("opacity",1);
-          this.UpdateGraph();
+          this.ChangeGraphType(1);
         }.bind(this),500);
       }.bind(this);
 
