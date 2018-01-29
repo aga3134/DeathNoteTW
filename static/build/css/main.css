@@ -134,6 +134,7 @@ html, body {
         .death-note .page-bg .content a:hover {
           color: #326432; }
       .death-note .page-bg .content .quote {
+        border-radius: 3px;
         font-size: 1.5em;
         text-align: left;
         background-color: #646464;
@@ -157,6 +158,8 @@ html, body {
       padding: 5px 10px 5px 5px;
       line-height: 1.5em;
       border-radius: 5px; }
+      .death-note .page-bg .note .bold {
+        font-weight: bold; }
       .death-note .page-bg .note .title {
         padding-bottom: 0px;
         font-size: 1.5em;

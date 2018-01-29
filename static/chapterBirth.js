@@ -14,6 +14,7 @@ var g_ChapterBirth = function(){
 	var marriageScale = {};
 	var marriageStatus = "未婚";
 	var marriageTimeLine;
+	var preMinAge=0,preMaxAge=100;
 
 	var birthHistData;
 	var birthHistMax = {};
@@ -279,13 +280,35 @@ var g_ChapterBirth = function(){
 			param.textInfo = "#marriageRatioInfo";
 			param.select = marriageStatus;
 
+			//fix min max age within age set
 			var minAge = parseInt($("#marriageRatioMinAge").val());
 			var maxAge = parseInt($("#marriageRatioMaxAge").val());
 			if(maxAge < minAge){
-				var tmp = maxAge; maxAge = minAge; minAge = tmp;
-				$("#marriageRatioMinAge").val(minAge)
-				$("#marriageRatioMaxAge").val(maxAge);
+				var tmp = maxAge; maxAge = minAge; minAge = tmp;	
 			}
+			if(minAge < 0) minAge = 0;
+			if(minAge > 100) minAge = 100;
+			if(maxAge < 0) maxAge = 0;
+			if(maxAge > 100) maxAge = 100;
+			if(minAge < 15){
+				if(preMinAge < minAge) minAge = 15;
+				else if(preMinAge > minAge) minAge = 0;
+			}
+			else{
+				minAge = minAge-(minAge%5);
+			}
+			if(maxAge < 15){
+				if(preMaxAge < maxAge) maxAge = 15;
+				else if(preMaxAge > maxAge) maxAge = 0;
+			}
+			else{
+				maxAge = maxAge-(maxAge%5);
+			}
+			preMinAge = minAge;
+			preMaxAge = maxAge;
+			$("#marriageRatioMinAge").val(minAge)
+			$("#marriageRatioMaxAge").val(maxAge);
+
 			var group = $("#marriageRatioSelect").val();
 			var ratioData = [];
 			var totalNum = 0;
