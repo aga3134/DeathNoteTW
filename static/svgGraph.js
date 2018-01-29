@@ -1,6 +1,6 @@
 
 var g_SvgGraph = function(){
-	var selectKey = "";
+	
 
 	function MapTW(param){
 		var map = param.map;
@@ -235,7 +235,7 @@ var g_SvgGraph = function(){
 
 	var PieChart = function(param){
 		if(param.data == null) return;
-
+		var selectKey = "";
 		//compute scale
 		var graph = $(param.selector);
 		var w = graph.width(), h = graph.height();
@@ -461,19 +461,43 @@ var g_SvgGraph = function(){
 
 	var SortedBar = function(param){
 		if(param.data == null) return;
+		var selectKey = "";
+
+		function ClickFn(item){
+    		if(param.clickFn){
+	    		var pre = g.select("rect[data-select='"+selectKey+"']");
+	    		pre.attr("stroke","black").attr("stroke-width",0.5);
+
+	    		var select = item.attr("data-select");
+				item.attr("stroke","#FF3333").attr("stroke-width",2);
+
+				$(param.textInfo).text(item.attr("data-info"));
+
+				selectKey = select;
+				g.selectAll("rect").sort(function (a, b) {
+					if (a[param.key] != select) return -1;
+					else return 1;
+				});
+				param.clickFn(item);
+			}
+		}
+
+		var sortData = param.data.sort(function(a,b){
+			return b[param.value]-a[param.value];
+		});
+		var rankOffset = param.rankOffset||0;
+		var rankLength = param.rankLength||sortData.length;
+		sortData = sortData.slice(rankOffset,rankOffset+rankLength);
+
 		//compute scale
 		var graph = $(param.selector);
 		var w = graph.width(), h = graph.height();
 		var svg = d3.select(param.selector);
 		svg.selectAll("*").remove();
 		var padL = param.padL||20,padR = param.padR||10,padT = param.padT||20,padB = param.padB||30;
-		var stepY = (h-padT-padB)/param.data.length;
+		var stepY = (h-padT-padB)/sortData.length;
 		var scaleW = d3.scale.linear().domain([0,param.maxValue]).range([0,w-padL-padR]);
 		var color = d3.scale.linear().domain([param.maxValue*0.1,param.maxValue]).range([param.minColor,param.maxColor]);
-
-		var sortData = param.data.sort(function(a,b){
-			return b[param.value]-a[param.value];
-		});
 
 		var xAxis = d3.svg.axis().orient("top").scale(scaleW).ticks(w/75);
 		var xAxisGroup = svg.append("g").call(xAxis)
@@ -502,6 +526,7 @@ var g_SvgGraph = function(){
   		g.selectAll("rect")
 			.data(sortData).enter()
 			.append("rect")
+			.attr("data-select",function(d){return d[param.key];})
 			.attr("data-info",param.infoFn)
 			.attr("x",padL)
 			.attr("y",function(d,i){return padT+stepY*i;})
@@ -512,19 +537,34 @@ var g_SvgGraph = function(){
 			.attr("fill", function(d) {return color(d[param.value]);})
 			.on("mouseover",function(d){
 				var cur = d3.select(this);
+				var curSelect = cur.attr("data-select");
+				if(curSelect == selectKey) return;
+
 				cur.attr("stroke","#FFAA0D")
 					.attr("stroke-width",2);
 				$(param.textInfo).text(cur.attr("data-info"));
 				//move hovered object up
 				g.selectAll("rect").sort(function (a, b) {
-					if (a[param.key] != d[param.key]) return -1;
+					//selected在最上面，其次hover
+					if(a[param.key] == selectKey) return 1;
+					else if(b[param.key] == selectKey) return -1;
+					else if (a[param.key] != d[param.key]) return -1;
 					else return 1;
 				});
 			})
 			.on("mouseout",function(){
-				d3.select(this).attr("stroke","black")
+				var cur = d3.select(this);
+				var curSelect = cur.attr("data-select");
+				if(curSelect == selectKey) return;
+				cur.attr("stroke","black")
 					.attr("stroke-width",0.5);
-			});
+
+				var selectItem = g.select("rect[data-select='"+selectKey+"']");
+				if(!selectItem.empty()){
+					$(param.textInfo).text(selectItem.attr("data-info"));
+				}
+			})
+			.on("click",function(){ClickFn(d3.select(this));});
 
 		g.selectAll("text")
 			.data(sortData).enter()
@@ -538,6 +578,16 @@ var g_SvgGraph = function(){
 			.text(function(d){return d[param.key];})
 
 		$(param.textInfo).text("單位: "+param.unit);
+
+		if(!param.select || param.select == ""){
+			var firstKey = param.data[0][param.key];
+			item = g.select("rect[data-select='"+firstKey+"']");
+			if(!item.empty()) ClickFn(item);
+		}
+		else{
+			var item = g.select("rect[data-select='"+param.select+"']");
+			if(!item.empty()) ClickFn(item);
+		}
 	};
 
 	return {

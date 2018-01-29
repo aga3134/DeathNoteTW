@@ -470,8 +470,8 @@ var g_ChapterAging = function(){
   		param.key = dataKey;
   		param.value = dataV;
   		param.maxValue = maxData[attrGroup];
-  		param.minColor = "#9999FF";
-  		param.maxColor = "#666699";
+  		param.minColor = "#CCCCFF";
+  		param.maxColor = "#8888AA";
   		param.unit = "人";
   		param.textInfo = $("#agingAbilityRatioInfo");
   		param.data = data[attrGroup][selectAttr].filter(function(d){return d[dataKey]!="總計";});

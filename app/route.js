@@ -174,6 +174,110 @@ module.exports = function(app){
 	//==========================病之章==========================
 
 	//==========================死之章==========================
+	app.get("/deathGeneral", function(req, res){
+		var county = req.query.county;
+		var cause = req.query.cause;
+		var sex = req.query.sex;
+		var ageType = req.query.ageType;
+		var sumAge = req.query.sumAge;
 
+		var query = {};
+		if(county) query.county = county;
+		if(cause) query.cause = cause;
+		if(sex) query.sex = sex;
+		if(ageType){
+			switch(ageType){
+				case '1': 	//小於4歲
+					query.ageCode = ['01','02','03','04','05','06'];
+					break;
+				case '2': 	//5~14歲
+					query.ageCode = ['07','08'];
+					break;
+				case '3': 	//15~64歲
+					query.ageCode = ['09','10','11','12','13','14','15','16','17','18'];
+					break;
+				case '4': 	//64歲以上
+					query.ageCode = ['19','20','21','22','23','24','25','26'];
+					break;
+			}
+		}
+		var groupArr = ['year','county','sex','cause'];
+		var attrArr = ['year','county','sex','cause',[DB.sequelize.fn('sum', DB.sequelize.col('count')),'count']];
+		if(sumAge != '1'){
+			groupArr.push('ageCode');
+			groupArr.push('minAge');
+			groupArr.push('maxAge');
+			attrArr.push('ageCode');
+			attrArr.push('minAge');
+			attrArr.push('maxAge');
+		}
+		
+		DB.DeathGeneral.findAll({where: query, group: groupArr, attributes: attrArr})
+		.then(function(results){
+			res.send(JSON.stringify(results));
+		});
+		
+	});
+
+	app.get("/deathCancer", function(req, res){
+		var county = req.query.county;
+		var cause = req.query.cause;
+		var sex = req.query.sex;
+		var ageType = req.query.ageType;
+		var sumAge = req.query.sumAge;
+		var query = {};
+		if(county) query.county = county;
+		if(cause) query.cause = cause;
+		if(sex) query.sex = sex;
+		if(ageType){
+			switch(ageType){
+				case '1': 	//小於4歲
+					query.ageCode = ['01','02','03','04','05','06'];
+					break;
+				case '2': 	//5~14歲
+					query.ageCode = ['07','08'];
+					break;
+				case '3': 	//15~64歲
+					query.ageCode = ['09','10','11','12','13','14','15','16','17','18'];
+					break;
+				case '4': 	//64歲以上
+					query.ageCode = ['19','20','21','22','23','24','25','26'];
+					break;
+			}
+		}
+		var groupArr = ['year','county','sex','cause'];
+		var attrArr = ['year','county','sex','cause',[DB.sequelize.fn('sum', DB.sequelize.col('count')),'count']];
+		if(sumAge != '1'){
+			groupArr.push('ageCode');
+			groupArr.push('minAge');
+			groupArr.push('maxAge');
+			attrArr.push('ageCode');
+			attrArr.push('minAge');
+			attrArr.push('maxAge');
+		}
+		
+		DB.DeathCancer.findAll({where: query, group: groupArr, attributes: attrArr})
+		.then(function(results){
+			res.send(JSON.stringify(results));
+		});
+	});
+
+	app.get("/deathGeneralSum", function(req, res){
+		var county = req.query.county;
+		var query = {};
+		if(county) query.county = county;
+		DB.DeathGeneralSum.findAll({where: query}).then(function(results){
+			res.send(JSON.stringify(results));
+		});
+	});
+
+	app.get("/deathCancerSum", function(req, res){
+		var county = req.query.county;
+		var query = {};
+		if(county) query.county = county;
+		DB.DeathCancerSum.findAll({where: query}).then(function(results){
+			res.send(JSON.stringify(results));
+		});
+	});
 
 }

@@ -38,4 +38,4 @@ def DataToDB(connection, table, d):
         sql = "INSERT IGNORE INTO "+table+" ("+field+") VALUES ("+val+")"
         #print(sql)
         cursor.execute(sql)
-        connection.commit()
+        

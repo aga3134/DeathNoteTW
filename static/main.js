@@ -106,7 +106,7 @@ var g_APP = new Vue({
       var barAttr = {};
       //生之章-人口分佈
       for(var i=1;i<=2;i++) barAttr["2-1-1-"+i] = {"min":1974,"max":2016};
-        for(var i=1;i<=2;i++) barAttr["2-1-2-"+i] = {"min":1974,"max":2016};
+      for(var i=1;i<=2;i++) barAttr["2-1-2-"+i] = {"min":1974,"max":2016};
       //生之章-婚姻狀況
       for(var i=1;i<=4;i++) barAttr["2-2-1-"+i] = {"min":2007,"max":2016};
       //生之章-出生統計
@@ -114,6 +114,10 @@ var g_APP = new Vue({
       for(var i=1;i<=2;i++) barAttr["2-3-2-"+i] = {"min":1999,"max":2016};
       //生之章-人口推估
       for(var i=1;i<=3;i++) barAttr["2-4-1-"+i] = {"min":2016,"max":2061};
+
+      //死之章-一般死因
+      for(var i=1;i<=2;i++) barAttr["5-1-1-"+i] = {"min":1992,"max":2016};
+      for(var i=1;i<=2;i++) barAttr["5-2-1-"+i] = {"min":1992,"max":2016};
 
       if(key in barAttr){
         var attr = barAttr[key];

@@ -164,6 +164,7 @@ class DataAging:
                     d["count"] = 0
                 #print(d)
                 util.DataToDB(self.connection,"AgingSurveyAge",d)
+        self.connection.commit()
     
     def UpdateAgingSurveyHouseType(self):
         print("update AgingSurveyHouseType")
@@ -209,6 +210,7 @@ class DataAging:
                         d["count"] = 0
                     #print(d)
                     util.DataToDB(self.connection,"AgingSurveyHouseType",d)
+        self.connection.commit()
                     
     
     def UpdateAgingSurveyFamilyType(self):
@@ -261,6 +263,7 @@ class DataAging:
                         d["count"] = 0
                     #print(d)
                     util.DataToDB(self.connection,"AgingSurveyFamilyType",d)
+        self.connection.commit()
     
     def UpdateAgingSurveyChronic(self):
         print("update AgingSurveyChronic")
@@ -300,6 +303,7 @@ class DataAging:
                         d["count"] = 0
                     #print(d)
                     util.DataToDB(self.connection,"AgingSurveyChronic",d)
+        self.connection.commit()
     
     def UpdateAgingSurveyActivity(self):
         print("update AgingSurveyActivity")
@@ -358,6 +362,7 @@ class DataAging:
                     d["secondaryCount"] = 0
                 #print(d)
                 util.DataToDB(self.connection,"AgingSurveyActivity",d)
+        self.connection.commit()
     
     def UpdateAgingSurveyFeeling(self):
         print("update AgingSurveyFeeling")
@@ -411,6 +416,7 @@ class DataAging:
                         d["oftenCount"] = 0
                     #print(d)
                     util.DataToDB(self.connection,"AgingSurveyFeeling",d)
+        self.connection.commit()
                     
     
     def UpdateAgingSurveyIdealLive(self):
@@ -451,6 +457,7 @@ class DataAging:
                         d["count"] = 0
                     #print(d)
                     util.DataToDB(self.connection,"AgingSurveyIdealLive",d)
+        self.connection.commit()
     
     def UpdateAgingSurveyExpect(self):
         print("update AgingSurveyExpect")
@@ -490,6 +497,7 @@ class DataAging:
                         d["count"] = 0
                     #print(d)
                     util.DataToDB(self.connection,"AgingSurveyExpect",d)
+        self.connection.commit()
     
     def UpdateAgingSurveyLivingDifficulty(self):
         print("update AgingSurveyLivingDifficulty")
@@ -529,6 +537,7 @@ class DataAging:
                         d["count"] = 0
                     #print(d)
                     util.DataToDB(self.connection,"AgingSurveyLivingDifficulty",d)
+        self.connection.commit()
     
     def UpdateAgingSurveyFunctionDifficulty(self):
         print("update AgingSurveyFunctionDifficulty")
@@ -589,6 +598,7 @@ class DataAging:
                         d["canNotCount"] = 0
                     #print(d)
                     util.DataToDB(self.connection,"AgingSurveyFunctionDifficulty",d)
+        self.connection.commit()
 
     def UpdateData(self):
         self.UpdateAgingSurveyAge()

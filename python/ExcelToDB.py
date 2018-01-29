@@ -11,6 +11,7 @@ import pymysql
 import warnings
 from DataBirth import DataBirth
 from DataAging import DataAging
+from DataDeath import DataDeath
 
 if __name__ == "__main__":
     config = json.loads(open("config.json").read())
@@ -21,6 +22,7 @@ if __name__ == "__main__":
     
     dataBirth = DataBirth(connection)
     dataAging = DataAging(connection)
+    dataDeath = DataDeath(connection)
     
     #ignore warning message
     with warnings.catch_warnings():
@@ -29,10 +31,13 @@ if __name__ == "__main__":
         if "init" in args:
             dataBirth.CreateTable()
             dataAging.CreateTable()
+            dataDeath.CreateTable()
         if "birth" in args:
             dataBirth.UpdateData()
         if "aging" in args:
             dataAging.UpdateData()
+        if "death" in args:
+            dataDeath.UpdateData()
    
     
     connection.close()

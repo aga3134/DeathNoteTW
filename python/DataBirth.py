@@ -175,6 +175,7 @@ class DataBirth:
                     d["count"] = v
                     #print(d)
                     util.DataToDB(self.connection,"PopulationByAge",d)
+        self.connection.commit()
                     
     def UpdateMarriageByAge(self):
         wb = load_workbook(filename = 'data/生之章/現住人口數按性別、年齡及婚姻狀況分(96~105).xlsx')
@@ -217,6 +218,7 @@ class DataBirth:
                     d["count"] = v
                     #print(d)
                     util.DataToDB(self.connection,"MarriageByAge",d)
+        self.connection.commit()
                         
     
     def UpdateBirthByCounty(self):
@@ -272,6 +274,7 @@ class DataBirth:
                      "divorce":divorce}
                 #print(d)
                 util.DataToDB(self.connection,"BirthByCounty",d)
+        self.connection.commit()
             
     
     def UpdateBirthCount(self):
@@ -322,6 +325,7 @@ class DataBirth:
                 d["count"] = v
                 #print(d)
                 util.DataToDB(self.connection,"BirthCount",d)
+        self.connection.commit()
     
     def UpdateFertilityRateByAge(self):
         wb = load_workbook(filename = 'data/生之章/生育率.xlsx')
@@ -361,6 +365,7 @@ class DataBirth:
                     d["rate"] = v
                     #print(d)
                     util.DataToDB(self.connection,"FertilityRateByAge",d)
+        self.connection.commit()
     
     def UpdateExpectLife(self):
         wb = load_workbook(filename = 'data/生之章/平均餘命.xlsx')
@@ -385,6 +390,7 @@ class DataBirth:
                     d["life"] = v
                     #print(d)
                     util.DataToDB(self.connection,"ExpectLife",d)
+        self.connection.commit()
     
     def UpdatePopulationProjection(self):
         def UpdateProjectionData(wb,estimateParam):
@@ -401,6 +407,7 @@ class DataBirth:
                         d["count"] = v
                         #print(d)
                         util.DataToDB(self.connection,"PopulationProjection",d)
+            self.connection.commit()
             
         wb = load_workbook(filename = 'data/生之章/中華民國人口推計（105至150年）數據－低推估.xlsx')
         UpdateProjectionData(wb,"低推估")
@@ -441,6 +448,7 @@ class DataBirth:
                 
                 #print(d)
                 util.DataToDB(self.connection,"ProjectionIndex",d)
+            self.connection.commit()
             
         wb = load_workbook(filename = 'data/生之章/中華民國人口推計（105至150年）數據－低推估.xlsx')
         UpdateIndexData(wb,"低推估")

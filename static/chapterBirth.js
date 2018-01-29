@@ -13,6 +13,7 @@ var g_ChapterBirth = function(){
 	var marriageData;
 	var marriageScale = {};
 	var marriageStatus = "未婚";
+	var marriageTimeLine;
 
 	var birthHistData;
 	var birthHistMax = {};
@@ -45,6 +46,7 @@ var g_ChapterBirth = function(){
 	  		}
 	  		case 2:	//婚姻狀況
 		  		DrawMarriage(app.optionType);
+		  		DrawMarriageTimeLine();
 	  			break;
 	  		case 3:	//出生統計
 	  			if(app.subGraphType == 1) DrawBirthMap(app.optionType);
@@ -347,6 +349,71 @@ var g_ChapterBirth = function(){
 		}
 	};
 
+	var DrawMarriageTimeLine = function(){
+		var year = $("#timeRange").val();
+
+		function DrawData(){
+			var minY = 1e10, maxY = 0;
+			var minC = 1e10, maxC = 0;
+			for(var key in marriageTimeLine[selectCounty]){
+				var keyData = marriageTimeLine[selectCounty][key];
+				for(var i=0;i<keyData.length;i++){
+					var v = keyData[i];
+					if(v.year < minY) minY = v.year;
+					if(v.year > maxY) maxY = v.year;
+					if(v.count < minC) minC = v.count;
+					if(v.count > maxC) maxC = v.count;
+				}
+			}
+			var param = {};
+			param.selector = "#marriageTimeLineSvg";
+			param.textInfo = "#marriageTimeLineInfo";
+			param.data = marriageTimeLine[selectCounty];
+			param.minTime = minY;
+			param.maxTime = maxY;
+			param.time = year;
+			param.minValue = Math.min(0,minC);
+			param.maxValue = maxC;
+			param.axisX = "year";
+			param.axisY = "count";
+			param.unitY = "對";
+			param.unitX = "年";
+			param.padL = 70;
+			param.alignZero = true;
+			var color = g_Util.ColorCategory(2);
+			param.color = {"結婚對數":color(0),"離婚對數":color(1)};
+			param.infoFn = function(d){
+				var num = g_Util.NumberWithCommas(d.count);
+				return selectCounty+" "+d.year+"年 "+d.key+" "+num+"人";
+			};
+			g_SvgGraph.TimeLine(param);
+		}
+
+		if(marriageTimeLine){
+			DrawData();
+		}
+		else{
+			$.get("/birthByCounty", function(data){
+				var json = JSON.parse(data);
+				marriageTimeLine = d3.nest()
+					.key(function(d) {return d.county;})
+					.rollup(function(arr){
+						var output = {};
+						output["結婚對數"] = [];
+						output["離婚對數"] = [];
+						for(var i=0;i<arr.length;i++){
+							var d = arr[i];
+							output["結婚對數"].push({year:d.year,count:d.marriage,key:"結婚對數"});
+							output["離婚對數"].push({year:d.year,count:d.divorce,key:"離婚對數"});
+						}
+						return output;
+					})
+					.map(json);
+				DrawData();
+			});
+		}
+	};
+
 	var DrawBirthMap = function(type){
 	  	var year = $("#timeRange").val();
 
@@ -391,7 +458,7 @@ var g_ChapterBirth = function(){
 	  		param.unit = "人";
 	  		param.clickFn = function(map){
 	  			selectCounty = map.GetSelectKey();
-	  			$("#birthHistTitle").text(selectCounty+" 出生人數");
+	  			$("#birthHistTitle").text(selectCounty+" 生母年齡");
 	  			$("#birthTimeLineTitle").text(selectCounty+" 人口變化");
 	  			DrawBirthHistogram();
 	  			DrawBirthTimeLine();

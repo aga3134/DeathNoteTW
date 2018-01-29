@@ -28,6 +28,13 @@ db.Init = function(){
 	db.AgingSurveyExpect = db.sequelize.import(__dirname + "./../db/agingSurveyExpect.js");
 	db.AgingSurveyLivingDifficulty = db.sequelize.import(__dirname + "./../db/agingSurveyLivingDifficulty.js");
 	db.AgingSurveyFunctionDifficulty = db.sequelize.import(__dirname + "./../db/agingSurveyFunctionDifficulty.js");
+	//病之章
+	
+	//死之章
+	db.DeathGeneral = db.sequelize.import(__dirname + "./../db/deathGeneral.js");
+	db.DeathCancer = db.sequelize.import(__dirname + "./../db/deathCancer.js");
+	db.DeathGeneralSum = db.sequelize.import(__dirname + "./../db/deathGeneralSum.js");
+	db.DeathCancerSum = db.sequelize.import(__dirname + "./../db/deathCancerSum.js");
 
 	var syncOp = {};
 	syncOp.force = false;
