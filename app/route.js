@@ -172,6 +172,25 @@ module.exports = function(app){
 	});
 
 	//==========================病之章==========================
+	app.get("/medicineStatisticByAge", function(req, res){
+		var mType = req.query.mType;
+		var sex = req.query.sex;
+		var disease = req.query.disease;
+		var sumAge = req.query.sumAge;
+		var query = {};
+		if(mType) query.mType = mType;
+		if(sex) query.sex = sex;
+		if(disease) query.disease = disease;
+		if(sumAge == '1'){
+			query.minAge = 0;
+			query.maxAge = 100;
+		}
+		DB.MedicineStatisticByAge.findAll({where: query})
+		.then(function(results){
+			res.send(JSON.stringify(results));
+		});
+
+	});
 
 	//==========================死之章==========================
 	app.get("/deathGeneral", function(req, res){

@@ -114,7 +114,10 @@ var g_APP = new Vue({
       for(var i=1;i<=2;i++) barAttr["2-3-2-"+i] = {"min":1999,"max":2016};
       //生之章-人口推估
       for(var i=1;i<=3;i++) barAttr["2-4-1-"+i] = {"min":2016,"max":2061};
-
+      //病之章-西醫門診
+      for(var g=1;g<=5;g++){
+        for(var i=1;i<=2;i++) barAttr["4-"+g+"-1-"+i] = {"min":1998,"max":2015};
+      }
       //死之章-一般死因
       for(var i=1;i<=2;i++) barAttr["5-1-1-"+i] = {"min":1992,"max":2016};
       for(var i=1;i<=2;i++) barAttr["5-2-1-"+i] = {"min":1992,"max":2016};

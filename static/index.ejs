@@ -558,7 +558,80 @@
 					</div>
 					<div id="chapterDisease" v-show="curPage === 4">
 						<div class="title">病の章</div>
-						<div class="content"></div>
+						<div class="switch-container">
+							<div class="switch-bt"
+								v-bind:class="{selected: graphType === 1}"
+								v-on:click="ChangeGraphType(1);">
+								西醫門診
+							</div>
+							<div class="switch-bt"
+								v-bind:class="{selected: graphType === 2}"
+								v-on:click="ChangeGraphType(2);">
+								中醫門診
+							</div>
+							<div class="switch-bt"
+								v-bind:class="{selected: graphType === 3}"
+								v-on:click="ChangeGraphType(3);">
+								牙醫門診
+							</div>
+							<div class="switch-bt"
+								v-bind:class="{selected: graphType === 4}"
+								v-on:click="ChangeGraphType(4);">
+								急診
+							</div>
+							<div class="switch-bt"
+								v-bind:class="{selected: graphType === 5}"
+								v-on:click="ChangeGraphType(5);">
+								住院
+							</div>
+							<div>
+								<div class="option-container">
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 1}"
+										v-on:click="ChangeOptionType(1);">
+										件數
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 2}"
+										v-on:click="ChangeOptionType(2);">
+										點數
+									</div>
+								</div>
+								<div class="half-w">
+									<div class="graph-title" id="diseaseRankTitle">傷病排序</div>
+									<div class="center">
+										性別:
+										<select id="diseaseRankSexSelect" v-on:change="UpdateGraph();">
+											<option value="全部">全部</option>
+											<option value="男">男</option>
+											<option value="女">女</option>
+										</select>
+										第
+										<select id="diseaseRankPage" v-on:change="UpdateGraph();">
+											<option value="0">1</option>
+											<option value="1">2</option>
+										</select>
+										頁
+									</div>
+									<svg id="diseaseRankSvg"></svg>
+									<div class="center" id="diseaseRankInfo">單位:件</div>
+								</div><!--
+								--><div class="half-w">
+									<div class="graph-title" id="diseaseRatioTitle">子項比例</div>
+									<svg id="diseaseRatioSvg"></svg>
+									<div class="center" id="diseaseRatioInfo">單位:件</div>
+								</div><!--
+								--><div class="half-w">
+									<div class="graph-title" id="diseaseAgeTitle">年齡分佈</div>
+									<div class="center">
+										<select id="selectSubDiseaase" v-on:change="g_ChapterDisease.MedicineStatisticAge();">
+										</select>
+									</div>
+									<svg id="diseaseAgeSvg"></svg>
+									<div class="center" id="diseaseAgeInfo">單位:件</div>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div id="chapterDeath" v-show="curPage === 5">
 						<div class="title">死の章</div>

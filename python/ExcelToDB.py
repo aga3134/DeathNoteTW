@@ -11,6 +11,7 @@ import pymysql
 import warnings
 from DataBirth import DataBirth
 from DataAging import DataAging
+from DataDisease import DataDisease
 from DataDeath import DataDeath
 
 if __name__ == "__main__":
@@ -22,6 +23,7 @@ if __name__ == "__main__":
     
     dataBirth = DataBirth(connection)
     dataAging = DataAging(connection)
+    dataDisease = DataDisease(connection)
     dataDeath = DataDeath(connection)
     
     #ignore warning message
@@ -31,11 +33,14 @@ if __name__ == "__main__":
         if "init" in args:
             dataBirth.CreateTable()
             dataAging.CreateTable()
+            dataDisease.CreateTable()
             dataDeath.CreateTable()
         if "birth" in args:
             dataBirth.UpdateData()
         if "aging" in args:
             dataAging.UpdateData()
+        if "disease" in args:
+            dataDisease.UpdateData()
         if "death" in args:
             dataDeath.UpdateData()
    

@@ -30,6 +30,12 @@ def IsNumber(s):
         return True
     except ValueError:
         return False
+    
+def VarifyValue(value):
+    if IsNumber(value):    
+        return value
+    else:
+        return 0
 
 def DataToDB(connection, table, d):
     field = ",".join(d.keys())

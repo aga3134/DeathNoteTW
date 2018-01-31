@@ -332,9 +332,9 @@ var g_SvgGraph = function(){
 
 		//draw axis
 		var xAxis = d3.svg.axis().orient("bottom").scale(scaleW).ticks(w/75)
-			.tickFormat(function(d){return d;});
+			.tickFormat(param.formatAxisX||function(d){return d;});
 		var yAxis = d3.svg.axis().orient("left").scale(scaleH).ticks(10)
-			.tickFormat(function(d){return d;});
+			.tickFormat(param.formatAxisY||function(d){return d;});
 		var xAxisGroup = svg.append("g").call(xAxis)
 			.attr({
 				"font-size": "12px",
@@ -569,7 +569,7 @@ var g_SvgGraph = function(){
 		g.selectAll("text")
 			.data(sortData).enter()
 			.append("text")
-			.attr("x",padL+10)
+			.attr("x",padL+20)
 			.attr("y",function(d,i){return padT+stepY*(i+0.5);})
 			.attr("text-anchor","start")
 			.attr("alignment-baseline","middle")
