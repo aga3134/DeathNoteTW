@@ -327,8 +327,7 @@
 								</ul>
 							</div>
 						</div>
-					</div>
-					<div v-show="graphType === 4">
+						<div v-show="graphType === 4">
 							<div class="half-w">
 								<div class="graph-title" id="projectionPyramidTitle">人口金字塔</div>
 								<div class="option-container">
@@ -352,6 +351,12 @@
 								<div class="center" id="projectionPyramidInfo">單位:人</div>
 							</div><!--
 							--><div class="half-w">
+								<div class="graph-title">人口比例</div>
+								<div class="center enhance" id="projectionRatio">單位:人(%)</div>
+								<svg id="projectionRatioSvg"></svg>
+								<div class="center" id="projectionRatioInfo">單位:人</div>
+							</div><!--
+							--><div class="full-w">
 								<div class="graph-title" id="projectionTimeLineTitle">時間變化</div>
 								<div class="center">
 									<select id="projectionTimeLineSelect" v-on:change="UpdateGraph();">
@@ -584,53 +589,59 @@
 								v-on:click="ChangeGraphType(5);">
 								住院
 							</div>
-							<div>
-								<div class="option-container">
-									<div class="option-bt"
-										v-bind:class="{selected: optionType === 1}"
-										v-on:click="ChangeOptionType(1);">
-										件數
-									</div>
-									<div class="option-bt"
-										v-bind:class="{selected: optionType === 2}"
-										v-on:click="ChangeOptionType(2);">
-										點數
-									</div>
+						</div>
+						<div>
+							<div class="option-container">
+								<div class="option-bt"
+									v-bind:class="{selected: optionType === 1}"
+									v-on:click="ChangeOptionType(1);">
+									件數
 								</div>
-								<div class="half-w">
-									<div class="graph-title" id="diseaseRankTitle">傷病排序</div>
-									<div class="center">
-										性別:
-										<select id="diseaseRankSexSelect" v-on:change="UpdateGraph();">
-											<option value="全部">全部</option>
-											<option value="男">男</option>
-											<option value="女">女</option>
-										</select>
-										第
-										<select id="diseaseRankPage" v-on:change="UpdateGraph();">
-											<option value="0">1</option>
-											<option value="1">2</option>
-										</select>
-										頁
-									</div>
-									<svg id="diseaseRankSvg"></svg>
-									<div class="center" id="diseaseRankInfo">單位:件</div>
-								</div><!--
-								--><div class="half-w">
-									<div class="graph-title" id="diseaseRatioTitle">子項比例</div>
-									<svg id="diseaseRatioSvg"></svg>
-									<div class="center" id="diseaseRatioInfo">單位:件</div>
-								</div><!--
-								--><div class="half-w">
-									<div class="graph-title" id="diseaseAgeTitle">年齡分佈</div>
-									<div class="center">
-										<select id="selectSubDiseaase" v-on:change="g_ChapterDisease.MedicineStatisticAge();">
-										</select>
-									</div>
-									<svg id="diseaseAgeSvg"></svg>
-									<div class="center" id="diseaseAgeInfo">單位:件</div>
+								<div class="option-bt"
+									v-bind:class="{selected: optionType === 2}"
+									v-on:click="ChangeOptionType(2);">
+									點數
 								</div>
 							</div>
+							<div class="half-w">
+								<div class="graph-title" id="diseaseRankTitle">傷病排序</div>
+								<div class="center">
+									性別:
+									<select id="diseaseRankSexSelect" v-on:change="UpdateGraph();">
+										<option value="全部">全部</option>
+										<option value="男">男</option>
+										<option value="女">女</option>
+									</select>
+									第
+									<select id="diseaseRankPage" v-on:change="UpdateGraph();">
+										<option value="0">1</option>
+										<option value="1">2</option>
+									</select>
+									頁
+								</div>
+								<svg id="diseaseRankSvg"></svg>
+								<div class="center" id="diseaseRankInfo">單位:件</div>
+							</div><!--
+							--><div class="half-w">
+								<div class="graph-title" id="diseaseRatioTitle">子項比例</div>
+								<svg id="diseaseRatioSvg"></svg>
+								<div class="center" id="diseaseRatioInfo">單位:件</div>
+							</div><!--
+							--><div class="half-w">
+								<div class="graph-title" id="diseaseAgeTitle">年齡分佈</div>
+								<div class="center">
+									<select id="selectSubDiseaase" v-on:change="g_ChapterDisease.MedicineStatisticAge();">
+									</select>
+								</div>
+								<svg id="diseaseAgeSvg"></svg>
+								<div class="center" id="diseaseAgeInfo">單位:件</div>
+							</div>
+						</div>
+						<div class="note">
+							<div class="title">備註</div>
+							<ul>
+								<li><span class="bold">點數:</span> 計算健保局要支付醫院多少費用的單位。在費用沒被刪減的情況下1點=1元，但通常部分項目會被砍，所以1點約為0.8~0.9元。</li>
+							</ul>
 						</div>
 					</div>
 					<div id="chapterDeath" v-show="curPage === 5">
@@ -702,6 +713,62 @@
 				</div>
 				<div id="pageAbout" v-show="curPage === 6">
 					<div class="title">關於筆記本</div>
+					<div class="note">
+						<div class="title">專案資訊</div>
+						<ul>
+							<li><a href="https://github.com/aga3134/DeathNoteTW" target="_blank">網站開源程式碼</a></li>
+							<li><a href="https://agawork.tw/" target="_blank">其他專案</a></li>
+							<li>若您對本站有任何建議或合作需求，歡迎來信討論 aga3134@gmail.com</li>
+						</ul>
+					</div>
+					<div class="note">
+						<div class="title">資料來源</div>
+						<div class="sub-title">生の章</div>
+						<ul>
+							<li><a href="http://www.ris.gov.tw/346;jsessionid=2F864914BBD4B9CE8208DE4AC97E61D7" target="_blank">人口資料庫 - 年度縣市及全國統計資料</a>
+								<ul>
+									<li>A - 01縣市人口按性別及五齡組(63)</li>
+									<li>A - 03人口數按年齡及婚姻狀況(96)</li>
+									<li>B - 01縣市出生按生母五齡組</li>
+								</ul>
+							</li>
+							<li><a href="https://www.ndc.gov.tw/Content_List.aspx?n=84223C65B6F94D72" target="_blank">國家發展委員會 - 中華民國人口推估（105至150年）</a></li>
+							<li><a href="https://dep.mohw.gov.tw/DOS/cp-1720-7278-113.html" target="_blank">衛福部性別統計指標 - 國人平均餘命</a></li>
+							<li>
+								<a href="https://www.stat.gov.tw/ct.asp?xItem=15409&CtNode=3622&mp=4" target="_blank">中華民國統計資訊網</a>
+								<ul>
+									<li>出生數、出生率、死亡數、死亡率</li>
+									<li>育齡婦女生育率、一般生育率、總生育率、有偶婦女生育率</li>
+								</ul>
+							</li>
+						</ul>
+						<div class="sub-title">老の章</div>
+						<ul>
+							<li><a href="https://dep.mohw.gov.tw/DOS/cp-1767-3586-113.html" target="_blank">衛福部 - 102 老人狀況調查</a></li>
+						</ul>
+						<div class="sub-title">病の章</div>
+						<ul>
+							<li><a href="https://dep.mohw.gov.tw/DOS/cp-1718-2912-113.html" target="_blank">衛福部 - 衛生類性別統計指標一覽表</a>
+								<ul>
+									<li>5.1-20_西醫門診件數--按疾病別性別及年齡</li>
+									<li>5.1-21+西醫門診醫療費用--按疾病別性別及年齡</li>
+									<li>5.1-22+西醫門診件數--按疾病別健保分局及縣市</li>
+									<li>5.1-23+西醫門診醫療費用--按疾病別健保分局及縣市</li>
+									<li>5.1-24+健保門診件數與申報費用—牙醫</li>
+									<li>5.1-25+健保門診件數與申報費用—中醫</li>
+									<li>5.1-26+急診件數--按疾病別性別及年齡</li>
+									<li>5.1-27+急診醫療費用--按疾病別性別及年齡</li>
+									<li>5.1-28+住院件數—按疾病別性別及年齡</li>
+									<li>5.1-29+住院醫療費用—按疾病別性別及年齡</li>
+								</ul>
+							</li>
+						</ul>
+						<div class="sub-title">死の章</div>
+						<ul>
+							<li><a href="https://data.gov.tw/dataset/5965" target="_blank">政府資料開放平臺 - 死因統計</a></li>
+							<li><a href="https://data.gov.tw/dataset/8154" target="_blank">政府資料開放平臺 - 癌症死因統計</a></li>
+						</ul>
+					</div>
 				</div>
 			</div>
 			<div class="cover-bottom">

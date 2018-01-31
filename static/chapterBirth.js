@@ -33,6 +33,7 @@ var g_ChapterBirth = function(){
 	var projectionVariety = {};
 	var projectionFertility = {};
 	var projectionPop = {};
+	var projectionRatio = {};
 
 	var map = new MapTW();
 	
@@ -778,6 +779,23 @@ var g_ChapterBirth = function(){
 				pyramidHover = item.attr("data-hover");
 			};
 			g_SvgGraph.PopulationPyramid(param);
+
+			var ratioData = projectionRatio[estimateParam][year];
+			var str = "扶老比:"+(100*ratioData[2].num/ratioData[1].num).toFixed(1)+"%";
+			str += " 扶幼比:"+(100*ratioData[0].num/ratioData[1].num).toFixed(1)+"%";
+			$("#projectionRatio").text(str);
+
+			param = {};
+			param.selector = "#projectionRatioSvg";
+			param.textInfo = "#projectionRatioInfo";
+			param.value = "num";
+			param.data = projectionRatio[estimateParam][year];
+			param.inRadius = 50;
+			param.infoFn = function(d){
+				var num = g_Util.NumberWithCommas(d.data.num);
+				return d.data.key+" "+num+"人 ("+d.data.ratio+"%)";
+			};
+			g_SvgGraph.PieChart(param);
 		}
 
 		if(projectionData[estimateParam]){
@@ -796,6 +814,28 @@ var g_ChapterBirth = function(){
 						return arr;
 					})
 					.map(json);
+
+				projectionRatio[estimateParam] = {};
+				for(var y in nestGroup){
+					var yearData = nestGroup[y];
+					var childNum = 0, adultNum = 0, elderNum = 0;
+					for(sex in yearData){
+						for(var i=0;i<yearData[sex].length;i++){
+							var d = yearData[sex][i];
+							if(d.maxAge < 15) childNum += d.count;
+							else if(d.maxAge < 65) adultNum += d.count;
+							else elderNum += d.count;
+						}
+					}
+					var sum = childNum+adultNum+elderNum;
+
+					projectionRatio[estimateParam][y] = [
+						{num: childNum, key:"小於15歲",ratio: (100*childNum/sum).toFixed(1)},
+						{num: adultNum, key:"15~65歲", ratio: (100*adultNum/sum).toFixed(1)},
+						{num: elderNum, key:"大於65歲", ratio: (100*elderNum/sum).toFixed(1)}
+					];
+				}
+
 				//console.log(nestGroup);
 				var maxV = 0;
 				for(var i=0;i<json.length;i++){

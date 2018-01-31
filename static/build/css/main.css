@@ -152,25 +152,38 @@ html, body {
       color: #6464ff; }
     .death-note .page-bg .note {
       width: 800px;
-      max-width: calc(100% - 20px);
+      max-width: 100%;
       margin: 20px auto;
       background-color: #c8c8c8;
-      padding: 5px 10px 5px 5px;
+      padding: 0px 0px 20px 0px;
       line-height: 1.5em;
       border-radius: 5px; }
       .death-note .page-bg .note .bold {
         font-weight: bold; }
       .death-note .page-bg .note .title {
-        padding-bottom: 0px;
+        padding: 10px;
+        margin: 10px auto;
         font-size: 1.5em;
+        font-weight: bold;
+        background-color: #aaaaaa; }
+      .death-note .page-bg .note .sub-title {
+        margin: 10px auto;
+        padding: 10px 0px 0px 20px;
+        font-size: 1.3em;
         font-weight: bold; }
+      .death-note .page-bg .note .segment {
+        padding: 20px; }
       .death-note .page-bg .note ul {
-        color: black;
         font-weight: normal; }
       .death-note .page-bg .note li {
-        padding: 10px; }
+        padding: 5px; }
+        .death-note .page-bg .note li ul {
+          padding: 10px; }
       .death-note .page-bg .note a {
-        text-decoration: none; }
+        text-decoration: none;
+        color: #5533CC; }
+        .death-note .page-bg .note a:hover {
+          color: #FF3333; }
     .death-note .page-bg .graph-title {
       margin: 5px;
       text-align: center;

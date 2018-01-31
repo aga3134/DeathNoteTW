@@ -7,6 +7,7 @@ var g_ChapterDisease = function(){
 	var medicineSumData = {};
 	var medicineRatioData = {};
 	var medicineAgeData = {};
+	var minColor,maxColor;
 
 	var loadGraph = function(app){
 		switch(app.graphType){
@@ -17,8 +18,18 @@ var g_ChapterDisease = function(){
 			case 5: mType = "住院"; break;
 		}
 		switch(app.optionType){
-			case 1: keyV = "caseNum"; keyUnit="件"; break;
-			case 2: keyV = "expense"; keyUnit="千點"; break;
+			case 1:
+				keyV = "caseNum";
+				keyUnit="件";
+				maxColor = "#996666";
+				minColor = "#FF9999";
+				break;
+			case 2:
+				keyV = "expense";
+				keyUnit="千點";
+				maxColor = "#669966";
+				minColor = "#99FF99";
+				break;
 		}
 		MedicineStatisticRank();
 	}
@@ -38,8 +49,8 @@ var g_ChapterDisease = function(){
 	  		param.minX = 0;
 	  		param.maxX = 100;
 	  		param.keyY = keyV;
-	  		param.minColor = "#FF9999";
-	  		param.maxColor = "#996666";
+	  		param.minColor = minColor;
+	  		param.maxColor = maxColor;
 	  		var unit = "";
 			if(keyUnit == "千點") unit = "百萬點";
 			else if(keyUnit == "件") unit = "千件";
@@ -131,8 +142,8 @@ var g_ChapterDisease = function(){
 	  		param.selector = "#diseaseRankSvg";
 	  		param.key = "disease";
 	  		param.value = keyV;
-	  		param.minColor = "#FF9999";
-	  		param.maxColor = "#996666";
+	  		param.minColor = minColor;
+	  		param.maxColor = maxColor;
 	  		param.unit = keyUnit;
 	  		param.textInfo = $("#diseaseRankInfo");
 	  		var page = $("#diseaseRankPage").val();
@@ -230,6 +241,8 @@ var g_ChapterDisease = function(){
 						}
 						other.caseNum = caseNumTotal-subCaseNum;
 						other.expense = expenseTotal-subExpense;
+						other.caseNumTotal = caseNumTotal;
+						other.expenseTotal = expenseTotal;
 						for(var i=0;i<arr.length;i++){
 							arr[i].caseNumTotal = caseNumTotal;
 							arr[i].expenseTotal = expenseTotal;
