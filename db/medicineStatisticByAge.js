@@ -28,8 +28,8 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.FLOAT,
 			primaryKey: true
 		},
-	    caseNum: DataTypes.INTEGER,
-	    expense: DataTypes.INTEGER
+	    caseNum: DataTypes.FLOAT,
+	    expense: DataTypes.FLOAT
 	},
 	{
 		timestamps: false,

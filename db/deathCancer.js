@@ -21,7 +21,7 @@ module.exports = function(sequelize, DataTypes) {
 			primaryKey: true
 		},
 		minAge: DataTypes.FLOAT,
-		minAge: DataTypes.FLOAT,
+		maxAge: DataTypes.FLOAT,
 	    count: DataTypes.INTEGER
 	},
 	{
