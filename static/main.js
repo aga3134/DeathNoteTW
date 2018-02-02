@@ -34,14 +34,14 @@ var g_APP = new Vue({
       $('.death-note').attr("scrollTop", 0);
 
       var CoverOn = function(){
-        $(".cover-top").css("width","calc(100% - 10px)");
+        $(".cover-top").css("width","100%");
         $("#coverContent").css("display","block");
         var btList = $("#coverButtonList");
         btList.children("img").css("opacity",0);
       }.bind(this);
       
       var CoverOff = function(){
-        $(".cover-top").css("width","50px");
+        $(".cover-top").css("width","0px");
         $("#coverContent").css("display","none");
         setTimeout(function(){
           var btList = $("#coverButtonList");
