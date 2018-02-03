@@ -47,7 +47,7 @@ var g_ChapterBirth = function(){
 	  			break;
 	  		}
 	  		case 2:	//婚姻狀況
-		  		DrawMarriage(app.optionType);
+		  		DrawMarriage(app);
 		  		DrawMarriageTimeLine();
 	  			break;
 	  		case 3:	//出生統計
@@ -255,16 +255,16 @@ var g_ChapterBirth = function(){
 		
 	};
 
-	var DrawMarriage = function(optionType){
+	var DrawMarriage = function(app){
 		var year = $("#timeRange").val();
-		switch(optionType){
+		switch(app.optionType){
 			case 1: marriageStatus = "未婚"; break;
 			case 2: marriageStatus = "有偶"; break;
 			case 3: marriageStatus = "離婚"; break;
 			case 4: marriageStatus = "喪偶"; break;
 		}
 
-		function DrawData(){
+		function DrawPyramid(){
 			var param = {};
 			param.selector = "#marriageSvg";
 			param.textInfo = "#marriageInfo";
@@ -275,7 +275,8 @@ var g_ChapterBirth = function(){
 				pyramidHover = item.attr("data-hover");
 			};
 			g_SvgGraph.PopulationPyramid(param);
-
+		}
+		function DrawRatio(){
 			param = {};
 			param.selector = "#marriageRatioSvg";
 			param.textInfo = "#marriageRatioInfo";
@@ -330,6 +331,7 @@ var g_ChapterBirth = function(){
 			for(var i=0;i<ratioData.length;i++){
 				ratioData[i].ratio = (100*(ratioData[i].num/totalNum)).toFixed(1);
 			}
+			param.key = "key";
 			param.value = "num";
 			param.data = ratioData;
 			param.inRadius = 50;
@@ -337,7 +339,23 @@ var g_ChapterBirth = function(){
 				var num = g_Util.NumberWithCommas(d.data.num);
 				return d.data.key+" "+num+"人 ("+d.data.ratio+"%)";
 			};
+			param.clickFn = function(item){
+				marriageStatus = item.attr("data-select");
+				switch(marriageStatus){
+					case "未婚": app.optionType = 1; break;
+					case "有偶": app.optionType = 2; break;
+					case "離婚": app.optionType = 3; break;
+					case "喪偶": app.optionType = 4; break;
+				}
+				DrawPyramid();
+			};
+			param.select = marriageStatus;
 			g_SvgGraph.PieChart(param);
+		}
+
+		function DrawData(){
+			DrawPyramid();
+			DrawRatio();
 		}
 
 		if(marriageData){
@@ -400,15 +418,14 @@ var g_ChapterBirth = function(){
 			param.maxValue = maxC;
 			param.axisX = "year";
 			param.axisY = "count";
-			param.unitY = "對";
+			param.unitY = "千對";
 			param.unitX = "年";
-			param.padL = 70;
 			param.alignZero = true;
 			var color = g_Util.ColorCategory(2);
 			param.color = {"結婚對數":color(0),"離婚對數":color(1)};
 			param.infoFn = function(d){
 				var num = g_Util.NumberWithCommas(d.count);
-				return selectCounty+" "+d.year+"年 "+d.key+" "+num+"人";
+				return selectCounty+" "+d.year+"年 "+d.key+" "+num+"千對";
 			};
 			g_SvgGraph.TimeLine(param);
 		}
@@ -427,8 +444,8 @@ var g_ChapterBirth = function(){
 						output["離婚對數"] = [];
 						for(var i=0;i<arr.length;i++){
 							var d = arr[i];
-							output["結婚對數"].push({year:d.year,count:d.marriage,key:"結婚對數"});
-							output["離婚對數"].push({year:d.year,count:d.divorce,key:"離婚對數"});
+							output["結婚對數"].push({year:d.year,count:parseInt(d.marriage*0.001),key:"結婚對數"});
+							output["離婚對數"].push({year:d.year,count:parseInt(d.divorce*0.001),key:"離婚對數"});
 						}
 						return output;
 					})
@@ -720,16 +737,15 @@ var g_ChapterBirth = function(){
 			param.maxValue = maxC;
 			param.axisX = "year";
 			param.axisY = "count";
-			param.unitY = "人";
+			param.unitY = "千人";
 			param.unitX = "年";
-			param.padL = 70;
 			param.alignZero = true;
 			var color = g_Util.ColorCategory(7);
 			param.color = {"男出生數":color(0),"女出生數":color(1),
 							"男死亡數":color(2),"女死亡數":color(3),"社會增加數":color(4)};
 			param.infoFn = function(d){
 				var num = g_Util.NumberWithCommas(d.count);
-				return selectCounty+" "+d.year+"年 "+d.key+" "+num+"人";
+				return selectCounty+" "+d.year+"年 "+d.key+" "+num+"千人";
 			};
 			g_SvgGraph.TimeLine(param);
 		}
@@ -751,11 +767,11 @@ var g_ChapterBirth = function(){
 						output["社會增加數"] = [];
 						for(var i=0;i<arr.length;i++){
 							var d = arr[i];
-							output["男出生數"].push({year:d.year,count:d.maleBirth,key:"男出生數"});
-							output["女出生數"].push({year:d.year,count:d.femaleBirth,key:"女出生數"});
-							output["男死亡數"].push({year:d.year,count:d.maleDeath,key:"男死亡數"});
-							output["女死亡數"].push({year:d.year,count:d.femaleDeath,key:"女死亡數"});
-							output["社會增加數"].push({year:d.year,count:d.socialIncrease,key:"社會增加數"});
+							output["男出生數"].push({year:d.year,count:parseInt(d.maleBirth*0.001),key:"男出生數"});
+							output["女出生數"].push({year:d.year,count:parseInt(d.femaleBirth*0.001),key:"女出生數"});
+							output["男死亡數"].push({year:d.year,count:parseInt(d.maleDeath*0.001),key:"男死亡數"});
+							output["女死亡數"].push({year:d.year,count:parseInt(d.femaleDeath*0.001),key:"女死亡數"});
+							output["社會增加數"].push({year:d.year,count:parseInt(d.socialIncrease*0.001),key:"社會增加數"});
 						}
 						return output;
 					})

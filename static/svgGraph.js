@@ -195,7 +195,7 @@ var g_SvgGraph = function(){
 			circleGroup.selectAll("circle").data(curData)
 				.enter().append("circle")
 				.attr("data-info",param.infoFn)
-				.attr("r",5)
+				.attr("r",10)
 				.attr("opacity",0)
 				.attr("fill","white")
 				.attr("stroke",curColor)
@@ -253,6 +253,7 @@ var g_SvgGraph = function(){
 
 	    		var select = item.attr("data-select");
 				item.attr("stroke","#FF3333").attr("stroke-width",2);
+				$(param.textInfo).text(item.attr("data-info"));
 
 				selectKey = select;
 				g.selectAll("path").sort(function (a, b) {
@@ -469,16 +470,47 @@ var g_SvgGraph = function(){
 	    		pre.attr("stroke","black").attr("stroke-width",0.5);
 
 	    		var select = item.attr("data-select");
-				item.attr("stroke","#FF3333").attr("stroke-width",2);
+	    		var rect = g.select("rect[data-select='"+select+"']");
+				rect.attr("stroke","#FF3333").attr("stroke-width",2);
 
-				$(param.textInfo).text(item.attr("data-info"));
+				$(param.textInfo).text(rect.attr("data-info"));
 
 				selectKey = select;
 				g.selectAll("rect").sort(function (a, b) {
 					if (a[param.key] != select) return -1;
 					else return 1;
 				});
-				param.clickFn(item);
+				param.clickFn(rect);
+			}
+		}
+		function HoverIn(item,d){
+			var curSelect = item.attr("data-select");
+			if(curSelect == selectKey) return;
+
+			var rect = g.select("rect[data-select='"+curSelect+"']");
+			rect.attr("stroke","#FFAA0D")
+				.attr("stroke-width",2);
+			$(param.textInfo).text(rect.attr("data-info"));
+			//move hovered object up
+			g.selectAll("rect").sort(function (a, b) {
+				//selected在最上面，其次hover
+				if(a[param.key] == selectKey) return 1;
+				else if(b[param.key] == selectKey) return -1;
+				else if (a[param.key] != d[param.key]) return -1;
+				else return 1;
+			});
+		}
+		function HoverOut(item){
+			var curSelect = item.attr("data-select");
+			if(curSelect == selectKey) return;
+
+			var rect = g.select("rect[data-select='"+curSelect+"']");
+			rect.attr("stroke","black")
+				.attr("stroke-width",0.5);
+
+			var selectItem = g.select("rect[data-select='"+selectKey+"']");
+			if(!selectItem.empty()){
+				$(param.textInfo).text(selectItem.attr("data-info"));
 			}
 		}
 
@@ -521,7 +553,6 @@ var g_SvgGraph = function(){
   			"stroke-width": 2
   		});
 
-
   		var g = svg.append("g").attr("class","barGroup");
   		g.selectAll("rect")
 			.data(sortData).enter()
@@ -535,40 +566,14 @@ var g_SvgGraph = function(){
 			.attr("stroke","black")
 			.attr("stroke-width",0.5)
 			.attr("fill", function(d) {return color(d[param.value]);})
-			.on("mouseover",function(d){
-				var cur = d3.select(this);
-				var curSelect = cur.attr("data-select");
-				if(curSelect == selectKey) return;
-
-				cur.attr("stroke","#FFAA0D")
-					.attr("stroke-width",2);
-				$(param.textInfo).text(cur.attr("data-info"));
-				//move hovered object up
-				g.selectAll("rect").sort(function (a, b) {
-					//selected在最上面，其次hover
-					if(a[param.key] == selectKey) return 1;
-					else if(b[param.key] == selectKey) return -1;
-					else if (a[param.key] != d[param.key]) return -1;
-					else return 1;
-				});
-			})
-			.on("mouseout",function(){
-				var cur = d3.select(this);
-				var curSelect = cur.attr("data-select");
-				if(curSelect == selectKey) return;
-				cur.attr("stroke","black")
-					.attr("stroke-width",0.5);
-
-				var selectItem = g.select("rect[data-select='"+selectKey+"']");
-				if(!selectItem.empty()){
-					$(param.textInfo).text(selectItem.attr("data-info"));
-				}
-			})
+			.on("mouseover",function(d){HoverIn(d3.select(this),d);})
+			.on("mouseout",function(){HoverOut(d3.select(this));})
 			.on("click",function(){ClickFn(d3.select(this));});
 
 		g.selectAll("text")
 			.data(sortData).enter()
 			.append("text")
+			.attr("data-select",function(d){return d[param.key];})
 			.attr("x",padL+20)
 			.attr("y",function(d,i){return padT+stepY*(i+0.5);})
 			.attr("text-anchor","start")
@@ -576,6 +581,9 @@ var g_SvgGraph = function(){
 			.attr("writing-mode","rl")
 			.attr("font-size","12px")
 			.text(function(d){return d[param.key];})
+			.on("mouseover",function(d){HoverIn(d3.select(this),d);})
+			.on("mouseout",function(){HoverOut(d3.select(this));	})
+			.on("click",function(){ClickFn(d3.select(this));});
 
 		$(param.textInfo).text("單位: "+param.unit);
 

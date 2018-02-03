@@ -191,24 +191,6 @@
 						</div>
 						<div v-show="graphType === 1">
 							<div class="half-w">
-								<div class="graph-title">人口數</div>
-								<div class="option-container">
-									<div class="option-bt"
-										v-bind:class="{selected: optionType === 1}"
-										v-on:click="ChangeOptionType(1);">
-										地圖
-									</div>
-									<div class="option-bt"
-										v-bind:class="{selected: optionType === 2}"
-										v-on:click="ChangeOptionType(2);">
-										排序
-									</div>
-								</div>
-								<div class="center enhance" id="popRatio">單位:人(%)</div>
-								<svg id="popMapSvg"></svg>
-								<div class="center" id="popMapInfo">單位:人</div>
-							</div><!--
-							--><div class="half-w">
 								<div class="graph-title" id="popPyramidTitle">人口金字塔</div>
 								<div class="option-container">
 									<div class="option-bt"
@@ -224,6 +206,24 @@
 								</div>
 								<svg id="popPyramidSvg"></svg>
 								<div class="center" id="popPyramidInfo">單位:人</div>
+							</div><!--
+							--><div class="half-w">
+								<div class="graph-title">縣市人口分佈</div>
+								<div class="option-container">
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 1}"
+										v-on:click="ChangeOptionType(1);">
+										地圖
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 2}"
+										v-on:click="ChangeOptionType(2);">
+										排序
+									</div>
+								</div>
+								<div class="center enhance" id="popRatio">單位:人(%)</div>
+								<svg id="popMapSvg"></svg>
+								<div class="center" id="popMapInfo">單位:人</div>
 							</div><!--
 							--><div class="full-w">
 								<div class="graph-title">平均壽命</div>
@@ -670,23 +670,6 @@
 						</div>
 						<div>
 							<div class="half-w">
-								<div class="option-container">
-									<div class="option-bt"
-										v-bind:class="{selected: optionType === 1}"
-										v-on:click="ChangeOptionType(1);">
-										地圖
-									</div>
-									<div class="option-bt"
-										v-bind:class="{selected: optionType === 2}"
-										v-on:click="ChangeOptionType(2);">
-										排序
-									</div>
-								</div>
-								<div class="graph-title" id="deathMapTitle">死亡人數</div>
-								<svg id="deathMapSvg"></svg>
-								<div class="center" id="deathMapInfo">單位:人</div>
-							</div><!--
-							--><div class="half-w">
 								<div class="graph-title" id="deathRankTitle">死因排序</div>
 								<div class="center">
 									性別:
@@ -705,6 +688,23 @@
 								</div>
 								<svg id="deathRankSvg"></svg>
 								<div class="center" id="deathRankInfo">單位:人</div>
+							</div><!--
+							--><div class="half-w">
+								<div class="option-container">
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 1}"
+										v-on:click="ChangeOptionType(1);">
+										地圖
+									</div>
+									<div class="option-bt"
+										v-bind:class="{selected: optionType === 2}"
+										v-on:click="ChangeOptionType(2);">
+										排序
+									</div>
+								</div>
+								<div class="graph-title" id="deathMapTitle">死亡人數</div>
+								<svg id="deathMapSvg"></svg>
+								<div class="center" id="deathMapInfo">單位:人</div>
 							</div><!--
 							--><div class="half-w">
 								<div class="graph-title" id="deathAgeTitle">年齡分佈</div>

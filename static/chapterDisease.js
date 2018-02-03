@@ -10,6 +10,9 @@ var g_ChapterDisease = function(){
 	var minColor,maxColor;
 
 	var loadGraph = function(app){
+		if(app.graphType != mType){
+			selectDisease = "";
+		}
 		switch(app.graphType){
 			case 1: mType = "西醫門診"; break;
 			case 2: mType = "中醫門診"; break;
