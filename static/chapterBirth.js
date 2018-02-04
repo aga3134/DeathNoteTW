@@ -9,6 +9,7 @@ var g_ChapterBirth = function(){
 	var pyramidScale = {};
 	var popRatioData = {};
 	var lifeData;
+	var popRatioSelect = "大於65歲";
 
 	var marriageData;
 	var marriageScale = {};
@@ -88,6 +89,7 @@ var g_ChapterBirth = function(){
 					param = {};
 					param.selector = "#popPyramidSvg";
 					param.textInfo = "#popPyramidInfo";
+					param.key = "key";
 					param.value = "num";
 					param.data = popRatioData[selectCounty][year];
 					param.inRadius = 50;
@@ -95,6 +97,10 @@ var g_ChapterBirth = function(){
 						var num = g_Util.NumberWithCommas(d.data.num);
 						return d.data.key+" "+num+"人 ("+d.data.ratio+"%)";
 					};
+					param.clickFn = function(item){
+						popRatioSelect = item.attr("data-select");
+					}
+					param.select = popRatioSelect;
 					g_SvgGraph.PieChart(param);
 					break;
 			}

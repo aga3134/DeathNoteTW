@@ -174,8 +174,31 @@ var g_SvgGraph = function(){
   			.attr("y2",h-padB);
 
 		//draw data
-		var lineStep = 20;
+		var lineStep = 15;
 		var index = 0;
+		//draw label
+  		for(var key in param.data){
+  			var curData = param.data[key];
+  			var curColor = param.color[key];
+  			//var offsetY = h-padB-index*lineStep-20;
+			var offsetY = padT+index*lineStep;
+			svg.append("line")
+				.attr("x1",w-10)
+				.attr("y1",offsetY)
+				.attr("x2",w)
+				.attr("y2",offsetY)
+				.attr("stroke-width",3)
+				.attr("stroke",curColor);
+			svg.append("text")
+				.attr("x",w-20)
+				.attr("y",offsetY)
+				.attr("text-anchor","end ")
+				.attr("alignment-baseline","middle ")
+				.attr("font-size","14px")
+				.text(key);
+			index++;
+  		}
+  		index = 0;
   		for(var key in param.data){
   			var curData = param.data[key];
   			var curColor = param.color[key];
@@ -210,24 +233,6 @@ var g_SvgGraph = function(){
 				.on("mouseout",function(){
 					d3.select(this).attr("opacity",0);
 				});
-
-			//var offsetY = h-padB-index*lineStep-20;
-			var offsetY = padT+index*lineStep;
-			svg.append("line")
-				.attr("x1",w-padR-10)
-				.attr("y1",offsetY)
-				.attr("x2",w-padR)
-				.attr("y2",offsetY)
-				.attr("stroke-width",3)
-				.attr("stroke",curColor);
-			svg.append("text")
-				.attr("x",w-padR-20)
-				.attr("y",offsetY)
-				.attr("text-anchor","end ")
-				.attr("alignment-baseline","middle ")
-				.attr("font-size","16px")
-				.text(key);
-
 			index++;
   		}
   		$(param.textInfo).text("單位 X軸:"+param.unitX+" Y軸:"+param.unitY);
