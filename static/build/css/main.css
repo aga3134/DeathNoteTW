@@ -115,6 +115,10 @@ html, body {
       padding: 20px;
       font-weight: bold;
       text-align: center; }
+    .death-note .page-bg .graph-container {
+      width: 1366px;
+      max-width: 100%;
+      margin: auto; }
     .death-note .page-bg .content {
       margin: auto;
       width: 500px;

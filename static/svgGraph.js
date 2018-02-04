@@ -204,7 +204,7 @@ var g_SvgGraph = function(){
 				.attr("cy", function(d){return padT+scaleH(d[param.axisY]);})
 				.on("mouseover",function(){
 					var cur = d3.select(this);
-					cur.attr("opacity",1);
+					cur.attr("opacity",0.5);
 					$(param.textInfo).text(cur.attr("data-info"));
 				})
 				.on("mouseout",function(){
