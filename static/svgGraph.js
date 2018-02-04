@@ -249,10 +249,10 @@ var g_SvgGraph = function(){
     	function ClickFn(item){
     		if(param.clickFn){
 	    		var pre = g.select("path[data-select='"+selectKey+"']");
-	    		pre.attr("stroke","#FFFFFF").attr("stroke-width",0);
+	    		pre.attr("stroke","#FFAA0D").attr("stroke-width",0);
 
 	    		var select = item.attr("data-select");
-				item.attr("stroke","#FF3333").attr("stroke-width",2);
+				item.attr("stroke","#FFFFFF").attr("stroke-width",2);
 				$(param.textInfo).text(item.attr("data-info"));
 
 				selectKey = select;
@@ -281,7 +281,7 @@ var g_SvgGraph = function(){
 			.attr("data-info",param.infoFn)
 			.attr("data-select",function(d){return d.data[param.key];})
 			.attr("d", arc)
-			.attr("stroke","#FFFFFF")
+			.attr("stroke","#FFAA0D")
 			.attr("stroke-width",0)
 			.attr("fill", function(d,i) { return color(i); })
 			.on("mouseover",function(d){

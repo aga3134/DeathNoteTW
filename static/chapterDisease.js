@@ -8,17 +8,20 @@ var g_ChapterDisease = function(){
 	var medicineRatioData = {};
 	var medicineAgeData = {};
 	var minColor,maxColor;
+	var diseaseRatioSelect = "";
 
 	var loadGraph = function(app){
-		if(app.graphType != mType){
-			selectDisease = "";
-		}
+		var graphStr = "";
 		switch(app.graphType){
-			case 1: mType = "西醫門診"; break;
-			case 2: mType = "中醫門診"; break;
-			case 3: mType = "牙醫門診"; break;
-			case 4: mType = "急診"; break;
-			case 5: mType = "住院"; break;
+			case 1: graphStr = "西醫門診"; break;
+			case 2: graphStr = "中醫門診"; break;
+			case 3: graphStr = "牙醫門診"; break;
+			case 4: graphStr = "急診"; break;
+			case 5: graphStr = "住院"; break;
+		}
+		if(graphStr != mType){
+			selectDisease = "";
+			mType = graphStr;
 		}
 		switch(app.optionType){
 			case 1:
@@ -137,6 +140,10 @@ var g_ChapterDisease = function(){
 				str += " ("+ratio+"%)";
 				return str;
 			};
+			param.clickFn = function(item){
+				diseaseRatioSelect = item.attr("data-select");
+			};
+			param.select = diseaseRatioSelect;
 			g_SvgGraph.PieChart(param);
 		}
 

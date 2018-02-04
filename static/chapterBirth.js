@@ -29,6 +29,7 @@ var g_ChapterBirth = function(){
 	var projectionData = {};
 	var projectionScale = {};
 	var estimateParam = "中推估";
+	var projectionRatioSelect = "大於65歲";
 	var projectionLife = {};
 	var projectionVariety = {};
 	var projectionFertility = {};
@@ -397,8 +398,8 @@ var g_ChapterBirth = function(){
 		function DrawData(){
 			var minY = 1e10, maxY = 0;
 			var minC = 1e10, maxC = 0;
-			for(var key in marriageTimeLine[selectCounty]){
-				var keyData = marriageTimeLine[selectCounty][key];
+			for(var key in marriageTimeLine["總計"]){
+				var keyData = marriageTimeLine["總計"][key];
 				for(var i=0;i<keyData.length;i++){
 					var v = keyData[i];
 					if(v.year < minY) minY = v.year;
@@ -410,7 +411,7 @@ var g_ChapterBirth = function(){
 			var param = {};
 			param.selector = "#marriageTimeLineSvg";
 			param.textInfo = "#marriageTimeLineInfo";
-			param.data = marriageTimeLine[selectCounty];
+			param.data = marriageTimeLine["總計"];
 			param.minTime = minY;
 			param.maxTime = maxY;
 			param.time = year;
@@ -424,8 +425,8 @@ var g_ChapterBirth = function(){
 			var color = g_Util.ColorCategory(2);
 			param.color = {"結婚對數":color(0),"離婚對數":color(1)};
 			param.infoFn = function(d){
-				var num = g_Util.NumberWithCommas(d.count);
-				return selectCounty+" "+d.year+"年 "+d.key+" "+num+"千對";
+				var num = g_Util.NumberWithCommas(d.count.toFixed(3));
+				return d.year+"年 "+d.key+" "+num+"千對";
 			};
 			g_SvgGraph.TimeLine(param);
 		}
@@ -444,8 +445,8 @@ var g_ChapterBirth = function(){
 						output["離婚對數"] = [];
 						for(var i=0;i<arr.length;i++){
 							var d = arr[i];
-							output["結婚對數"].push({year:d.year,count:parseInt(d.marriage*0.001),key:"結婚對數"});
-							output["離婚對數"].push({year:d.year,count:parseInt(d.divorce*0.001),key:"離婚對數"});
+							output["結婚對數"].push({year:d.year,count:d.marriage*0.001,key:"結婚對數"});
+							output["離婚對數"].push({year:d.year,count:d.divorce*0.001,key:"離婚對數"});
 						}
 						return output;
 					})
@@ -744,7 +745,7 @@ var g_ChapterBirth = function(){
 			param.color = {"男出生數":color(0),"女出生數":color(1),
 							"男死亡數":color(2),"女死亡數":color(3),"社會增加數":color(4)};
 			param.infoFn = function(d){
-				var num = g_Util.NumberWithCommas(d.count);
+				var num = g_Util.NumberWithCommas(d.count.toFixed(3));
 				return selectCounty+" "+d.year+"年 "+d.key+" "+num+"千人";
 			};
 			g_SvgGraph.TimeLine(param);
@@ -767,11 +768,11 @@ var g_ChapterBirth = function(){
 						output["社會增加數"] = [];
 						for(var i=0;i<arr.length;i++){
 							var d = arr[i];
-							output["男出生數"].push({year:d.year,count:parseInt(d.maleBirth*0.001),key:"男出生數"});
-							output["女出生數"].push({year:d.year,count:parseInt(d.femaleBirth*0.001),key:"女出生數"});
-							output["男死亡數"].push({year:d.year,count:parseInt(d.maleDeath*0.001),key:"男死亡數"});
-							output["女死亡數"].push({year:d.year,count:parseInt(d.femaleDeath*0.001),key:"女死亡數"});
-							output["社會增加數"].push({year:d.year,count:parseInt(d.socialIncrease*0.001),key:"社會增加數"});
+							output["男出生數"].push({year:d.year,count:d.maleBirth*0.001,key:"男出生數"});
+							output["女出生數"].push({year:d.year,count:d.femaleBirth*0.001,key:"女出生數"});
+							output["男死亡數"].push({year:d.year,count:d.maleDeath*0.001,key:"男死亡數"});
+							output["女死亡數"].push({year:d.year,count:d.femaleDeath*0.001,key:"女死亡數"});
+							output["社會增加數"].push({year:d.year,count:d.socialIncrease*0.001,key:"社會增加數"});
 						}
 						return output;
 					})
@@ -804,6 +805,7 @@ var g_ChapterBirth = function(){
 			param = {};
 			param.selector = "#projectionRatioSvg";
 			param.textInfo = "#projectionRatioInfo";
+			param.key = "key";
 			param.value = "num";
 			param.data = projectionRatio[estimateParam][year];
 			param.inRadius = 50;
@@ -811,6 +813,10 @@ var g_ChapterBirth = function(){
 				var num = g_Util.NumberWithCommas(d.data.num);
 				return d.data.key+" "+num+"人 ("+d.data.ratio+"%)";
 			};
+			param.clickFn = function(item){
+				projectionRatioSelect = item.attr("data-select");
+			};
+			param.select = projectionRatioSelect;
 			g_SvgGraph.PieChart(param);
 		}
 

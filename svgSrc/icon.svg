@@ -28,9 +28,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.98994949"
-     inkscape:cx="65.156233"
-     inkscape:cy="258.46987"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="-619.06814"
+     inkscape:cy="-105.66258"
      inkscape:document-units="mm"
      inkscape:current-layer="layer2"
      showgrid="false"
@@ -69,7 +69,7 @@
        ry="0.95247585" />
     <g
        id="g835"
-       transform="rotate(-19.571729,69.788023,49.84134)">
+       transform="matrix(0.83950755,-0.41674892,0.41674892,0.83950755,-12.595107,40.014446)">
       <path
          sodipodi:nodetypes="cscssc"
          inkscape:connector-curvature="0"
@@ -79,8 +79,9 @@
       <path
          inkscape:connector-curvature="0"
          id="path831"
-         d="m 58.264755,17.868074 c 3.741774,1.069078 6.68174,-0.534539 6.414471,4.009043 -0.267272,4.543582 -0.53454,36.883195 4.81085,51.31575 5.34539,14.432552 20.847023,42.763123 19.777945,45.168553 -1.069078,2.40542 -7.483546,6.949 -7.750815,3.74177 C 81.249934,118.89595 63.342876,72.658326 62.54107,68.916554 61.739261,65.17478 58.532026,31.49882 57.462948,26.15343 56.39387,20.808039 58.264755,17.868074 58.264755,17.868074 Z"
-         style="fill:#ffffff;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         d="m 58.264755,17.868074 c 3.741774,1.069078 6.68174,-0.534539 6.414471,4.009043 -0.267272,4.543582 3.531446,36.247334 8.876836,50.679889 5.34539,14.432552 16.781037,43.398984 15.711959,45.804414 -1.069078,2.40542 -7.483546,6.949 -7.750815,3.74177 C 81.249934,118.89595 69.724253,72.775373 68.922447,69.033601 68.120638,65.291827 58.532026,31.49882 57.462948,26.15343 56.39387,20.808039 58.264755,17.868074 58.264755,17.868074 Z"
+         style="fill:#ffffff;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         sodipodi:nodetypes="csscsssc" />
     </g>
     <path
        style="fill:none;stroke:none;stroke-width:0.31029662px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -90,7 +91,7 @@
        sodipodi:nodetypes="cscac" />
     <g
        id="g839"
-       transform="rotate(5.4557773,70.989666,66.159174)">
+       transform="matrix(0.88795477,0.08480866,-0.08480866,0.88795477,15.564364,1.7432043)">
       <path
          inkscape:connector-curvature="0"
          id="path4608"

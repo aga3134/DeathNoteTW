@@ -12,10 +12,15 @@ var g_ChapterDeath = function(){
 
 	var selectCounty = "總計";
 	var selectCause = "";
+	var preGraphType = 0;
 
 	var map = new MapTW();
 
 	var loadGraph = function(app){
+		if(preGraphType != app.graphType){
+			preGraphType = app.graphType;
+			selectCause = "";
+		}
 		switch(app.graphType){
 			case 1:	//一般死因
 				DrawDeathMapGeneral(app.optionType);
