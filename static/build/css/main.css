@@ -189,6 +189,8 @@ html, body {
         color: #5533CC; }
         .death-note .page-bg .note a:hover {
           color: #FF3333; }
+      .death-note .page-bg .note .ad {
+        margin: 10px; }
     .death-note .page-bg .graph-title {
       margin: 5px;
       text-align: center;
