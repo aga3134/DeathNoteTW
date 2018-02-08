@@ -188,7 +188,7 @@ var g_ChapterDeath = function(){
 	  		param.maxValue = maxV;
 	  		param.infoFn = function(d){
 				var num = g_Util.NumberWithCommas(d.count);
-				var str = selectCounty+" "+d.minAge+"~"+d.maxAge+"歲 "+num+deathUnit;
+				var str = selectCounty+" "+sex+" "+d.minAge+"~"+d.maxAge+"歲 "+num+deathUnit;
 				if(d.total){
 					var ratio = (100*d.count/d.total).toFixed(1);
 					str += " ("+ratio+"%)";
@@ -273,7 +273,7 @@ var g_ChapterDeath = function(){
 			};
 			param.clickFn = function(item){
 				selectCause = item.attr("data-select");
-				$("#deathAgeTitle").text(year+"年 "+selectCause+" 性別:"+sex);
+				$("#deathAgeTitle").text(selectCounty+" "+sex+" "+selectCause+" 年齡分佈");
 				LoadPopCounty(DrawCauseAgeGeneral);
 			}
 	  		g_SvgGraph.SortedBar(param);
@@ -306,7 +306,7 @@ var g_ChapterDeath = function(){
 	var DrawDeathMapGeneral = function(optionType){
 		var year = $("#timeRange").val();
 		var sex = $("#deathRankSexSelect").val();
-	  	$("#deathMapTitle").text(deathTitle+" 性別:"+sex);
+	  	$("#deathMapTitle").text(sex+" "+deathTitle);
 	  	function DrawMap(){
 	  		var param = {};
 	  		param.map = map;
@@ -439,7 +439,7 @@ var g_ChapterDeath = function(){
 	  		param.maxValue = maxV;
 	  		param.infoFn = function(d){
 				var num = g_Util.NumberWithCommas(d.count);
-				var str = selectCounty+" "+d.minAge+"~"+d.maxAge+"歲 "+num+deathUnit;
+				var str = selectCounty+" "+sex+" "+d.minAge+"~"+d.maxAge+"歲 "+num+deathUnit;
 				if(d.total){
 					var ratio = (100*d.count/d.total).toFixed(1);
 					str += " ("+ratio+"%)";
@@ -515,7 +515,7 @@ var g_ChapterDeath = function(){
 	  		param.maxValue = maxV;
 	  		param.infoFn = function(d){
 				var num = g_Util.NumberWithCommas(d.count);
-				var str = d.cause+" "+num+deathUnit;
+				var str = d.cause+" "+sex+" "+num+deathUnit;
 				if(d.total){
 					var ratio = (100*d.count/d.total).toFixed(1);
 					str += " ("+ratio+"%)";
@@ -524,7 +524,7 @@ var g_ChapterDeath = function(){
 			};
 			param.clickFn = function(item){
 				selectCause = item.attr("data-select");
-				$("#deathAgeTitle").text(year+"年 "+selectCause+" 性別:"+sex);
+				$("#deathAgeTitle").text(selectCounty+" "+sex+" "+selectCause+" 年齡分佈");
 				LoadPopCounty(DrawCauseAgeCancer);
 			}
 	  		g_SvgGraph.SortedBar(param);
@@ -557,7 +557,7 @@ var g_ChapterDeath = function(){
 	var DrawDeathMapCancer = function(optionType){
 		var year = $("#timeRange").val();
 		var sex = $("#deathRankSexSelect").val();
-	  	$("#deathMapTitle").text(deathTitle+" 性別:"+sex);
+	  	$("#deathMapTitle").text(sex+" "+deathTitle);
 	  	function DrawMap(){
 	  		var param = {};
 	  		param.map = map;
