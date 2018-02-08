@@ -121,6 +121,8 @@ var g_APP = new Vue({
       //死之章-一般死因
       for(var i=1;i<=2;i++) barAttr["5-1-1-"+i] = {"min":1992,"max":2016};
       for(var i=1;i<=2;i++) barAttr["5-2-1-"+i] = {"min":1992,"max":2016};
+      for(var i=1;i<=2;i++) barAttr["5-1-2-"+i] = {"min":1992,"max":2016};
+      for(var i=1;i<=2;i++) barAttr["5-2-2-"+i] = {"min":1992,"max":2016};
 
       if(key in barAttr){
         var attr = barAttr[key];

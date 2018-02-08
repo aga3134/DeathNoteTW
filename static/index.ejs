@@ -669,6 +669,18 @@
 									癌症死因
 								</div>
 							</div>
+							<div class="option-container">
+								<div class="option-bt"
+									v-bind:class="{selected: subGraphType === 1}"
+									v-on:click="ChangeSubGraphType(1);">
+									死亡人數
+								</div>
+								<div class="option-bt"
+									v-bind:class="{selected: subGraphType === 2}"
+									v-on:click="ChangeSubGraphType(2);">
+									死亡率
+								</div>
+							</div>
 							<div>
 								<div class="half-w">
 									<div class="graph-title" id="deathRankTitle">死因排序</div>

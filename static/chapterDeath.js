@@ -10,9 +10,14 @@ var g_ChapterDeath = function(){
 	var deathCancerAge = {"男":{},"女":{},"全部":{}};
 	var deathCancerMapBound = {};
 
+	var popSum;
+	var popCountyData = {"男":{},"女":{},"全部":{}};
+
 	var selectCounty = "總計";
 	var selectCause = "";
 	var preGraphType = 0;
+	var deathTitle = "";
+	var deathUnit = "";
 
 	var map = new MapTW();
 
@@ -20,6 +25,16 @@ var g_ChapterDeath = function(){
 		if(preGraphType != app.graphType){
 			preGraphType = app.graphType;
 			selectCause = "";
+		}
+		switch(app.subGraphType){
+			case 1:
+				deathTitle = "死亡人數";
+				deathUnit = "人";
+				break;
+			case 2:
+				deathTitle = "死亡率";
+				deathUnit = "‰";
+				break;
 		}
 		switch(app.graphType){
 			case 1:	//一般死因
@@ -30,6 +45,96 @@ var g_ChapterDeath = function(){
 				break;
 		}
 	};
+
+	function LoadPopSum(callback){
+		if(popSum){
+			if(callback) callback();
+			return;
+		}
+		$.get("/populationByAge?sum=1", function(data){
+	  		var json = JSON.parse(data);
+	  		popSum = d3.nest()
+		  		.key(function(d) {return d.year;})
+		  		.key(function(d) {return d.sex;})
+				.key(function(d) {return d.county;})
+				.rollup(function(arr){
+					return d3.sum(arr,function(d){return d.count;});
+				})
+				.map(json);
+
+			for(var y in popSum){
+				popSum[y]["全部"] = {};
+				for(var county in popSum[y]["男"]){
+					popSum[y]["全部"][county] = popSum[y]["男"][county];
+				}
+			}
+			for(var y in popSum){
+				for(var county in popSum[y]["女"]){
+					if(popSum[y]["全部"][county]) popSum[y]["全部"][county]+=popSum[y]["女"][county];
+					else popSum[y]["全部"][county] = popSum[y]["女"][county];
+				}
+			}
+			if(callback) callback();
+	  	});
+	}
+
+	function LoadPopCounty(callback){
+		var sex = $("#deathRankSexSelect").val();
+		//var stack = new Error().stack;
+		//console.log( stack );
+		if(popCountyData[sex][selectCounty]){
+			if(callback) callback();
+			return;
+		}
+		$.get("/populationByAge?county="+selectCounty, function(data){
+			var json = JSON.parse(data).filter(function(d){
+				return d.maxAge-d.minAge==4;	//只取5歲區間
+			});
+
+			var sexData = d3.nest()
+		  		.key(function(d) {return d.sex;})
+				.map(json);
+
+			popCountyData["男"][selectCounty] = d3.nest()
+	  			.key(function(d) {return d.year;})
+	  			.key(function(d) {return d.minAge;})
+	  			.rollup(function(arr){
+	  				return d3.sum(arr,function(d){return d.count;});
+	  			})
+				.map(sexData["男"]);
+
+			popCountyData["女"][selectCounty] = d3.nest()
+	  			.key(function(d) {return d.year;})
+	  			.key(function(d) {return d.minAge;})
+	  			.rollup(function(arr){
+	  				return d3.sum(arr,function(d){return d.count;});
+	  			})
+				.map(sexData["女"]);
+
+			popCountyData["全部"][selectCounty] = {};
+			for(var y in popCountyData["男"][selectCounty]){
+				popCountyData["全部"][selectCounty][y] = {};
+				var yearData = popCountyData["男"][selectCounty][y];
+				for(var age in yearData){
+					popCountyData["全部"][selectCounty][y][age] = yearData[age];
+				}
+			}
+
+			for(var y in popCountyData["女"][selectCounty]){
+				var yearData = popCountyData["女"][selectCounty][y];
+				for(var age in yearData){
+					if(popCountyData["全部"][selectCounty][y][age]){
+						popCountyData["全部"][selectCounty][y][age] += yearData[age];
+					}
+					else{
+						popCountyData["全部"][selectCounty][y][age] = yearData[age];
+					}
+				}
+			}
+			if(callback) callback();
+
+		});
+	}
 
 	//=====================一般死因=========================
 	var DrawCauseAgeGeneral = function(){
@@ -50,22 +155,44 @@ var g_ChapterDeath = function(){
 	  		param.minColor = "#99FF99";
 	  		param.maxColor = "#669966";
 	  		param.unitX = "歲";
-	  		param.unitY = "人";
+	  		param.unitY = deathUnit;
 	  		param.textInfo = $("#deathAgeInfo");
 	  		var sex = $("#deathRankSexSelect").val();
-	  		param.data = deathGeneralAge[sex][selectCounty][selectCause][year];
+
 	  		var maxV = 0;
-	  		for(var y in  deathGeneralAge[sex][selectCounty][selectCause]){
-	  			var yearData = deathGeneralAge[sex][selectCounty][selectCause][y];
-	  			var v = d3.max(yearData,function(d){return d.count;});
-	  			if(v > maxV) maxV = v;
+	  		var deathData;
+	  		switch(deathTitle){
+	  			case "死亡人數":
+	  				deathData = deathGeneralAge[sex][selectCounty][selectCause][year];
+	  				for(var y in  deathGeneralAge[sex][selectCounty][selectCause]){
+			  			var yearData = deathGeneralAge[sex][selectCounty][selectCause][y];
+			  			var v = d3.max(yearData,function(d){return d.count;});
+			  			if(v > maxV) maxV = v;
+			  		}
+	  				break;
+	  			case "死亡率":
+	  				deathData = [];
+	  				for(var i=0;i<deathGeneralAge[sex][selectCounty][selectCause][year].length;i++){
+	  					var v = deathGeneralAge[sex][selectCounty][selectCause][year][i];
+	  					var popNum = popCountyData[sex][selectCounty][year][v.minAge];
+	  					if(!popNum) continue;
+	  					var d = {year:v.year,cause:v.cause,county:v.county,sex:v.sex,
+	  						minAge:v.minAge,maxAge:v.maxAge,
+	  						count: (1000*v.count/popNum).toFixed(3)};
+	  					deathData.push(d);
+	  				}
+	  				maxV = 10;
+	  				break;
 	  		}
+	  		param.data = deathData;
 	  		param.maxValue = maxV;
 	  		param.infoFn = function(d){
 				var num = g_Util.NumberWithCommas(d.count);
-				var str = selectCounty+" "+d.minAge+"~"+d.maxAge+"歲 "+num+"人";
-				var ratio = (100*d.count/d.total).toFixed(1);
-				str += " ("+ratio+"%)";
+				var str = selectCounty+" "+d.minAge+"~"+d.maxAge+"歲 "+num+deathUnit;
+				if(d.total){
+					var ratio = (100*d.count/d.total).toFixed(1);
+					str += " ("+ratio+"%)";
+				}
 				return str;
 			};
 	  		g_SvgGraph.Histogram(param);
@@ -103,31 +230,51 @@ var g_ChapterDeath = function(){
 	  		param.value = "count";
 	  		param.minColor = "#99FF99";
 	  		param.maxColor = "#669966";
-	  		param.unit = "人";
+	  		param.unit = deathUnit;
 	  		param.textInfo = $("#deathRankInfo");
 	  		var page = $("#deathRankPage").val();
 	  		param.rankOffset = 10*page;
 	  		param.rankLength = 10;
 	  		param.select = selectCause;
-	  		param.data = deathGeneralData[sex][selectCounty][year];
+	  
 	  		var maxV = 0;
 	  		for(var y in deathGeneralData[sex][selectCounty]){
 	  			var yearData = deathGeneralData[sex][selectCounty][y];
 	  			var v = d3.max(yearData,function(d){return d.count;});
 	  			if(v > maxV) maxV = v;
 	  		}
+	  		var deathData;
+	  		switch(deathTitle){
+	  			case "死亡人數":
+	  				deathData = deathGeneralData[sex][selectCounty][year];
+	  				break;
+	  			case "死亡率":
+	  				deathData = [];
+	  				var popNum = popSum[year][sex][selectCounty];
+	  				for(var i=0;i<deathGeneralData[sex][selectCounty][year].length;i++){
+	  					var v = deathGeneralData[sex][selectCounty][year][i];
+	  					var d = {year:v.year,cause:v.cause,county:v.county,sex:v.sex,
+	  						count: (1000*v.count/popNum).toFixed(3)};
+	  					deathData.push(d);
+	  				}
+	  				maxV = (1000*maxV/popNum).toFixed(3);
+	  				break;
+	  		}
+	  		param.data = deathData;
 	  		param.maxValue = maxV;
 	  		param.infoFn = function(d){
 				var num = g_Util.NumberWithCommas(d.count);
-				var str = d.cause+" "+num+"人";
-				var ratio = (100*d.count/d.total).toFixed(1);
-				str += " ("+ratio+"%)";
+				var str = d.cause+" "+num+deathUnit;
+				if(d.total){
+					var ratio = (100*d.count/d.total).toFixed(1);
+					str += " ("+ratio+"%)";
+				}
 				return str;
 			};
 			param.clickFn = function(item){
 				selectCause = item.attr("data-select");
-				$("#deathAgeTitle").text(year+" "+selectCause+" "+sex);
-				DrawCauseAgeGeneral();
+				$("#deathAgeTitle").text(year+"年 "+selectCause+" 性別:"+sex);
+				LoadPopCounty(DrawCauseAgeGeneral);
 			}
 	  		g_SvgGraph.SortedBar(param);
 		}
@@ -150,7 +297,7 @@ var g_ChapterDeath = function(){
 			  		})
 					.map(json);
 
-				DrawData();
+		  		DrawData();
 			});
 		}
 		
@@ -159,28 +306,44 @@ var g_ChapterDeath = function(){
 	var DrawDeathMapGeneral = function(optionType){
 		var year = $("#timeRange").val();
 		var sex = $("#deathRankSexSelect").val();
-	  	$("#deathMapTitle").text("死亡人數 "+sex);
+	  	$("#deathMapTitle").text(deathTitle+" 性別:"+sex);
 	  	function DrawMap(){
 	  		var param = {};
 	  		param.map = map;
 	  		param.year = year;
 	  		param.type = optionType;
 	  		param.selector = "#deathMapSvg";
-	  		param.minBound = deathGeneralMapBound.min;
-	  		param.maxBound = deathGeneralMapBound.max;
 	  		param.minColor = "#FFFFFF";
 	  		param.maxColor = "#999999";
 	  		param.textInfo = $("#deathMapInfo");
-	  		
-	  		param.data = deathGeneralSum[year][sex];
-	  		param.unit = "人";
+
+	  		var deathData;
+	  		switch(deathTitle){
+	  			case "死亡人數":
+	  				deathData = deathGeneralSum[year][sex];
+	  				param.minBound = deathGeneralMapBound.min;
+	  				param.maxBound = deathGeneralMapBound.max;
+	  				break;
+	  			case "死亡率":
+	  				deathData = {};
+	  				for(var county in deathGeneralSum[year][sex]){
+	  					var deathNum = deathGeneralSum[year][sex][county];
+	  					var popNum = popSum[year][sex][county];
+	  					deathData[county] = (1000*deathNum/popNum).toFixed(3);
+	  				}
+	  				param.minBound = 1;
+	  				param.maxBound = 10;
+	  				break;
+	  		}
+	  		param.data = deathData;
+	  		param.unit = deathUnit;
 	  		param.clickFn = function(map){
 	  			selectCounty = map.GetSelectKey();
 	  			$("#deathRankTitle").text(selectCounty+" 死因排序");
 	  			DrawDeathRankGeneral();
 	  		};
 	  		g_SvgGraph.MapTW(param);
-	  		DrawDeathRankGeneral();
+	  		//DrawDeathRankGeneral();
 	  	}
 
 		if(deathGeneralSum){
@@ -220,7 +383,7 @@ var g_ChapterDeath = function(){
 					}
 				}
 
-				DrawMap();
+		  		LoadPopSum(DrawMap());
 			});
 		}
 	};
@@ -244,22 +407,43 @@ var g_ChapterDeath = function(){
 	  		param.minColor = "#FF9999";
 	  		param.maxColor = "#996666";
 	  		param.unitX = "歲";
-	  		param.unitY = "人";
+	  		param.unitY = deathUnit;
 	  		param.textInfo = $("#deathAgeInfo");
 	  		var sex = $("#deathRankSexSelect").val();
-	  		param.data = deathCancerAge[sex][selectCounty][selectCause][year];
 	  		var maxV = 0;
-	  		for(var y in  deathCancerAge[sex][selectCounty][selectCause]){
-	  			var yearData = deathCancerAge[sex][selectCounty][selectCause][y];
-	  			var v = d3.max(yearData,function(d){return d.count;});
-	  			if(v > maxV) maxV = v;
+	  		var deathData;
+	  		switch(deathTitle){
+	  			case "死亡人數":
+	  				deathData = deathCancerAge[sex][selectCounty][selectCause][year];
+	  				for(var y in  deathCancerAge[sex][selectCounty][selectCause]){
+			  			var yearData = deathCancerAge[sex][selectCounty][selectCause][y];
+			  			var v = d3.max(yearData,function(d){return d.count;});
+			  			if(v > maxV) maxV = v;
+			  		}
+	  				break;
+	  			case "死亡率":
+	  				deathData = [];
+	  				for(var i=0;i<deathCancerAge[sex][selectCounty][selectCause][year].length;i++){
+	  					var v = deathCancerAge[sex][selectCounty][selectCause][year][i];
+	  					var popNum = popCountyData[sex][selectCounty][year][v.minAge];
+	  					if(!popNum) continue;
+	  					var d = {year:v.year,cause:v.cause,county:v.county,sex:v.sex,
+	  						minAge:v.minAge,maxAge:v.maxAge,
+	  						count: (1000*v.count/popNum).toFixed(3)};
+	  					deathData.push(d);
+	  				}
+	  				maxV = 2;
+	  				break;
 	  		}
+	  		param.data = deathData;
 	  		param.maxValue = maxV;
 	  		param.infoFn = function(d){
 				var num = g_Util.NumberWithCommas(d.count);
-				var str = selectCounty+" "+d.minAge+"~"+d.maxAge+"歲 "+num+"人";
-				var ratio = (100*d.count/d.total).toFixed(1);
-				str += " ("+ratio+"%)";
+				var str = selectCounty+" "+d.minAge+"~"+d.maxAge+"歲 "+num+deathUnit;
+				if(d.total){
+					var ratio = (100*d.count/d.total).toFixed(1);
+					str += " ("+ratio+"%)";
+				}
 				return str;
 			};
 	  		g_SvgGraph.Histogram(param);
@@ -297,31 +481,51 @@ var g_ChapterDeath = function(){
 	  		param.value = "count";
 	  		param.minColor = "#FF9999";
 	  		param.maxColor = "#996666";
-	  		param.unit = "人";
+	  		param.unit = deathUnit;
 	  		param.textInfo = $("#deathRankInfo");
 	  		var page = $("#deathRankPage").val();
 	  		param.rankOffset = 10*page;
 	  		param.rankLength = 10;
 	  		param.select = selectCause;
-	  		param.data = deathCancerData[sex][selectCounty][year];
+	  		
 	  		var maxV = 0;
 	  		for(var y in deathCancerData[sex][selectCounty]){
 	  			var yearData = deathCancerData[sex][selectCounty][y];
 	  			var v = d3.max(yearData,function(d){return d.count;});
 	  			if(v > maxV) maxV = v;
 	  		}
+	  		var deathData;
+	  		switch(deathTitle){
+	  			case "死亡人數":
+	  				deathData = deathCancerData[sex][selectCounty][year];
+	  				break;
+	  			case "死亡率":
+	  				deathData = [];
+	  				var popNum = popSum[year][sex][selectCounty];
+	  				for(var i=0;i<deathCancerData[sex][selectCounty][year].length;i++){
+	  					var v = deathCancerData[sex][selectCounty][year][i];
+	  					var d = {year:v.year,cause:v.cause,county:v.county,sex:v.sex,
+	  						count: (1000*v.count/popNum).toFixed(3)};
+	  					deathData.push(d);
+	  				}
+	  				maxV = (1000*maxV/popNum).toFixed(3);
+	  				break;
+	  		}
+	  		param.data = deathData;
 	  		param.maxValue = maxV;
 	  		param.infoFn = function(d){
 				var num = g_Util.NumberWithCommas(d.count);
-				var str = d.cause+" "+num+"人";
-				var ratio = (100*d.count/d.total).toFixed(1);
-				str += " ("+ratio+"%)";
+				var str = d.cause+" "+num+deathUnit;
+				if(d.total){
+					var ratio = (100*d.count/d.total).toFixed(1);
+					str += " ("+ratio+"%)";
+				}
 				return str;
 			};
 			param.clickFn = function(item){
 				selectCause = item.attr("data-select");
-				$("#deathAgeTitle").text(year+" "+selectCause+" "+sex);
-				DrawCauseAgeCancer();
+				$("#deathAgeTitle").text(year+"年 "+selectCause+" 性別:"+sex);
+				LoadPopCounty(DrawCauseAgeCancer);
 			}
 	  		g_SvgGraph.SortedBar(param);
 		}
@@ -344,7 +548,7 @@ var g_ChapterDeath = function(){
 			  		})
 					.map(json);
 
-				DrawData();
+		  		DrawData();
 			});
 		}
 		
@@ -353,7 +557,7 @@ var g_ChapterDeath = function(){
 	var DrawDeathMapCancer = function(optionType){
 		var year = $("#timeRange").val();
 		var sex = $("#deathRankSexSelect").val();
-	  	$("#deathMapTitle").text("死亡人數 "+sex);
+	  	$("#deathMapTitle").text(deathTitle+" 性別:"+sex);
 	  	function DrawMap(){
 	  		var param = {};
 	  		param.map = map;
@@ -363,17 +567,34 @@ var g_ChapterDeath = function(){
 	  		param.minColor = "#FFFFFF";
 	  		param.maxColor = "#999999";
 	  		param.textInfo = $("#deathMapInfo");
-	  		param.minBound = deathCancerMapBound.min;
-	  		param.maxBound = deathCancerMapBound.max;
-	  		param.data = deathCancerSum[year][sex];
-	  		param.unit = "人";
+
+	  		var deathData;
+	  		switch(deathTitle){
+	  			case "死亡人數":
+	  				deathData = deathCancerSum[year][sex];
+	  				param.minBound = deathCancerMapBound.min;
+	  				param.maxBound = deathCancerMapBound.max;
+	  				break;
+	  			case "死亡率":
+	  				deathData = {};
+	  				for(var county in deathCancerSum[year][sex]){
+	  					var deathNum = deathCancerSum[year][sex][county];
+	  					var popNum = popSum[year][sex][county];
+	  					deathData[county] = (1000*deathNum/popNum).toFixed(3);
+	  				}
+	  				param.minBound = 0.1;
+	  				param.maxBound = 1;
+	  				break;
+	  		}
+	  		param.data = deathData;
+	  		param.unit = deathUnit;
 	  		param.clickFn = function(map){
 	  			selectCounty = map.GetSelectKey();
 	  			$("#deathRankTitle").text(selectCounty+" 死因排序");
 	  			DrawDeathRankCancer();
 	  		};
 	  		g_SvgGraph.MapTW(param);
-	  		DrawDeathRankCancer();
+	  		//DrawDeathRankCancer();
 	  	}
 
 		if(deathCancerSum){
@@ -413,7 +634,8 @@ var g_ChapterDeath = function(){
 					}
 				}
 
-				DrawMap();
+		  		LoadPopSum(DrawMap());
+
 			});
 		}
 	};
