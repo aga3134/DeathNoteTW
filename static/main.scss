@@ -153,6 +153,25 @@ html, body {
 			max-width: 100%;
 			margin: auto;
 		}
+		.chapter-desc{
+			margin: auto;
+			width:800px;
+			max-width: 100%;
+			padding: 10px;
+			color: rgb(50,50,50);
+			font-size: 1em;
+			&:first-letter{
+				color: #ff3333;
+				font-size: 2em;
+			}
+			a{
+				text-decoration: none;
+				color: #5533CC;
+				&:hover{
+					color: #FF3333;
+				}
+			}
+		}
 		.content{
 			margin: auto;
 			width:500px;

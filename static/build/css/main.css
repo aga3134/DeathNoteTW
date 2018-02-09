@@ -119,6 +119,21 @@ html, body {
       width: 1366px;
       max-width: 100%;
       margin: auto; }
+    .death-note .page-bg .chapter-desc {
+      margin: auto;
+      width: 800px;
+      max-width: 100%;
+      padding: 10px;
+      color: #323232;
+      font-size: 1em; }
+      .death-note .page-bg .chapter-desc:first-letter {
+        color: #ff3333;
+        font-size: 2em; }
+      .death-note .page-bg .chapter-desc a {
+        text-decoration: none;
+        color: #5533CC; }
+        .death-note .page-bg .chapter-desc a:hover {
+          color: #FF3333; }
     .death-note .page-bg .content {
       margin: auto;
       width: 500px;
