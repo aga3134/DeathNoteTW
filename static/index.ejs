@@ -18,7 +18,7 @@
 		<meta http-equiv="Content-Language" content="zh-tw" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" type="text/css" href="/static/build/css/main.css?v=<%=version%>&a=2">
+		<link rel="stylesheet" type="text/css" href="/static/build/css/main.css?v=<%=version%>&a=3">
 
 		<!-- Global site tag (gtag.js) - Google Analytics -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-64789288-6"></script>
@@ -67,6 +67,7 @@
 			<div class="page-move">
 			</div>
 			<div class="page-bg">
+				<img class="back-bt" src="/static/Image/icon-back.png" v-on:click="FlipPage(0);">
 				<div id="pageRule" v-show="curPage === 1 && showGraph">
 					<div class="title">規則</div>
 					<div class="content">

@@ -139,6 +139,13 @@ html, body {
       height: 80px;
       max-width: 100%;
       vertical-align: middle; }
+    .death-note .page-bg .back-bt {
+      cursor: pointer;
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      width: 40px;
+      height: 40px; }
     .death-note .page-bg .content {
       margin: auto;
       width: 500px;
