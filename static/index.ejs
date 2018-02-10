@@ -396,7 +396,7 @@
 								<div class="switch-bt"
 									v-bind:class="{selected: graphType === 1}"
 									v-on:click="ChangeGraphType(1);">
-									抽樣分佈
+									居家健康
 								</div>
 								<div class="switch-bt"
 									v-bind:class="{selected: graphType === 2}"
@@ -416,14 +416,15 @@
 										分類:
 										<select id="agingStatusAttrSelect" v-model="optionType"
 											v-on:change="UpdateGraph();">
-											<option value="1">性別</option>
-											<option value="2">年齡別</option>
-											<option value="3">身分別</option>
-											<option value="4">教育程度</option>
-											<option value="5">婚姻狀況</option>
-											<option value="6">現有子女數</option>
-											<option value="7" v-show="subGraphType !== 1 && subGraphType !== 2">居住方式</option>
-											<option value="8">縣市</option>
+											<option value="1">總計</option>
+											<option value="2">性別</option>
+											<option value="3">年齡別</option>
+											<option value="4">身分別</option>
+											<option value="5">教育程度</option>
+											<option value="6">婚姻狀況</option>
+											<option value="7">現有子女數</option>
+											<option value="8" v-show="subGraphType !== 1 && subGraphType !== 2">居住方式</option>
+											<option value="9">縣市</option>
 										</select>
 									</div>
 									<svg id="agingStatusAttrSvg"></svg>
@@ -459,14 +460,15 @@
 										分類:
 										<select id="agingLivingAttrSelect" v-model="optionType"
 											v-on:change="UpdateGraph();">
-											<option value="1">性別</option>
-											<option value="2">年齡別</option>
-											<option value="3">身分別</option>
-											<option value="4">教育程度</option>
-											<option value="5">婚姻狀況</option>
-											<option value="6">現有子女數</option>
-											<option value="7">居住方式</option>
-											<option value="8">縣市</option>
+											<option value="1">總計</option>
+											<option value="2">性別</option>
+											<option value="3">年齡別</option>
+											<option value="4">身分別</option>
+											<option value="5">教育程度</option>
+											<option value="6">婚姻狀況</option>
+											<option value="7">現有子女數</option>
+											<option value="8">居住方式</option>
+											<option value="9">縣市</option>
 										</select>
 									</div>
 									<svg id="agingLivingAttrSvg"></svg>
@@ -524,14 +526,15 @@
 										分類:
 										<select id="agingAbilityAttrSelect" v-model="optionType"
 											v-on:change="UpdateGraph();">
-											<option value="1">性別</option>
-											<option value="2">年齡別</option>
-											<option value="3">身分別</option>
-											<option value="4">教育程度</option>
-											<option value="5">婚姻狀況</option>
-											<option value="6">現有子女數</option>
-											<option value="7">居住方式</option>
-											<option value="8">縣市</option>
+											<option value="1">總計</option>
+											<option value="2">性別</option>
+											<option value="3">年齡別</option>
+											<option value="4">身分別</option>
+											<option value="5">教育程度</option>
+											<option value="6">婚姻狀況</option>
+											<option value="7">現有子女數</option>
+											<option value="8">居住方式</option>
+											<option value="9">縣市</option>
 										</select>
 									</div>
 									<svg id="agingAbilityAttrSvg"></svg>

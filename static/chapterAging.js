@@ -46,9 +46,13 @@ var g_ChapterAging = function(){
 			for(var key in data[attrGroup]){
 				var arr = data[attrGroup][key];
 				for(var i=0;i<arr.length;i++){
-					if(arr[i][dataKey] == "總計") continue;
-					var v = arr[i][dataV];
-					if(maxV < v) maxV = v;
+					//if(arr[i][dataKey] == "總計") continue;
+					//var v = arr[i][dataV];
+					//if(maxV < v) maxV = v;
+					if(arr[i][dataKey] == "總計"){
+						maxV = arr[i][dataV];
+						break;
+					}
 				}		
 			}
 			maxData[attrGroup] = maxV;		
@@ -80,9 +84,9 @@ var g_ChapterAging = function(){
 		for(var key in data["縣市"]){
 			var attr = data["縣市"][key];
 			if(/區/.test(attr)) continue;
-			for(var i=0;i<arr.length;i++){
-				if(arr[i][dataKey] == "總計"){
-					var v = arr[i][dataV];
+			for(var i=0;i<attr.length;i++){
+				if(attr[i][dataKey] == "總計"){
+					var v = attr[i][dataV];
 					mapData[key] = v;
 				}
 			}
@@ -90,7 +94,7 @@ var g_ChapterAging = function(){
 		//console.log(mapData);
 	}
 
-	//====================抽樣分佈======================
+	//====================居家健康======================
 	function StatusGraph(data,dataKey,dataV){
 		UpdateSummery(data,dataKey,dataV);
 		var attrGroup = $("#agingStatusAttrSelect option:selected").text();
@@ -138,6 +142,7 @@ var g_ChapterAging = function(){
 	}
 
 	function StatusSortBar(data,dataKey,dataV){
+		UpdateSummery(data,dataKey,dataV);
 		var attrGroup = $("#agingStatusAttrSelect option:selected").text();
 		var param = {};
   		param.selector = "#agingStatusRatioSvg";
@@ -286,6 +291,7 @@ var g_ChapterAging = function(){
 	}
 
 	function LivingSortBar(data,dataKey,dataV){
+		UpdateSummery(data,dataKey,dataV);
 		var attrGroup = $("#agingLivingAttrSelect option:selected").text();
 		var param = {};
   		param.selector = "#agingLivingRatioSvg";
@@ -464,6 +470,7 @@ var g_ChapterAging = function(){
 	}
 
 	function AbilitySortBar(data,dataKey,dataV){
+		UpdateSummery(data,dataKey,dataV);
 		var attrGroup = $("#agingAbilityAttrSelect option:selected").text();
 		var param = {};
   		param.selector = "#agingAbilityRatioSvg";
