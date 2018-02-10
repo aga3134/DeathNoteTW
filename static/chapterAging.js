@@ -46,7 +46,7 @@ var g_ChapterAging = function(){
 			for(var key in data[attrGroup]){
 				var arr = data[attrGroup][key];
 				for(var i=0;i<arr.length;i++){
-					if(arr[i][dataKey] == "總計") continue;
+					//if(arr[i][dataKey] == "總計") continue;
 					var v = arr[i][dataV];
 					if(maxV < v) maxV = v;
 				}		
