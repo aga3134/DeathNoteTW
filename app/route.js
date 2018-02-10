@@ -1,5 +1,5 @@
 var DB = require("./db");
-var version = "1.0.0";
+var version = "1.0.1";
 
 module.exports = function(app){
 	

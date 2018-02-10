@@ -134,6 +134,10 @@ html, body {
         color: #5533CC; }
         .death-note .page-bg .chapter-desc a:hover {
           color: #FF3333; }
+    .death-note .page-bg .logo {
+      width: 150px;
+      max-width: 100%;
+      vertical-align: middle; }
     .death-note .page-bg .content {
       margin: auto;
       width: 500px;
