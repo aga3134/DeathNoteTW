@@ -172,6 +172,12 @@ html, body {
 				}
 			}
 		}
+		.inline-in-mobile{
+			display: inline;
+			@include pad-width{
+				display: block;
+			}
+		}
 		.logo{
 			margin: 10px;
 			height: 80px;

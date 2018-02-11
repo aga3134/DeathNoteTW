@@ -134,6 +134,11 @@ html, body {
         color: #5533CC; }
         .death-note .page-bg .chapter-desc a:hover {
           color: #FF3333; }
+    .death-note .page-bg .inline-in-mobile {
+      display: inline; }
+      @media only screen and (min-width: 640px) {
+        .death-note .page-bg .inline-in-mobile {
+          display: block; } }
     .death-note .page-bg .logo {
       margin: 10px;
       height: 80px;
