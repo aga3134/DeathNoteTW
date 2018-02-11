@@ -30,7 +30,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
      inkscape:cx="-228.79837"
-     inkscape:cy="312.9798"
+     inkscape:cy="484.40837"
      inkscape:document-units="mm"
      inkscape:current-layer="layer2"
      showgrid="false"
@@ -65,11 +65,11 @@
      inkscape:label="main">
     <path
        sodipodi:type="star"
-       style="opacity:1;fill:#1a1a1a;fill-opacity:1;stroke:none;stroke-width:0.92204374;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:#323232;fill-opacity:1;stroke:none;stroke-width:0.92204374;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path831"
        sodipodi:sides="3"
        sodipodi:cx="50.573215"
-       sodipodi:cy="69.169648"
+       sodipodi:cy="69.169647"
        sodipodi:r1="25.810965"
        sodipodi:r2="12.905483"
        sodipodi:arg1="3.1415927"
@@ -78,18 +78,20 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="m 24.762251,69.169646 19.358223,-11.176475 19.358225,-11.176474 0,22.35295 -2e-6,22.352952 -19.358223,-11.176475 z"
-       inkscape:transform-center-x="6.4527423" />
+       inkscape:transform-center-x="6.4527423"
+       transform="matrix(1,0,0,1.2029134,0,-14.035451)"
+       inkscape:transform-center-y="-2.5849051e-006" />
     <rect
-       style="opacity:1;fill:#1a1a1a;fill-opacity:1;stroke:none;stroke-width:0.92204374;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:#323232;fill-opacity:1;stroke:none;stroke-width:1.05036891;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect833"
        width="59.595306"
-       height="17.774038"
+       height="23.065704"
        x="45.517273"
-       y="60.049446"
+       y="57.932781"
        rx="1.8440875"
-       ry="1.8440875" />
+       ry="2.3931072" />
     <path
-       style="opacity:1;fill:#1a1a1a;fill-opacity:1;stroke:none;stroke-width:3.77952766;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:#323232;fill-opacity:1;stroke:none;stroke-width:3.77952766;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 260 16.285156 A 241.42857 241.42857 0 0 0 18.572266 257.71484 A 241.42857 241.42857 0 0 0 260 499.14258 A 241.42857 241.42857 0 0 0 501.42773 257.71484 A 241.42857 241.42857 0 0 0 260 16.285156 z M 260 66.285156 A 191.42856 191.42856 0 0 1 451.42773 257.71484 A 191.42856 191.42856 0 0 1 260 449.14258 A 191.42856 191.42856 0 0 1 68.572266 257.71484 A 191.42856 191.42856 0 0 1 260 66.285156 z "
        transform="scale(0.26458333)"
        id="path843" />
