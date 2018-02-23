@@ -254,10 +254,18 @@ var g_ChapterDisease = function(){
 						other.caseNumTotal = caseNumTotal;
 						other.expenseTotal = expenseTotal;
 						for(var i=0;i<arr.length;i++){
+							//只更動subDisease total，disease total從medicineSumData計算
+							if(arr[i].disease == arr[i].subDisease) continue;
 							arr[i].caseNumTotal = caseNumTotal;
 							arr[i].expenseTotal = expenseTotal;
 						}
-						if(arr.length == 1) return arr;
+						if(arr.length == 1){
+							//複製成新的物件，避免與medicineSumData資料互相衝突
+							var copy = Object.assign({}, arr[0]);
+							copy.caseNumTotal = caseNumTotal;
+							copy.expenseTotal = expenseTotal;
+							return [copy];
+						}
 						else{
 							arr.push(other);
 							return arr.filter(function(d){return d.disease!=d.subDisease;});
